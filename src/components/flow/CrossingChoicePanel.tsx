@@ -1,6 +1,8 @@
 import React from "react";
-import { LogOut } from "../additional/LogOut";
-import { Link, useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom";
+import { BaseButtonLink } from "../../styles/MainTheme";
+import { PositiveButton } from "../../styles/PositiveButton";
+import { Navbar } from "../additional/Navbar";
 
 export function CrossingChoicePanel() {
 	const location = useLocation();
@@ -8,21 +10,20 @@ export function CrossingChoicePanel() {
 
 	return (
 		<div>
-			<h2>Welcome /USERNAME/</h2>
+			<Navbar />
 			{!ifNewUser && (
-				<>
-					<h3>Choose your course of action</h3>
-					<button>
-						<Link to="list">
+				<div>
+					<h3>Choose your course of action:</h3>
+					<PositiveButton>
+						<BaseButtonLink to="list">
 							Choose from list of previously created crossings
-						</Link>
-					</button>
-				</>
+						</BaseButtonLink>
+					</PositiveButton>
+				</div>
 			)}
-			<button>
-				<Link to="new">Create new crossing</Link>
-			</button>
-			<LogOut />
+			<PositiveButton>
+				<BaseButtonLink to="new">Create new crossing</BaseButtonLink>
+			</PositiveButton>
 		</div>
 	);
 }

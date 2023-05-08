@@ -1,25 +1,31 @@
 import React from "react";
 import { LogOut } from "../additional/LogOut";
-import { Link } from "react-router-dom";
+import { Navbar } from "../additional/Navbar";
+import { BaseButtonLink } from "../../styles/MainTheme";
+import { NeutralNegativeButton } from "../../styles/NeutralButton";
+import { NeutralPositiveButton } from "../../styles/NeutralButton";
 
 export function AddVideos() {
 	return (
-		<div>
-			<h3>
-				Here will be a tool allowing user to put .mp4 or something like this
-				footage of traffic
-			</h3>
-			<button>
-				<Link to="../crossing-choice" relative="path">
-					Go back to crossing choice panel
-				</Link>
-			</button>
-			<button>
-				<Link to="../results-choice" relative="path">
-					Go to results choice panel
-				</Link>
-			</button>
-			<LogOut />
-		</div>
+		<>
+			<Navbar />
+			<div>
+				<h3>
+					Here will be a tool allowing user to put .mp4 or something like this
+					footage of traffic
+				</h3>
+				<NeutralNegativeButton>
+					<BaseButtonLink to="../crossing-choice" relative="path">
+						Go back to crossing choice panel
+					</BaseButtonLink>
+				</NeutralNegativeButton>
+				<NeutralPositiveButton>
+					<BaseButtonLink to="../results-choice" relative="path">
+						Go to results choice panel
+					</BaseButtonLink>
+				</NeutralPositiveButton>
+				<LogOut />
+			</div>
+		</>
 	);
 }

@@ -1,36 +1,53 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useContext } from "react";
+import { ToggleSwitch } from "../additional/ToggleSwitch";
+import logo from "../../assets/TFO_4.png";
+import {
+	SigningContainer,
+	SigningLi,
+	SigningLogo,
+	SigningUl,
+} from "../../styles/SigningStyles";
+import { PositiveButton } from "../../styles/PositiveButton";
+import { BaseButtonLink } from "../../styles/MainTheme";
+import { ThemeContext } from "../../custom/ThemeContext";
+import dm_logo from "../../assets/TFO_4_dark_mode.png";
 
 export function Register() {
 	//might be good to create pop up about the successful creation of the account
+	const { theme } = useContext(ThemeContext);
 	return (
-		<div>
-			<p>Sign up to be able to use our app!</p>
+		<SigningContainer>
+			<SigningLogo
+				src={theme === "light" ? logo : dm_logo}
+				alt="Traffic Flow Optimizer Logo"
+			/>
+			<h3>Sign up to be able to use our app!</h3>
 			<form>
-				<ul>
-					<li>
+				<SigningUl>
+					<SigningLi>
 						<label>email:</label>
-						<input type="email" />
-					</li>
-					<li>
+						<input type="email" placeholder="email" />
+					</SigningLi>
+					<SigningLi>
 						<label>username:</label>
 						<input type="text" placeholder="username" />
-					</li>
+					</SigningLi>
+					<SigningLi>
+						<label>password:</label>
+						<input type="password" />
+					</SigningLi>
 					<li>
-						<label>password</label>
+						<label>repeat password:</label>
 						<input type="password" />
 					</li>
-					<li>
-						<label>repeat password</label>
-						<input type="password" />
-					</li>
-				</ul>
+				</SigningUl>
 			</form>
-			<button>
-				<Link to="/crossing-choice" state={{ ifNewUser: true }}>
+			<PositiveButton>
+				<BaseButtonLink to="/crossing-choice" state={{ ifNewUser: true }}>
 					Sign Up!
-				</Link>
-			</button>
-		</div>
+				</BaseButtonLink>
+			</PositiveButton>
+			<ToggleSwitch />
+		</SigningContainer>
 	);
 }

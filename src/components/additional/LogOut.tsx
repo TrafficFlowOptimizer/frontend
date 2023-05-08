@@ -1,10 +1,11 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { NegativeButton } from "../../styles/NegativeButton";
+import { BaseButtonLink } from "../../styles/MainTheme";
 
 export function LogOut() {
 	return (
-		<button>
-			<Link to="/">LogOut</Link>
-		</button>
+		<NegativeButton>
+			<BaseButtonLink to="/">LogOut</BaseButtonLink>
+		</NegativeButton>
 	);
 }
