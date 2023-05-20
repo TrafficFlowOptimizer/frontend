@@ -15,51 +15,55 @@ import { ResultsAsNumeric } from "./components/flow/ResultsAsNumeric";
 import { ThemeProvider } from "styled-components";
 import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
+import { LoggedUser, UserContext } from "./custom/UserContext";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
+	const [loggedUser, setLoggedUser] = useState<LoggedUser | null>(null);
 
 	return (
-		<ThemeContext.Provider value={{ theme, setTheme }}>
-			<BrowserRouter>
-				<ThemeProvider theme={theme === "light" ? LightTheme : DarkTheme}>
-					<BaseDiv>
-						<Routes>
-							<Route path="/" element={<Welcome />} />
-							<Route path="register" element={<Register />} />
-							<Route path="login" element={<LogIn />} />
-							<Route
-								path="crossing-choice"
-								element={<CrossingChoicePanel />}
-							/>
-							<Route
-								path="crossing-choice/list"
-								element={<ListOfCrossings />}
-							/>
-							<Route
-								path="crossing-choice/new"
-								element={<CreateNewCrossing />}
-							/>
-							<Route path="add-videos" element={<AddVideos />} />
-							<Route path="list-videos" element={<VideosList />} />
-							<Route
-								path="results-choice"
-								element={<ResultsChoicePanel />}
-							/>
-							<Route
-								path="results-simulation"
-								element={<ResultsAsSimulation />}
-							/>
-							<Route
-								path="results-numeric"
-								element={<ResultsAsNumeric />}
-							/>
-							<Route path="*" element={<PageNotFoundLanding />} />
-						</Routes>
-					</BaseDiv>
-				</ThemeProvider>
-			</BrowserRouter>
-		</ThemeContext.Provider>
+		<UserContext.Provider value={{ loggedUser, setLoggedUser }}>
+			<ThemeContext.Provider value={{ theme, setTheme }}>
+				<BrowserRouter>
+					<ThemeProvider theme={theme === "light" ? LightTheme : DarkTheme}>
+						<BaseDiv>
+							<Routes>
+								<Route path="/" element={<Welcome />} />
+								<Route path="register" element={<Register />} />
+								<Route path="login" element={<LogIn />} />
+								<Route
+									path="crossing-choice"
+									element={<CrossingChoicePanel />}
+								/>
+								<Route
+									path="crossing-choice/list"
+									element={<ListOfCrossings />}
+								/>
+								<Route
+									path="crossing-choice/new"
+									element={<CreateNewCrossing />}
+								/>
+								<Route path="add-videos" element={<AddVideos />} />
+								<Route path="list-videos" element={<VideosList />} />
+								<Route
+									path="results-choice"
+									element={<ResultsChoicePanel />}
+								/>
+								<Route
+									path="results-simulation"
+									element={<ResultsAsSimulation />}
+								/>
+								<Route
+									path="results-numeric"
+									element={<ResultsAsNumeric />}
+								/>
+								<Route path="*" element={<PageNotFoundLanding />} />
+							</Routes>
+						</BaseDiv>
+					</ThemeProvider>
+				</BrowserRouter>
+			</ThemeContext.Provider>
+		</UserContext.Provider>
 	);
 }
 

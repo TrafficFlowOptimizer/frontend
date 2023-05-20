@@ -39,6 +39,15 @@ export const BaseButton = styled.button`
 	}
 `;
 
+export const BaseForm = styled.form`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 1vh;
+`;
+
 export const BaseButtonLink = styled(Link)`
 	text-decoration: none;
 	font-size: 1.25em;

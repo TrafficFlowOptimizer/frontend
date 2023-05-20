@@ -1,17 +1,16 @@
 import React from "react";
-import { useLocation } from "react-router-dom";
 import { BaseButtonLink } from "../../styles/MainTheme";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { Navbar } from "../additional/Navbar";
+import { useUserContext } from "../../custom/UserContext";
 
 export function CrossingChoicePanel() {
-	const location = useLocation();
-	const { ifNewUser } = location.state ?? true;
+	const { loggedUser } = useUserContext();
 
 	return (
 		<div>
 			<Navbar />
-			{!ifNewUser && (
+			{loggedUser !== null && (
 				<div>
 					<h3>Choose your course of action:</h3>
 					<PositiveButton>

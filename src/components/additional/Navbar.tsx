@@ -4,17 +4,19 @@ import { ToggleSwitch } from "./ToggleSwitch";
 import styled from "styled-components";
 import logo from "../../assets/TFO_4.png";
 import dm_logo from "../../assets/TFO_4_dark_mode.png";
-import { ThemeContext } from "../../custom/ThemeContext";
+import { useThemeContext } from "../../custom/ThemeContext";
+import { useUserContext } from "../../custom/UserContext";
 
 export function Navbar() {
-	const { theme } = useContext(ThemeContext);
+	const { theme } = useThemeContext();
+	const { loggedUser } = useUserContext();
 	return (
 		<NavbarContainer>
 			<NavbarLogo
 				src={theme === "light" ? logo : dm_logo}
 				alt="Traffic Flow Optimizer Logo"
 			/>
-			<h2>USERNAME</h2>
+			<h2>{loggedUser !== null ? loggedUser.username : "ERROR"}</h2>
 			<ToggleSwitch />
 			<LogOut />
 		</NavbarContainer>
