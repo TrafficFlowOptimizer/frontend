@@ -1,46 +1,116 @@
-import React, { useContext } from "react";
+import React, { useContext, useState } from "react";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { BaseForm } from "../../styles/MainTheme";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
+import axios from "axios";
 import logo from "../../assets/TFO_4.png";
 import {
 	SigningContainer,
 	SigningLi,
 	SigningLogo,
 	SigningUl,
+	InvalidInputMessage,
 } from "../../styles/SigningStyles";
 import { ThemeContext } from "../../custom/ThemeContext";
 import dm_logo from "../../assets/TFO_4_dark_mode.png";
 import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../custom/UserContext";
+import { LoggedUser, useUserContext } from "../../custom/UserContext";
+
+export type loginData = {
+	nickname: string;
+	password: string;
+};
 
 export function LogIn() {
 	const { theme } = useContext(ThemeContext);
 	const { setLoggedUser } = useUserContext();
 	const navigate = useNavigate();
+	const [isEmailValid, setIsEmailValid] = useState(false);
+	const [emailMessage, setEmailMessage] = useState("This field cannot be empty");
+	const [isPasswordLongEnough, setIsPasswordLongEnough] = useState(false);
+	const [passwordMessage, setPasswordMessage] = useState(
+		"This field cannot be empty",
+	);
+	const [badLoginMessage, setBadLoginMessage] = useState("");
+
+	const onEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
+		const specialCharactersReg = /[-’/`~!#*$_%+=.,^&(){}[\]|;:”<>?\\]/g;
+		const maximalUsernameLength = 64;
+
+		const text = e.currentTarget.value;
+
+		if (!specialCharactersReg.test(text)) {
+			if (text.length <= maximalUsernameLength) {
+				setIsEmailValid(true);
+				setEmailMessage("");
+			} else {
+				setIsEmailValid(false);
+				setEmailMessage("The input is too long");
+			}
+		} else {
+			setIsEmailValid(false);
+			setEmailMessage("Input contains illegal characters");
+		}
+	};
+
+	const onPasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
+		const text = e.currentTarget.value;
+		if (text.length <= 8) {
+			setIsPasswordLongEnough(false);
+			setPasswordMessage("The password is at least 8 characters long!");
+		} else {
+			setIsPasswordLongEnough(true);
+			setPasswordMessage("");
+		}
+	};
 
 	const logIn = (event: React.SyntheticEvent) => {
 		console.log("Logging in!");
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			usernameOrEmail: { value: string };
+			nickname: { value: string };
 			password: { value: string };
 		};
-		const email = target.usernameOrEmail.value; // typechecks!
-		const password = target.password.value; // typechecks!
+		const loginData: loginData = {
+			nickname: target.nickname.value,
+			password: target.password.value,
+		};
 
-		//TODO: typechecks (but with onChange functions (?) and REST API inserted here
+		axios
+			.post<boolean>("/auth/login", loginData) // the type should be LoggedUser
+			.then((response) => {
+				//temp comment cause backend is not yet ready
+				// const receivedData: LoggedUser = response.data;
+				// setBadLoginMessage("");
+				// setLoggedUser({
+				// 	id: receivedData.id,
+				// 	username: receivedData.username,
+				// 	email: receivedData.email,
+				// });
 
-		console.log("email ->", email, "password->", password);
-		console.log(email === "xd", password === "pipka");
+				setBadLoginMessage("");
+				setLoggedUser({
+					id: "1aaa",
+					username: loginData.nickname,
+					email: "jan.kowal@gmail.com",
+				});
+				navigate("/crossing-choice");
+			})
+			.catch((error) => {
+				setBadLoginMessage("Invalid email/username or password!");
+				console.error(error);
+			});
 
-		if (email === "xd" && password === "pipka") {
-			navigate("/crossing-choice");
-			setLoggedUser({ id: "1aaa", username: email, email: email }); //temp
-		} else {
-			alert("No such user!");
-		}
+		//TODO: check if the rest works
+
+		// if (email === "xd" && password === "nazwiskopipka") {
+		// 	setBadLoginMessage("");
+		// 	setLoggedUser({ id: "1aaa", username: email, email: email }); //temp
+		// 	navigate("/crossing-choice");
+		// } else {
+		// 	setBadLoginMessage("Invalid email/username or password!");
+		// }
 	};
 	return (
 		<SigningContainer>
@@ -52,19 +122,37 @@ export function LogIn() {
 			<BaseForm onSubmit={logIn}>
 				<SigningUl>
 					<SigningLi>
-						<label>email / username:</label>
+						<label>username:</label>
 						<input
-							name="usernameOrEmail"
+							name="nickname"
 							type="text"
 							placeholder="username"
+							onChange={onEmailChange}
 						/>
 					</SigningLi>
+					{!isEmailValid && (
+						<SigningLi>
+							<InvalidInputMessage>{emailMessage}</InvalidInputMessage>
+						</SigningLi>
+					)}
 					<SigningLi>
 						<label>password:</label>
-						<input name="password" type="password" />
+						<input
+							name="password"
+							type="password"
+							onChange={onPasswordChange}
+						/>
 					</SigningLi>
+					{!isPasswordLongEnough && (
+						<SigningLi>
+							<InvalidInputMessage>{passwordMessage}</InvalidInputMessage>
+						</SigningLi>
+					)}
 				</SigningUl>
-				<PositiveButton type="submit">
+				<PositiveButton
+					type="submit"
+					disabled={!isEmailValid && !isPasswordLongEnough}
+				>
 					{/*<BaseButtonLink*/}
 					{/*	to="/crossing-choice"*/}
 					{/*	state={{ ifNewUser: false }}*/}
@@ -72,6 +160,9 @@ export function LogIn() {
 					Log In!
 					{/*</BaseButtonLink>*/}
 				</PositiveButton>
+				{badLoginMessage.length > 0 && (
+					<InvalidInputMessage>{badLoginMessage}</InvalidInputMessage>
+				)}
 			</BaseForm>
 			<ToggleSwitch />
 		</SigningContainer>

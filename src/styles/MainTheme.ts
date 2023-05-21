@@ -1,6 +1,13 @@
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
+export enum ButtonColors {
+	RED = "#db2b39",
+	BLUE = "#6d72c3",
+	ORANGE = "#f9a620",
+	GREEN = "#20bf55"
+}
+
 export const LightTheme = {
 	id: "light",
 	primary: "#FCFAF9",
@@ -36,6 +43,10 @@ export const BaseButton = styled.button`
 		z-index: 10;
 		transform: scale(1.1);
 		box-shadow: 5px 4px 3px 1px ${(props) => props.theme.id === "light" ? "#585858" : "#141413"};
+	}
+	
+	&:disabled {
+		background-color: ${LightTheme.secondary};
 	}
 `;
 
