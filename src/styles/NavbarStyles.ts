@@ -1,8 +1,19 @@
 import styled from "styled-components";
 
-export const NavbarLogoLogo = styled.img`
-	width: 10vw;
-	height: 13.25h;
+export const NavbarContainer = styled.div`
+	background-color: ${(props) => props.theme.secondary};
+	display: flex;
+	flex-direction: row;
+	flex-wrap: no-wrap;
+	justify-content: flex-start;
+	align-items: center;
+	gap: 1vw;
+	padding: 1vh 2vw;
+	margin: 1vh 2vw;
+	border-radius: 25px;
 `;
 
-// needs two variations depending on the theme -> 2 versions of logo, not of component
+export const NavbarLogo = styled.img`
+	width: 8vw;
+	height: 10.6h;
+`;

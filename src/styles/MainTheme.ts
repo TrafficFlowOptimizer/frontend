@@ -73,7 +73,7 @@ export const BaseDiv = styled.div`
 	height: 100vh;
 	padding-left: 15px;
 	padding-right: 15px;
-	overflow: clip;
+	overflow: scroll;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};

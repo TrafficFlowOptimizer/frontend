@@ -101,16 +101,6 @@ export function LogIn() {
 				setBadLoginMessage("Invalid email/username or password!");
 				console.error(error);
 			});
-
-		//TODO: check if the rest works
-
-		// if (email === "xd" && password === "nazwiskopipka") {
-		// 	setBadLoginMessage("");
-		// 	setLoggedUser({ id: "1aaa", username: email, email: email }); //temp
-		// 	navigate("/crossing-choice");
-		// } else {
-		// 	setBadLoginMessage("Invalid email/username or password!");
-		// }
 	};
 	return (
 		<SigningContainer>
