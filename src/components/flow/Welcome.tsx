@@ -1,7 +1,7 @@
 import React, { useContext } from "react";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { BaseButtonLink, BaseH1 } from "../../styles/MainTheme";
-import logo from "../../assets/TFO_4.png";
+import logo from "../../assets/TFO_4_but_better.png";
 import {
 	WelcomePageContainer,
 	WelcomePageLogo,
@@ -10,7 +10,7 @@ import {
 } from "../../styles/WelcomePageStyles";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
 import { ThemeContext } from "../../custom/ThemeContext";
-import dm_logo from "../../assets/TFO_4_dark_mode.png";
+import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 
 export function Welcome() {
 	const { theme } = useContext(ThemeContext);

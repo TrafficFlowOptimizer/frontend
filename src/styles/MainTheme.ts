@@ -4,10 +4,10 @@ import { Link } from "react-router-dom";
 export enum ButtonColors {
 	RED = "#db2b39",
 	BLUE = "#6d72c3",
-	ORANGE = "#f9a620",
+	ORANGE = "#d97a00",
 	GREEN = "#20bf55"
 }
-
+// TODO: ogarnij kolor bo coś ci nie gra
 export const LightTheme = {
 	id: "light",
 	primary: "#FCFAF9",
@@ -38,7 +38,7 @@ export const BaseButton = styled.button`
 	border: none;
 	border-radius: 12px;
 	transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
-	&:hover {
+	&:hover:enabled {
 		cursor: pointer;
 		z-index: 10;
 		transform: scale(1.1);
@@ -84,6 +84,6 @@ export const BaseDiv = styled.div`
 export const BaseInput = styled.input`
 	padding: 2px;
 	border-radius: 5px;
-	border: none;
-	background-color: ${(props) => props.theme.secondary};
+	border: 1px solid ${(props) => props.theme.text};
+	background-color: ${(props) => props.theme.primary};
 `;

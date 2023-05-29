@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
-import logo from "../../assets/TFO_4.png";
+import logo from "../../assets/TFO_4_but_better.png";
 import {
 	SigningContainer,
 	SigningLi,
@@ -10,7 +10,7 @@ import {
 import { PositiveButton } from "../../styles/PositiveButton";
 import { BaseButtonLink } from "../../styles/MainTheme";
 import { ThemeContext } from "../../custom/ThemeContext";
-import dm_logo from "../../assets/TFO_4_dark_mode.png";
+import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 
 export function Register() {
 	//might be good to create pop up about the successful creation of the account
@@ -43,7 +43,7 @@ export function Register() {
 				</SigningUl>
 			</form>
 			<PositiveButton>
-				<BaseButtonLink to="/crossing-choice" state={{ ifNewUser: true }}>
+				<BaseButtonLink to="/crossroad-choice" state={{ ifNewUser: true }}>
 					Sign Up!
 				</BaseButtonLink>
 			</PositiveButton>

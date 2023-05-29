@@ -3,7 +3,7 @@ import { PositiveButton } from "../../styles/PositiveButton";
 import { BaseForm, BaseInput } from "../../styles/MainTheme";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
 import axios from "axios";
-import logo from "../../assets/TFO_4.png";
+import logo from "../../assets/TFO_4_but_better.png";
 import {
 	SigningContainer,
 	SigningLi,
@@ -12,7 +12,7 @@ import {
 	InvalidInputMessage,
 } from "../../styles/SigningStyles";
 import { ThemeContext } from "../../custom/ThemeContext";
-import dm_logo from "../../assets/TFO_4_dark_mode.png";
+import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
 
@@ -97,7 +97,7 @@ export function LogIn() {
 					username: loginData.nickname,
 					email: "jan.kowal@gmail.com",
 				});
-				navigate("/crossing-choice");
+				navigate("/crossroad-choice");
 			})
 			.catch((error) => {
 				setBadLoginMessage("Invalid email/username or password!");
@@ -146,7 +146,7 @@ export function LogIn() {
 					disabled={!isUsernameValid && !isPasswordLongEnough}
 				>
 					{/*<BaseButtonLink*/}
-					{/*	to="/crossing-choice"*/}
+					{/*	to="/crossroad-choice"*/}
 					{/*	state={{ ifNewUser: false }}*/}
 					{/*>*/}
 					Log In!
