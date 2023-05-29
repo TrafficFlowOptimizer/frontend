@@ -12,7 +12,7 @@ export const LightTheme = {
 	id: "light",
 	primary: "#FCFAF9",
 	text: "#191516",
-	secondary: "#c9c8c7",
+	secondary: "#dfe0e6",
 	font: "Verdana, sans-serif",
 };
 
@@ -73,9 +73,17 @@ export const BaseDiv = styled.div`
 	height: 100vh;
 	padding-left: 15px;
 	padding-right: 15px;
-	overflow: scroll;
+	overflow-y: scroll;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
 	font-size: 1em;
+`;
+
+
+export const BaseInput = styled.input`
+	padding: 2px;
+	border-radius: 5px;
+	border: none;
+	background-color: ${(props) => props.theme.secondary};
 `;

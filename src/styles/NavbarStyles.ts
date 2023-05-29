@@ -10,7 +10,7 @@ export const NavbarContainer = styled.div`
 	gap: 1vw;
 	padding: 1vh 2vw;
 	margin: 1vh 2vw;
-	border-radius: 25px;
+	border-radius: 15px;
 `;
 
 export const NavbarLogo = styled.img`

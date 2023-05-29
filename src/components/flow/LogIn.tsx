@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import { PositiveButton } from "../../styles/PositiveButton";
-import { BaseForm } from "../../styles/MainTheme";
+import { BaseForm, BaseInput } from "../../styles/MainTheme";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
 import axios from "axios";
 import logo from "../../assets/TFO_4.png";
@@ -14,7 +14,7 @@ import {
 import { ThemeContext } from "../../custom/ThemeContext";
 import dm_logo from "../../assets/TFO_4_dark_mode.png";
 import { useNavigate } from "react-router-dom";
-import { LoggedUser, useUserContext } from "../../custom/UserContext";
+import { useUserContext } from "../../custom/UserContext";
 
 export type loginData = {
 	nickname: string;
@@ -25,8 +25,10 @@ export function LogIn() {
 	const { theme } = useContext(ThemeContext);
 	const { setLoggedUser } = useUserContext();
 	const navigate = useNavigate();
-	const [isEmailValid, setIsEmailValid] = useState(false);
-	const [emailMessage, setEmailMessage] = useState("This field cannot be empty");
+	const [isUsernameValid, setIsUsernameValid] = useState(false);
+	const [usernameMessage, setUsernameMessage] = useState(
+		"This field cannot be empty",
+	);
 	const [isPasswordLongEnough, setIsPasswordLongEnough] = useState(false);
 	const [passwordMessage, setPasswordMessage] = useState(
 		"This field cannot be empty",
@@ -41,15 +43,15 @@ export function LogIn() {
 
 		if (!specialCharactersReg.test(text)) {
 			if (text.length <= maximalUsernameLength) {
-				setIsEmailValid(true);
-				setEmailMessage("");
+				setIsUsernameValid(true);
+				setUsernameMessage("");
 			} else {
-				setIsEmailValid(false);
-				setEmailMessage("The input is too long");
+				setIsUsernameValid(false);
+				setUsernameMessage("The input is too long");
 			}
 		} else {
-			setIsEmailValid(false);
-			setEmailMessage("Input contains illegal characters");
+			setIsUsernameValid(false);
+			setUsernameMessage("Input contains illegal characters");
 		}
 	};
 
@@ -113,21 +115,21 @@ export function LogIn() {
 				<SigningUl>
 					<SigningLi>
 						<label>username:</label>
-						<input
+						<BaseInput
 							name="nickname"
 							type="text"
 							placeholder="username"
 							onChange={onEmailChange}
 						/>
 					</SigningLi>
-					{!isEmailValid && (
+					{!isUsernameValid && (
 						<SigningLi>
-							<InvalidInputMessage>{emailMessage}</InvalidInputMessage>
+							<InvalidInputMessage>{usernameMessage}</InvalidInputMessage>
 						</SigningLi>
 					)}
 					<SigningLi>
 						<label>password:</label>
-						<input
+						<BaseInput
 							name="password"
 							type="password"
 							onChange={onPasswordChange}
@@ -141,7 +143,7 @@ export function LogIn() {
 				</SigningUl>
 				<PositiveButton
 					type="submit"
-					disabled={!isEmailValid && !isPasswordLongEnough}
+					disabled={!isUsernameValid && !isPasswordLongEnough}
 				>
 					{/*<BaseButtonLink*/}
 					{/*	to="/crossing-choice"*/}

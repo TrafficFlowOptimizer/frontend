@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ButtonColors } from "./MainTheme";
+import { ButtonColors, DarkTheme } from "./MainTheme";
 
 export const NumericResultsUl = styled.ul`
 	list-style-type: none;
@@ -11,6 +11,9 @@ export const NumericResultsUl = styled.ul`
 	align-items: flex-start;
 	
 	overflow-y: scroll;
+	
+	width: 90%
+	height: 80%;
 `;
 
 export const HeaderInfo = styled.p`
@@ -23,7 +26,11 @@ export const NumericResultsLi = styled.li`
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	align-items: flex-start;
-	gap: 0.2vh;
+	gap: 0.5vh;
+	
+	width: 1580px;
+	background-color: ${(props) => props.theme.secondary};
+	border-radius: 15px;
 `;
 
 export const NumericResultsPanel = styled.div`
@@ -33,6 +40,8 @@ export const NumericResultsPanel = styled.div`
 	justify-content: flex-start;
 	align-items: center;
 	gap: 10px;
+	
+	margin: 0px 15px;
 `;
 
 export type SequenceProps = {
@@ -47,10 +56,21 @@ export const StyledSequence = styled.li<SequenceProps>`
 	flex-shrink: 0;
 	position: relative;
 	left: -30px;
+	
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+`;
+
+export const SequenceIndex = styled.p`
+	color: ${DarkTheme.text};
+	font-size: 11px;
 `;
 
 export const SequenceContainer = styled(NumericResultsUl)`
 	gap: 5px;
 	width: 25vw;
 	flex-direction: row;
+	overflow: visible;
 `;

@@ -8,6 +8,7 @@ import {
 	NumericResultsPanel,
 	StyledSequence,
 	SequenceContainer,
+	SequenceIndex,
 } from "../../styles/NumericResultsStyles";
 import { Navbar } from "../additional/Navbar";
 import { useLocation } from "react-router-dom";
@@ -30,8 +31,6 @@ export function ResultsAsNumeric() {
 								<NumericResultsPanel>
 									<HeaderInfo>Light ID:</HeaderInfo>
 									<p>light#{result.lightId}</p>
-								</NumericResultsPanel>
-								<NumericResultsPanel>
 									<HeaderInfo>
 										Cars passed to arrived ratio:
 									</HeaderInfo>
@@ -44,7 +43,11 @@ export function ResultsAsNumeric() {
 											<StyledSequence
 												key={index}
 												isGreen={elem === 1}
-											/>
+											>
+												<SequenceIndex>
+													{index + 1}
+												</SequenceIndex>
+											</StyledSequence>
 										))}
 									</SequenceContainer>
 								</NumericResultsPanel>
