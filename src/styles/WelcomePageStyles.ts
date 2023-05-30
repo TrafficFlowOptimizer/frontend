@@ -4,7 +4,6 @@ export const WelcomePageLogo = styled.img`
 	width: 30vw;
 	height: 39.75h;
 `;
-// needs two variations depending on the theme -> 2 versions of logo!
 
 export const WelcomePageContainer = styled.div`
 	display: flex;

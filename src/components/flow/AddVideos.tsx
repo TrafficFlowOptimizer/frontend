@@ -15,7 +15,7 @@ export function AddVideos() {
 					footage of traffic
 				</h3>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossing-choice" relative="path">
+					<BaseButtonLink to="../crossroad-choice" relative="path">
 						Go back to crossing choice panel
 					</BaseButtonLink>
 				</NeutralNegativeButton>

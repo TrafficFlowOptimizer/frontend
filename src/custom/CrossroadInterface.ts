@@ -1,17 +1,18 @@
-export enum CrossingType {
+export enum CrossroadType {
 	PRIVATE = "private",
 	PUBLIC = "public",
 }
 
-export type Crossing = {
-	_id: string;
+export type Crossroad = {
+	id: string;
 	name: string;
 	location: string;
 	creatorId: string;
-	type: CrossingType;
+	type: CrossroadType;
 	roadIds: string[];
 	collisionsIds: string[];
-	trafficLightsIds: string[];
+	trafficLightIds: string[];
+	connectionIds: string[];
 };
 
 export type OptimizationResults = {

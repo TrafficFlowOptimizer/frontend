@@ -4,9 +4,9 @@ import { PageNotFoundLanding } from "./components/additional/PageNotFoundLanding
 import { Welcome } from "./components/flow/Welcome";
 import { Register } from "./components/flow/Register";
 import { LogIn } from "./components/flow/LogIn";
-import { CrossingChoicePanel } from "./components/flow/CrossingChoicePanel";
-import { ListOfCrossings } from "./components/flow/ListOfCrossings";
-import { CreateNewCrossing } from "./components/flow/CreateNewCrossing";
+import { CrossroadChoicePanel } from "./components/flow/CrossroadChoicePanel";
+import { ListOfCrossroads } from "./components/flow/ListOfCrossroads";
+import { CreateNewCrossroad } from "./components/flow/CreateNewCrossroad";
 import { AddVideos } from "./components/flow/AddVideos";
 import { VideosList } from "./components/flow/VideosList";
 import { ResultsChoicePanel } from "./components/flow/ResultsChoicePanel";
@@ -32,16 +32,16 @@ function App() {
 								<Route path="register" element={<Register />} />
 								<Route path="login" element={<LogIn />} />
 								<Route
-									path="crossing-choice"
-									element={<CrossingChoicePanel />}
+									path="crossroad-choice"
+									element={<CrossroadChoicePanel />}
 								/>
 								<Route
-									path="crossing-choice/list"
-									element={<ListOfCrossings />}
+									path="crossroad-choice/list"
+									element={<ListOfCrossroads />}
 								/>
 								<Route
-									path="crossing-choice/new"
-									element={<CreateNewCrossing />}
+									path="crossroad-choice/new"
+									element={<CreateNewCrossroad />}
 								/>
 								<Route path="add-videos" element={<AddVideos />} />
 								<Route path="list-videos" element={<VideosList />} />

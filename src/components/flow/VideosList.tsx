@@ -23,8 +23,8 @@ export function VideosList() {
 					</BaseButtonLink>
 				</NeutralPositiveButton>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossing-choice/list" relative="path">
-						Go back to crossings list
+					<BaseButtonLink to="../crossroad-choice/list" relative="path">
+						Go back to crossroads list
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 				<LogOut />

@@ -12,18 +12,18 @@ import {
 } from "../../styles/NumericResultsStyles";
 import { Navbar } from "../additional/Navbar";
 import { useLocation } from "react-router-dom";
-import { OptimizationResults } from "../../custom/CrossingInterface";
+import { OptimizationResults } from "../../custom/CrossroadInterface";
 
 export function ResultsAsNumeric() {
 	const location = useLocation();
 	const results: OptimizationResults = location.state.results ?? true;
 	const parsedResults = results.results;
-	const crossingName: string = location.state.crossingName ?? true;
+	const crossroadName: string = location.state.crossroadName ?? true;
 	return (
 		<>
 			<Navbar />
 			<div>
-				<h3>Results as numeric for: {crossingName}</h3>
+				<h3>Results as numeric for: {crossroadName}</h3>
 				<NumericResultsUl>
 					{parsedResults.length > 0 ? (
 						parsedResults.map((result) => (
@@ -58,8 +58,8 @@ export function ResultsAsNumeric() {
 					)}
 				</NumericResultsUl>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossing-choice" relative="path">
-						Go back to crossing choice panel
+					<BaseButtonLink to="../crossroad-choice" relative="path">
+						Go back to crossroad choice panel
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 			</div>

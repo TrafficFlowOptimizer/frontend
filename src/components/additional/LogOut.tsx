@@ -5,7 +5,7 @@ import { BaseButtonLink } from "../../styles/MainTheme";
 export function LogOut() {
 	return (
 		<NegativeButton>
-			<BaseButtonLink to="/">LogOut</BaseButtonLink>
+			<BaseButtonLink to="/">Log out</BaseButtonLink>
 		</NegativeButton>
 	);
 }

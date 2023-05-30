@@ -8,12 +8,9 @@ export const NumericResultsUl = styled.ul`
 	flex-wrap: no-wrap;
 	gap: 3vh;
 	justify-content: flex-start;
-	align-items: flex-start;
-	
-	overflow-y: scroll;
-	
+	align-items: flex-start;	
 	width: 90%
-	height: 80%;
+	height: 80vh;
 `;
 
 export const HeaderInfo = styled.p`
@@ -61,6 +58,7 @@ export const StyledSequence = styled.li<SequenceProps>`
 	flex-direction: row;
 	justify-content: center;
 	align-items: center;
+	cursor: default;
 `;
 
 export const SequenceIndex = styled.p`

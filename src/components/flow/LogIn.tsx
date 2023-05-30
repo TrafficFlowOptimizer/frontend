@@ -1,18 +1,19 @@
 import React, { useContext, useState } from "react";
 import { PositiveButton } from "../../styles/PositiveButton";
-import { BaseForm, BaseInput } from "../../styles/MainTheme";
+import { RedirectionLink, BaseForm, BaseInput } from "../../styles/MainTheme";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
 import axios from "axios";
-import logo from "../../assets/TFO_4.png";
+import logo from "../../assets/TFO_4_but_better.png";
+import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import {
 	SigningContainer,
 	SigningLi,
 	SigningLogo,
 	SigningUl,
 	InvalidInputMessage,
+	PlaceholderSpan,
 } from "../../styles/SigningStyles";
 import { ThemeContext } from "../../custom/ThemeContext";
-import dm_logo from "../../assets/TFO_4_dark_mode.png";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
 
@@ -35,16 +36,19 @@ export function LogIn() {
 	);
 	const [badLoginMessage, setBadLoginMessage] = useState("");
 
-	const onEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
+	const onUsernameChange = (e: React.FormEvent<HTMLInputElement>) => {
 		const specialCharactersReg = /[-’/`~!#*$_%+=.,^&(){}[\]|;:”<>?\\]/g;
 		const maximalUsernameLength = 64;
 
 		const text = e.currentTarget.value;
 
 		if (!specialCharactersReg.test(text)) {
-			if (text.length <= maximalUsernameLength) {
+			if (text.length <= maximalUsernameLength && text.length > 0) {
 				setIsUsernameValid(true);
 				setUsernameMessage("");
+			} else if (text.length === 0) {
+				setIsUsernameValid(false);
+				setUsernameMessage("This field cannot be empty");
 			} else {
 				setIsUsernameValid(false);
 				setUsernameMessage("The input is too long");
@@ -57,9 +61,15 @@ export function LogIn() {
 
 	const onPasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
 		const text = e.currentTarget.value;
-		if (text.length <= 8) {
+		const minimalPasswordLength = 8;
+		const maximalPasswordLength = 64;
+
+		if (text.length < minimalPasswordLength) {
 			setIsPasswordLongEnough(false);
 			setPasswordMessage("The password is at least 8 characters long!");
+		} else if (text.length > maximalPasswordLength) {
+			setIsPasswordLongEnough(false);
+			setPasswordMessage("The password is at most 64 characters long!");
 		} else {
 			setIsPasswordLongEnough(true);
 			setPasswordMessage("");
@@ -97,7 +107,7 @@ export function LogIn() {
 					username: loginData.nickname,
 					email: "jan.kowal@gmail.com",
 				});
-				navigate("/crossing-choice");
+				navigate("/crossroad-choice");
 			})
 			.catch((error) => {
 				setBadLoginMessage("Invalid email/username or password!");
@@ -119,12 +129,16 @@ export function LogIn() {
 							name="nickname"
 							type="text"
 							placeholder="username"
-							onChange={onEmailChange}
+							onChange={onUsernameChange}
 						/>
 					</SigningLi>
-					{!isUsernameValid && (
+					{!isUsernameValid ? (
 						<SigningLi>
 							<InvalidInputMessage>{usernameMessage}</InvalidInputMessage>
+						</SigningLi>
+					) : (
+						<SigningLi>
+							<PlaceholderSpan></PlaceholderSpan>
 						</SigningLi>
 					)}
 					<SigningLi>
@@ -135,25 +149,31 @@ export function LogIn() {
 							onChange={onPasswordChange}
 						/>
 					</SigningLi>
-					{!isPasswordLongEnough && (
+					{!isPasswordLongEnough ? (
 						<SigningLi>
 							<InvalidInputMessage>{passwordMessage}</InvalidInputMessage>
 						</SigningLi>
+					) : (
+						<SigningLi>
+							<PlaceholderSpan></PlaceholderSpan>
+						</SigningLi>
 					)}
+					<SigningLi>
+						<RedirectionLink to="/register" relative="path">
+							Don`t have an account? Register now.
+						</RedirectionLink>
+					</SigningLi>
 				</SigningUl>
 				<PositiveButton
 					type="submit"
 					disabled={!isUsernameValid && !isPasswordLongEnough}
 				>
-					{/*<BaseButtonLink*/}
-					{/*	to="/crossing-choice"*/}
-					{/*	state={{ ifNewUser: false }}*/}
-					{/*>*/}
 					Log In!
-					{/*</BaseButtonLink>*/}
 				</PositiveButton>
-				{badLoginMessage.length > 0 && (
+				{badLoginMessage.length > 0 ? (
 					<InvalidInputMessage>{badLoginMessage}</InvalidInputMessage>
+				) : (
+					<PlaceholderSpan></PlaceholderSpan>
 				)}
 			</BaseForm>
 			<ToggleSwitch />

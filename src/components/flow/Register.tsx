@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { ToggleSwitch } from "../additional/ToggleSwitch";
-import logo from "../../assets/TFO_4.png";
+import logo from "../../assets/TFO_4_but_better.png";
+import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import {
 	SigningContainer,
 	SigningLi,
@@ -8,9 +9,13 @@ import {
 	SigningUl,
 } from "../../styles/SigningStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import {
+	BaseButtonLink,
+	BaseInput,
+	BaseForm,
+	RedirectionLink,
+} from "../../styles/MainTheme";
 import { ThemeContext } from "../../custom/ThemeContext";
-import dm_logo from "../../assets/TFO_4_dark_mode.png";
 
 export function Register() {
 	//might be good to create pop up about the successful creation of the account
@@ -22,28 +27,33 @@ export function Register() {
 				alt="Traffic Flow Optimizer Logo"
 			/>
 			<h3>Sign up to be able to use our app!</h3>
-			<form>
+			<BaseForm>
 				<SigningUl>
 					<SigningLi>
 						<label>email:</label>
-						<input type="email" placeholder="email" />
+						<BaseInput type="email" placeholder="email" />
 					</SigningLi>
 					<SigningLi>
 						<label>username:</label>
-						<input type="text" placeholder="username" />
+						<BaseInput type="text" placeholder="username" />
 					</SigningLi>
 					<SigningLi>
 						<label>password:</label>
-						<input type="password" />
+						<BaseInput type="password" />
 					</SigningLi>
-					<li>
+					<SigningLi>
 						<label>repeat password:</label>
-						<input type="password" />
-					</li>
+						<BaseInput type="password" />
+					</SigningLi>
+					<SigningLi>
+						<RedirectionLink to="/login" relative="path">
+							Already have an account? Log in.
+						</RedirectionLink>
+					</SigningLi>
 				</SigningUl>
-			</form>
+			</BaseForm>
 			<PositiveButton>
-				<BaseButtonLink to="/crossing-choice" state={{ ifNewUser: true }}>
+				<BaseButtonLink to="/crossroad-choice" state={{ ifNewUser: true }}>
 					Sign Up!
 				</BaseButtonLink>
 			</PositiveButton>

@@ -10,8 +10,8 @@ export function ResultsAsSimulation() {
 			<div>
 				<h3>Results as simulation</h3>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossing-choice" relative="path">
-						Go back to crossing choice panel
+					<BaseButtonLink to="../crossroad-choice" relative="path">
+						Go back to crossroad choice panel
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 			</div>

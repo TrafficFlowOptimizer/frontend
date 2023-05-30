@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 export enum ButtonColors {
 	RED = "#db2b39",
 	BLUE = "#6d72c3",
-	ORANGE = "#f9a620",
+	ORANGE = "#f78b00",
 	GREEN = "#20bf55"
 }
 
@@ -29,7 +29,7 @@ export const BaseH1 = styled.h1`
 `;
 
 export const BaseButton = styled.button`
-	font-size: 1vw;
+	font-size: 16px;
 	color: ${LightTheme.primary};
 	width: fit-content;
 	height: fit-content;
@@ -38,7 +38,7 @@ export const BaseButton = styled.button`
 	border: none;
 	border-radius: 12px;
 	transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
-	&:hover {
+	&:hover:enabled {
 		cursor: pointer;
 		z-index: 10;
 		transform: scale(1.1);
@@ -61,8 +61,14 @@ export const BaseForm = styled.form`
 
 export const BaseButtonLink = styled(Link)`
 	text-decoration: none;
-	font-size: 1.25em;
+	font-size: 16px;
 	color: ${LightTheme.primary};
+`;
+
+export const RedirectionLink = styled(Link)`
+	text-decoration: underline;
+	font-size: 16px;
+	color: ${(props) => props.theme.text};
 `;
 
 export const BaseDiv = styled.div`
@@ -73,7 +79,6 @@ export const BaseDiv = styled.div`
 	height: 100vh;
 	padding-left: 15px;
 	padding-right: 15px;
-	overflow-y: scroll;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
@@ -82,8 +87,8 @@ export const BaseDiv = styled.div`
 
 
 export const BaseInput = styled.input`
-	padding: 2px;
+	padding: 5px;
 	border-radius: 5px;
-	border: none;
-	background-color: ${(props) => props.theme.secondary};
+	border: 1px solid ${(props) => props.theme.text};
+	background-color: ${(props) => props.theme.primary};
 `;

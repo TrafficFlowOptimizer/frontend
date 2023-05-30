@@ -37,4 +37,10 @@ export const SigningLogo = styled.img`
 export const InvalidInputMessage = styled.p`
 	color: ${ButtonColors.RED};
 	font-weight: bold;
+	font-size: 10px;
+`;
+
+export const PlaceholderSpan = styled.span`
+	width: 241px;
+	height: 32.5px;
 `;
