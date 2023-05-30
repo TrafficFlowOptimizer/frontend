@@ -12,7 +12,7 @@ import {
 	StyledItemTr,
 	StyledItemTd,
 } from "../../styles/CrossroadListStyles";
-import { Crossroad, OptimizationResults } from "../../custom/CrossroadInterface";
+import { Crossroad } from "../../custom/CrossroadInterface";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { PopUp } from "../additional/Modal/PopUp";
@@ -56,8 +56,6 @@ export function ListOfCrossroads() {
 	const [listOfCrossroads, setListOfCrossroads] = useState<Crossroad[]>([]);
 	const [chosenCrossroadId, setChosenCrossroadId] = useState<string | null>(null);
 	const [showLoadingModal, setShowLoadingModal] = useState(false);
-
-	const navigate = useNavigate();
 	//normally list of crossings would be obtained by rest, but for now we will have it hardcode;
 	useEffect(() => {
 		console.log("get crossings useEffect");
@@ -80,26 +78,6 @@ export function ListOfCrossroads() {
 
 	const handleOptimizationOrder = () => {
 		setShowLoadingModal(true);
-		const optimizationTime = 30;
-		axios
-			.get<OptimizationResults>(
-				"/crossroad/" +
-					chosenCrossroadId +
-					"/optimization/" +
-					String(optimizationTime),
-			)
-			.then((response) => {
-				const optimizationData: OptimizationResults = response.data;
-				navigate("../../results-choice", {
-					state: {
-						results: optimizationData,
-						crossroadName: getChosenCrossroadName(),
-					},
-				});
-			})
-			.catch((error) => {
-				console.error(error);
-			});
 		// const mockedOptimizationData: OptimizationResults = {
 		// 	results: [
 		// 		{
@@ -149,10 +127,12 @@ export function ListOfCrossroads() {
 
 	return (
 		<>
-			{showLoadingModal && (
+			{showLoadingModal && chosenCrossroadId !== null && (
 				<>
 					<PopUp
-						textToDisplay={`Optimizing ${getChosenCrossroadName()} crossing. This might take a while...\nSit back and relax`}
+						textToDisplay={`Optimizing ${getChosenCrossroadName()} crossroad.\nSit back and relax`}
+						crossroadName={getChosenCrossroadName()}
+						crossroadId={chosenCrossroadId}
 					/>
 					<Backdrop />
 				</>

@@ -76,7 +76,7 @@ export const BaseDiv = styled.div`
 	top: 0px;
 	left: 0px;
 	width: 100vw;
-	height: 100vh;
+	height: fit-content;
 	padding-left: 15px;
 	padding-right: 15px;
 	background-color: ${(props) => props.theme.primary};
@@ -91,4 +91,5 @@ export const BaseInput = styled.input`
 	border-radius: 5px;
 	border: 1px solid ${(props) => props.theme.text};
 	background-color: ${(props) => props.theme.primary};
+	color: ${(props) => props.theme.text};
 `;
