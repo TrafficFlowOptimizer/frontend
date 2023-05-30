@@ -8,6 +8,7 @@ import { faCloud } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { OptimizationResults } from "../../../custom/CrossroadInterface";
 import { useNavigate } from "react-router-dom";
+import { Memes } from "../Memes";
 
 export type PopUpProps = {
 	textToDisplay: string;
@@ -61,6 +62,7 @@ export function PopUp(props: PopUpProps) {
 						}}
 					/>
 					<StyledMessageField>{props.textToDisplay}</StyledMessageField>
+					<Memes />
 				</div>
 			) : (
 				<div>
@@ -82,7 +84,8 @@ export const StyledModal = styled.div`
 	background-color: ${(props) => props.theme.primary};
 	padding: 1rem;
 	text-align: center;
-	width: 30rem;
+	width: fit-content;
+	height: fit-content;
 	z-index: 10;
 	position: fixed;
 	top: 20vh;
