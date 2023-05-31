@@ -9,6 +9,7 @@ import axios from "axios";
 import { OptimizationResults } from "../../../custom/CrossroadInterface";
 import { useNavigate } from "react-router-dom";
 import { Memes } from "../Memes";
+import { Dropdown } from "../Dropdown";
 
 export type PopUpProps = {
 	textToDisplay: string;
@@ -21,16 +22,16 @@ export function PopUp(props: PopUpProps) {
 	const { theme } = useContext(ThemeContext);
 	const navigate = useNavigate();
 	const [optimizationDeployed, setOptimizationDeployed] = useState(false);
+	const [chosenTime, setChosenTime] = useState<number | null>(null);
 
 	const startOptimization = () => {
 		setOptimizationDeployed(true);
-		const optimizationTime = 30;
 		axios
 			.get<OptimizationResults>(
 				"/crossroad/" +
 					props.crossroadId +
 					"/optimization/" +
-					String(optimizationTime),
+					String(chosenTime),
 			)
 			.then((response) => {
 				const optimizationData: OptimizationResults = response.data;
@@ -44,6 +45,10 @@ export function PopUp(props: PopUpProps) {
 			.catch((error) => {
 				console.error(error);
 			});
+	};
+
+	const onChange = (newValue: number | null) => {
+		setChosenTime(newValue);
 	};
 
 	return (
@@ -67,9 +72,18 @@ export function PopUp(props: PopUpProps) {
 			) : (
 				<div>
 					<StyledMessageField>
-						Choose optimization time for {props.crossroadName}
+						Crossroad: {props.crossroadName}
 					</StyledMessageField>
-					<PositiveButton onClick={startOptimization}>
+					<Dropdown
+						placeholder="Select optimization time"
+						options={[10, 20, 30, 60, 120, -1]}
+						isSearchable={false}
+						onChange={onChange}
+					/>
+					<PositiveButton
+						onClick={startOptimization}
+						disabled={chosenTime === null}
+					>
 						Start optimization
 					</PositiveButton>
 				</div>
@@ -84,12 +98,18 @@ export const StyledModal = styled.div`
 	background-color: ${(props) => props.theme.primary};
 	padding: 1rem;
 	text-align: center;
-	width: fit-content;
-	height: fit-content;
+	width: 30vw;
+	height: 55vh;
 	z-index: 10;
 	position: fixed;
 	top: 20vh;
 	left: calc(50% - 15rem);
+
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	justify-content: flex-start;
+	align-items: center;
 `;
 
 const StyledMessageField = styled.p`
