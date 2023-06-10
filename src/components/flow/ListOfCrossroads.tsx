@@ -21,44 +21,12 @@ import { Backdrop } from "../additional/Modal/Backdrop";
 export type tableCrossroadState = "chosen" | "not chosen";
 
 export function ListOfCrossroads() {
-	// const hardcodedCrossing: Crossing = {
-	// 	_id: "crs2137",
-	// 	name: "Małe skrzyżowanie na Czyżynach",
-	// 	location: "al. Jana Pawła II",
-	// 	creatorId: "1aaa",
-	// 	type: CrossingType.PRIVATE,
-	// 	roadIds: [],
-	// 	collisionsIds: [],
-	// 	trafficLightsIds: [],
-	// };
-	//
-	// const hardcodedCrossing2: Crossing = {
-	// 	_id: "crs4200",
-	// 	name: "Małe skrzyżowanie na Bałutach",
-	// 	location: "al. Pokoju",
-	// 	creatorId: "1aaa",
-	// 	type: CrossingType.PRIVATE,
-	// 	roadIds: [],
-	// 	collisionsIds: [],
-	// 	trafficLightsIds: [],
-	// };
-	//
-	// const hardcodedCrossing3: Crossing = {
-	// 	_id: "crs69669",
-	// 	name: "Małe skrzyżowanie na Mokotowie",
-	// 	location: "al. Jerozolimskie",
-	// 	creatorId: "1aaa",
-	// 	type: CrossingType.PRIVATE,
-	// 	roadIds: [],
-	// 	collisionsIds: [],
-	// 	trafficLightsIds: [],
-	// };
+	const navigate = useNavigate();
 	const [listOfCrossroads, setListOfCrossroads] = useState<Crossroad[]>([]);
 	const [chosenCrossroadId, setChosenCrossroadId] = useState<string | null>(null);
 	const [showLoadingModal, setShowLoadingModal] = useState(false);
-	//normally list of crossings would be obtained by rest, but for now we will have it hardcode;
 	useEffect(() => {
-		console.log("get crossings useEffect");
+		// console.log("get crossings useEffect");
 		axios
 			.get<Crossroad[]>("/crossroad")
 			.then((response) => {
@@ -123,6 +91,15 @@ export function ListOfCrossroads() {
 		} else {
 			setChosenCrossroadId(crossroad_id);
 		}
+	};
+
+	const handleAddVideosButton = () => {
+		navigate("../../add-videos", {
+			state: {
+				crossroadId: chosenCrossroadId,
+				crossroadName: getChosenCrossroadName(),
+			},
+		});
 	};
 
 	return (
@@ -197,10 +174,11 @@ export function ListOfCrossroads() {
 					See video footage for chosen crossing
 				</BaseButtonLink>
 			</NeutralPositiveButton>
-			<PositiveButton>
-				<BaseButtonLink to="../../add-videos" relative="path">
-					Add new video for chosen crossing
-				</BaseButtonLink>
+			<PositiveButton
+				disabled={chosenCrossroadId === null}
+				onClick={handleAddVideosButton}
+			>
+				Add new video for chosen crossing
 			</PositiveButton>
 			<PositiveButton>
 				<BaseButtonLink to="../new" relative="path">
