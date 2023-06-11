@@ -90,6 +90,7 @@ export function FileUploader(props: FileUploaderProps) {
 				.then((response) => {
 					const result: VideoResponseMessage = response.data;
 					setUploadMessage(result.message);
+					setVideoToUpload(null);
 				})
 				.catch((error) => {
 					console.error(error);
