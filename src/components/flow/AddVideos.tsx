@@ -19,7 +19,7 @@ export function AddVideos() {
 			<Navbar />
 			<div>
 				<h3>Add videos for crossroad: {crossroadName}</h3>
-				<FileUploader />
+				<FileUploader crossroadId={crossroadId} />
 				<NeutralNegativeButton>
 					<BaseButtonLink to="../crossroad-choice" relative="path">
 						Go back to crossing choice panel

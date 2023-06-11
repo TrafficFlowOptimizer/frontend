@@ -1,6 +1,16 @@
 import styled from "styled-components";
 import { ButtonColors } from "./MainTheme";
 
+export const MainUploaderDiv = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: center;
+	gap: 3vh;
+	margin: 10px;
+`;
+
 export const UploaderForm = styled.form`
   height: 80%;
   width: 50%;
@@ -8,8 +18,9 @@ export const UploaderForm = styled.form`
   text-align: center;
 `;
 
-export const FormGroupFiles = styled.div`
-	
+export const FormGroupFiles = styled(MainUploaderDiv)`
+	padding: 10px;
+	margin: 0;
 `;
 
 export const DragFileElement = styled.div`
@@ -29,6 +40,7 @@ export const UploadButton = styled.button`
   font-size: 1rem;
   border: none;
   background-color: transparent;
+  color: ${(props) => props.theme.text};
   
   &:hover {
   	text-decoration-line: underline;

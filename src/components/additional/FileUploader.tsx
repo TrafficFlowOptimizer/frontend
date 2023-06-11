@@ -7,11 +7,30 @@ import {
 	UploaderLabel,
 	UploadButton,
 	DragFileElement,
+	MainUploaderDiv,
 } from "../../styles/FileUploaderStyles";
 import { Dropdown } from "./Dropdown";
+import axios from "axios";
+import { useUserContext } from "../../custom/UserContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
+import { DarkTheme, LightTheme } from "../../styles/MainTheme";
+import { useThemeContext } from "../../custom/ThemeContext";
 
-export function FileUploader() {
+export type FileUploaderProps = {
+	crossroadId: string;
+};
+
+export type VideoResponseMessage = {
+	message: string;
+};
+
+export function FileUploader(props: FileUploaderProps) {
+	const { theme } = useThemeContext();
+	const { loggedUser } = useUserContext();
 	const [chosenHour, setChosenHour] = useState<string | number | null>(null);
+	const [videoToUpload, setVideoToUpload] = useState<File | null>(null);
+	const [uploadMessage, setUploadMessage] = useState("");
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const onChange = (newValue: number | string | null) => {
@@ -48,6 +67,7 @@ export function FileUploader() {
 
 	const handleFiles = (files: FileList) => {
 		console.log(files);
+		setVideoToUpload(files[0]);
 	};
 
 	const onUploadButtonClick = () => {
@@ -58,8 +78,73 @@ export function FileUploader() {
 		}
 	};
 
+	const sendVideos = () => {
+		if (videoToUpload !== null) {
+			const uploadVideoData = new FormData();
+			uploadVideoData.append("file", videoToUpload);
+			uploadVideoData.append("crossroadId", props.crossroadId);
+			axios
+				.post("/videos/upload", uploadVideoData, {
+					headers: { "Content-Type": "multipart/form-data" },
+				})
+				.then((response) => {
+					const result: VideoResponseMessage = response.data;
+					setUploadMessage(result.message);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		} else {
+			alert("No videos to upload!");
+		}
+	};
+
 	return (
-		<div>
+		<MainUploaderDiv>
+			<UploaderForm onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
+				<FormFileInput
+					ref={inputRef}
+					id="files"
+					type="file"
+					accept="video/*"
+					multiple={false}
+					onChange={handleChange}
+				/>
+				<UploaderLabel htmlFor="files" dragActive={dragActive}>
+					<FormGroupFiles>
+						<FontAwesomeIcon
+							icon={faFileUpload}
+							size="xl"
+							style={{
+								color:
+									theme === "dark"
+										? LightTheme.primary
+										: DarkTheme.primary,
+							}}
+						/>
+						<p>Drag and drop your file here or</p>
+						{videoToUpload !== null && <p>Ready: {videoToUpload.name}</p>}
+						<UploadButton onClick={onUploadButtonClick}>
+							Upload a file
+						</UploadButton>
+					</FormGroupFiles>
+				</UploaderLabel>
+				{dragActive && (
+					<DragFileElement
+						onDragEnter={handleDrag}
+						onDragLeave={handleDrag}
+						onDragOver={handleDrag}
+						onDrop={handleDrop}
+					></DragFileElement>
+				)}
+			</UploaderForm>
+			<PositiveButton
+				disabled={chosenHour === null || videoToUpload === null}
+				onClick={sendVideos}
+			>
+				Send video to server
+			</PositiveButton>
+			{uploadMessage != "" && <p>{uploadMessage}</p>}
 			<Dropdown
 				placeholder="Select time of the video"
 				options={[
@@ -91,35 +176,6 @@ export function FileUploader() {
 				isSearchable={false}
 				onChange={onChange}
 			/>
-			<UploaderForm onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
-				<FormFileInput
-					ref={inputRef}
-					id="files"
-					type="file"
-					accept="video/*"
-					multiple={true}
-					onChange={handleChange}
-				/>
-				<UploaderLabel htmlFor="files" dragActive={dragActive}>
-					<FormGroupFiles>
-						<p>Drag and drop your file here or</p>
-						<UploadButton onClick={onUploadButtonClick}>
-							Upload a file
-						</UploadButton>
-					</FormGroupFiles>
-				</UploaderLabel>
-				{dragActive && (
-					<DragFileElement
-						onDragEnter={handleDrag}
-						onDragLeave={handleDrag}
-						onDragOver={handleDrag}
-						onDrop={handleDrop}
-					></DragFileElement>
-				)}
-			</UploaderForm>
-			<PositiveButton disabled={chosenHour === null}>
-				Send files to server
-			</PositiveButton>
-		</div>
+		</MainUploaderDiv>
 	);
 }
