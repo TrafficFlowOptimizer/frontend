@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import { BaseButton } from "./MainTheme";
+import { BaseButton, ButtonColors } from "./MainTheme";
 
 export const NegativeButton = styled(BaseButton)`
-	background-color: #db2b39;
+	background-color: ${ButtonColors.RED};
 `;

@@ -3,22 +3,22 @@ import { BaseButtonLink } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { Navbar } from "../additional/Navbar";
+import { useLocation } from "react-router-dom";
 
 export function ResultsChoicePanel() {
+	const location = useLocation();
+	const results = location.state ?? true;
 	return (
 		<>
 			<Navbar />
 			<div>
 				<h3>Choose your course of action:</h3>
-				<form>
-					{/*this shit doesn't work TODO: figure out why*/}
-					<label>See current results</label>
-					<input type="radio"></input>
-					<label>Optimize with new data</label>
-					<input type="radio"></input>
-				</form>
 				<NeutralPositiveButton>
-					<BaseButtonLink to="../results-numeric" relative="path">
+					<BaseButtonLink
+						to="../results-numeric"
+						relative="path"
+						state={results}
+					>
 						See results as numeric data
 					</BaseButtonLink>
 				</NeutralPositiveButton>
@@ -28,8 +28,8 @@ export function ResultsChoicePanel() {
 					</BaseButtonLink>
 				</NeutralPositiveButton>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossing-choice" relative="path">
-						Go back to crossing choice panel
+					<BaseButtonLink to="../crossroad-choice" relative="path">
+						Go back to crossroad choice panel
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 			</div>
