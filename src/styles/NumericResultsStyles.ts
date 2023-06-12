@@ -42,11 +42,22 @@ export const NumericResultsPanel = styled.div`
 	margin: 0px 15px;
 `;
 
-export const LightResultsPanel = styled(NumericResultsPanel)`
+export const LightResultsPanel = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 10px;
 	margin: 5px 15px;
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
 	padding: 5px;
+	width: 1540px;
+`;
+
+export const SingleInfoPanel = styled(NumericResultsPanel)`
+	margin: 0px;
 `;
 
 export type SequenceProps = {
@@ -76,7 +87,7 @@ export const SequenceIndex = styled.p`
 
 export const SequenceContainer = styled(NumericResultsUl)`
 	gap: 5px;
-	width: 65vw;
+	width: 80vw;
 	flex-direction: row;
-	overflow-y: scroll;
+	overflow: visible;
 `;

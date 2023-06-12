@@ -10,6 +10,7 @@ import {
 	SequenceContainer,
 	SequenceIndex,
 	LightResultsPanel,
+	SingleInfoPanel,
 } from "../../styles/NumericResultsStyles";
 import { Navbar } from "../additional/Navbar";
 import { useLocation } from "react-router-dom";
@@ -65,23 +66,29 @@ export function ResultsAsNumeric() {
 								{result.lights.length > 0 ? (
 									result.lights.map((light) => (
 										<LightResultsPanel key={light.lightId}>
-											<HeaderInfo>Light:</HeaderInfo>
-											<p>#{light.lightId}</p>
-											<HeaderInfo>Direction:</HeaderInfo>
-											<p>{light.direction}</p>
-											<HeaderInfo>Light sequence:</HeaderInfo>
-											<SequenceContainer>
-												{light.sequence.map((elem, index) => (
-													<StyledSequence
-														key={index}
-														isGreen={elem === 1}
-													>
-														<SequenceIndex>
-															{index + 1}
-														</SequenceIndex>
-													</StyledSequence>
-												))}
-											</SequenceContainer>
+											<SingleInfoPanel>
+												<HeaderInfo>Light:</HeaderInfo>
+												<p>#{light.lightId}</p>
+												<HeaderInfo>Direction:</HeaderInfo>
+												<p>{light.direction}</p>
+											</SingleInfoPanel>
+											<SingleInfoPanel>
+												<HeaderInfo>Light sequence:</HeaderInfo>
+												<SequenceContainer>
+													{light.sequence.map(
+														(elem, index) => (
+															<StyledSequence
+																key={index}
+																isGreen={elem === 1}
+															>
+																<SequenceIndex>
+																	{index + 1}
+																</SequenceIndex>
+															</StyledSequence>
+														),
+													)}
+												</SequenceContainer>
+											</SingleInfoPanel>
 										</LightResultsPanel>
 									))
 								) : (
