@@ -76,7 +76,7 @@ export function PopUp(props: PopUpProps) {
 					</StyledMessageField>
 					<Dropdown
 						placeholder="Select optimization time"
-						options={[10, 20, 30, 60, 120, -1]}
+						options={[1, 10, 20, 30, 60, 120, -1]}
 						isSearchable={false}
 						onChange={onChange}
 					/>
