@@ -28,6 +28,12 @@ export const BaseH1 = styled.h1`
 	font-size: 3em;
 `;
 
+export const CustomH1 = styled.h1`
+	font-weight: bold;
+	font-size: xx-large;;
+	margin: 1vh 1vw;
+`;
+
 export const BaseButton = styled.button`
 	font-size: 16px;
 	color: ${LightTheme.primary};
@@ -61,7 +67,7 @@ export const BaseForm = styled.form`
 
 export const BaseButtonLink = styled(Link)`
 	text-decoration: none;
-	font-size: 16px;
+	font-size: min(16px, 1.5vw);
 	color: ${LightTheme.primary};
 `;
 
@@ -77,8 +83,8 @@ export const BaseDiv = styled.div`
 	left: 0px;
 	width: 100%;
 	height: 100%;
-	padding-left: 15px;
-	padding-right: 15px;
+	//padding-left: 15px;
+	//padding-right: 15px;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
