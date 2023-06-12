@@ -6,15 +6,31 @@ export const NumericResultsUl = styled.ul`
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
-	gap: 3vh;
+	gap: 2vh;
 	justify-content: flex-start;
 	align-items: flex-start;	
 	width: 90%
 	height: 80vh;
+	padding: 1vh 1vw;
 `;
 
-export const HeaderInfo = styled.p`
+export const HeaderInfo1 = styled.p`
 	font-weight: bold;
+	margin: 15px 5px 15px 0px;
+`;
+
+export const CustomParagraph1 = styled.p`
+	font-weight: normal;
+	margin: 15px 15px 15px 0px;
+`;
+export const HeaderInfo2 = styled.p`
+	font-weight: bold;
+	margin: 5px 5px 15px 5px;
+`;
+
+export const CustomParagraph2 = styled.p`
+	font-weight: normal;
+	margin: 5px 15px 15px 0px;
 `;
 
 export const NumericResultsLi = styled.li`
@@ -23,9 +39,9 @@ export const NumericResultsLi = styled.li`
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	align-items: flex-start;
-	gap: 0.5vh;
 	
-	width: 1580px;
+	//padding: 1vh 1dvw;
+	width: calc(100% - 0.5vw);
 	background-color: ${(props) => props.theme.secondary};
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
@@ -37,7 +53,6 @@ export const NumericResultsPanel = styled.div`
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	align-items: center;
-	gap: 10px;
 	
 	margin: 0px 15px;
 `;
@@ -48,12 +63,11 @@ export const LightResultsPanel = styled.div`
 	flex-wrap: no-wrap;
 	justify-content: center;
 	align-items: flex-start;
-	gap: 10px;
-	margin: 5px 15px;
+	margin: 5px 15px 10px 15px;
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
-	padding: 5px;
-	width: 1540px;
+	padding: 10px;
+	width: calc(100% - 55px);
 `;
 
 export const SingleInfoPanel = styled(NumericResultsPanel)`
@@ -71,7 +85,6 @@ export const StyledSequence = styled.li<SequenceProps>`
 	border-radius: 50%;
 	flex-shrink: 0;
 	position: relative;
-	left: -30px;
 	
 	display: flex;
 	flex-direction: row;
@@ -87,7 +100,9 @@ export const SequenceIndex = styled.p`
 
 export const SequenceContainer = styled(NumericResultsUl)`
 	gap: 5px;
-	width: 80vw;
+	margin: 0px 0px 5px 5px;
+	width: calc(100dvw - 120px);
 	flex-direction: row;
-	overflow: visible;
+	overflow-x: auto;
+	padding: 0px 0px 5px 5px;
 `;

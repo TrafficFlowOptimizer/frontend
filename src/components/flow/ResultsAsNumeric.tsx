@@ -1,9 +1,12 @@
 import React from "react";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink, CustomH1 } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	NumericResultsUl,
-	HeaderInfo,
+	HeaderInfo1,
+	CustomParagraph1,
+	HeaderInfo2,
+	CustomParagraph2,
 	NumericResultsLi,
 	NumericResultsPanel,
 	StyledSequence,
@@ -25,7 +28,7 @@ export function ResultsAsNumeric() {
 		<>
 			<Navbar />
 			<div>
-				<h3>Results as numeric for: {crossroadName}</h3>
+				<CustomH1>Results as numeric for: {crossroadName}</CustomH1>
 				<NumericResultsUl>
 					{parsedResults.length > 0 ? (
 						parsedResults.map((result, index) => (
@@ -56,24 +59,37 @@ export function ResultsAsNumeric() {
 							// </NumericResultsLi>
 							<NumericResultsLi key={index}>
 								<NumericResultsPanel>
-									<HeaderInfo>Connection:</HeaderInfo>
-									<p>#{index}</p>
-									<HeaderInfo>
+									<HeaderInfo1>Connection:</HeaderInfo1>
+									<CustomParagraph1>#{index}</CustomParagraph1>
+									<HeaderInfo1>
 										Cars passed to arrived ratio:
-									</HeaderInfo>
-									<p>{result.flow}</p>
+									</HeaderInfo1>
+									<CustomParagraph1>{result.flow}</CustomParagraph1>
+									<HeaderInfo1>Previous ratio:</HeaderInfo1>
+									<CustomParagraph1>{"TBD"}</CustomParagraph1>
 								</NumericResultsPanel>
 								{result.lights.length > 0 ? (
 									result.lights.map((light) => (
 										<LightResultsPanel key={light.lightId}>
 											<SingleInfoPanel>
-												<HeaderInfo>Light:</HeaderInfo>
-												<p>#{light.lightId}</p>
-												<HeaderInfo>Direction:</HeaderInfo>
-												<p>{light.direction}</p>
+												<HeaderInfo2>Light:</HeaderInfo2>
+												<CustomParagraph2>
+													#{light.lightId}
+												</CustomParagraph2>
+												<HeaderInfo2>Direction:</HeaderInfo2>
+												<CustomParagraph2>
+													{light.direction}
+												</CustomParagraph2>
+												<HeaderInfo2>
+													Current light sequence:
+												</HeaderInfo2>
 											</SingleInfoPanel>
 											<SingleInfoPanel>
-												<HeaderInfo>Light sequence:</HeaderInfo>
+												{/*<HeaderInfo>Light:</HeaderInfo>*/}
+												{/*<p>#{light.lightId}</p>*/}
+												{/*<HeaderInfo>Direction:</HeaderInfo>*/}
+												{/*<p>{light.direction}</p>*/}
+												{/*<HeaderInfo>Light sequence:</HeaderInfo>*/}
 												<SequenceContainer>
 													{light.sequence.map(
 														(elem, index) => (
