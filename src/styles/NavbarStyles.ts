@@ -7,14 +7,17 @@ export const NavbarContainer = styled.div`
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	align-items: center;
-	gap: 1vw;
-	padding: 1vh 2vw;
-	margin: 1vh 2vw;
+	gap: 2vw;
+	padding: 1vh 0.5vw;
+	margin: 1vh 1vw;
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
+  max-height: 80px;
+  font-size: min(1.5vw, 20px);
 `;
 
 export const NavbarLogo = styled.img`
 	width: 8vw;
-	height: 10.6h;
+  max-width: 150px;
+  min-width: 50px;
 `;
