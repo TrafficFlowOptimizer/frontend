@@ -28,6 +28,7 @@ export const NumericResultsLi = styled.li`
 	width: 1580px;
 	background-color: ${(props) => props.theme.secondary};
 	border-radius: 15px;
+	border: solid ${(props) => props.theme.text} 1px;
 `;
 
 export const NumericResultsPanel = styled.div`
@@ -39,6 +40,13 @@ export const NumericResultsPanel = styled.div`
 	gap: 10px;
 	
 	margin: 0px 15px;
+`;
+
+export const LightResultsPanel = styled(NumericResultsPanel)`
+	margin: 5px 15px;
+	border-radius: 15px;
+	border: solid ${(props) => props.theme.text} 1px;
+	padding: 5px;
 `;
 
 export type SequenceProps = {
@@ -68,7 +76,7 @@ export const SequenceIndex = styled.p`
 
 export const SequenceContainer = styled(NumericResultsUl)`
 	gap: 5px;
-	width: 25vw;
+	width: 65vw;
 	flex-direction: row;
-	overflow: visible;
+	overflow-y: scroll;
 `;

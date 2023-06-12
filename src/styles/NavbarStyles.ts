@@ -11,6 +11,7 @@ export const NavbarContainer = styled.div`
 	padding: 1vh 2vw;
 	margin: 1vh 2vw;
 	border-radius: 15px;
+	border: solid ${(props) => props.theme.text} 1px;
 `;
 
 export const NavbarLogo = styled.img`
