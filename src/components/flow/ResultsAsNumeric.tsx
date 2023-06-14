@@ -1,9 +1,10 @@
 import React from "react";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	NumericResultsUl,
-	HeaderInfo,
+	CustomHeader,
+	CustomParagraph,
 	NumericResultsLi,
 	NumericResultsPanel,
 	StyledSequence,
@@ -25,7 +26,7 @@ export function ResultsAsNumeric() {
 		<>
 			<Navbar />
 			<div>
-				<h3>Results as numeric for: {crossroadName}</h3>
+				<PageHeader>Results as numeric for: {crossroadName}</PageHeader>
 				<NumericResultsUl>
 					{parsedResults.length > 0 ? (
 						parsedResults.map((result, index) => (
@@ -56,24 +57,60 @@ export function ResultsAsNumeric() {
 							// </NumericResultsLi>
 							<NumericResultsLi key={index}>
 								<NumericResultsPanel>
-									<HeaderInfo>Connection:</HeaderInfo>
-									<p>#{index}</p>
-									<HeaderInfo>
+									<CustomHeader topMargin={15} leftMargin={0}>
+										Connection:
+									</CustomHeader>
+									<CustomParagraph topMargin={15}>
+										#{index}
+									</CustomParagraph>
+									<CustomHeader topMargin={15} leftMargin={0}>
 										Cars passed to arrived ratio:
-									</HeaderInfo>
-									<p>{result.flow}</p>
+									</CustomHeader>
+									<CustomParagraph topMargin={15}>
+										{result.flow}
+									</CustomParagraph>
+									<CustomHeader topMargin={15} leftMargin={0}>
+										Previous ratio:
+									</CustomHeader>
+									<CustomParagraph topMargin={15}>
+										{"TBD"}
+									</CustomParagraph>
 								</NumericResultsPanel>
 								{result.lights.length > 0 ? (
 									result.lights.map((light) => (
 										<LightResultsPanel key={light.lightId}>
 											<SingleInfoPanel>
-												<HeaderInfo>Light:</HeaderInfo>
-												<p>#{light.lightId}</p>
-												<HeaderInfo>Direction:</HeaderInfo>
-												<p>{light.direction}</p>
+												<CustomHeader
+													topMargin={5}
+													leftMargin={5}
+												>
+													Light:
+												</CustomHeader>
+												<CustomParagraph topMargin={5}>
+													#{light.lightId}
+												</CustomParagraph>
+												<CustomHeader
+													topMargin={5}
+													leftMargin={5}
+												>
+													Direction:
+												</CustomHeader>
+												<CustomParagraph topMargin={5}>
+													{light.direction}
+												</CustomParagraph>
+												<CustomHeader
+													topMargin={5}
+													leftMargin={5}
+												>
+													Current light sequence:
+												</CustomHeader>
 											</SingleInfoPanel>
 											<SingleInfoPanel>
-												<HeaderInfo>Light sequence:</HeaderInfo>
+												{/*<HeaderInfo>Light:</HeaderInfo>*/}
+												{/*<p>#{light.lightId}</p>*/}
+												{/*<HeaderInfo>Direction:</HeaderInfo>*/}
+												{/*<p>{light.direction}</p>*/}
+												{/*<HeaderInfo>Light sequence:</HeaderInfo>*/}
 												<SequenceContainer>
 													{light.sequence.map(
 														(elem, index) => (

@@ -13,7 +13,6 @@ export const ToggleContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	font-weight: normal;
-	font-size: 1.2vw;
 `;
 
 export const StyledToggleLabel = styled.label<ToggleProps>`
