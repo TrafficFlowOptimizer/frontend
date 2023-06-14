@@ -14,23 +14,19 @@ export const NumericResultsUl = styled.ul`
 	padding: 1vh 1vw;
 `;
 
-export const HeaderInfo1 = styled.p`
-	font-weight: bold;
-	margin: 15px 5px 15px 0px;
+
+export type CHProps = { topMargin: number; leftMargin: number;}
+
+export const CustomHeader = styled.p<CHProps>` 
+	font-weight: bold; 
+	margin: ${(props) => props.topMargin}px 5px 15px ${(props) => props.leftMargin}px;
 `;
 
-export const CustomParagraph1 = styled.p`
-	font-weight: normal;
-	margin: 15px 15px 15px 0px;
-`;
-export const HeaderInfo2 = styled.p`
-	font-weight: bold;
-	margin: 5px 5px 15px 5px;
-`;
+export type CPProps = { topMargin: number; }
 
-export const CustomParagraph2 = styled.p`
-	font-weight: normal;
-	margin: 5px 15px 15px 0px;
+export const CustomParagraph = styled.p<CPProps>` 
+	font-weight: normal; 
+	margin: ${(props) => props.topMargin}px 15px 15px 0px;
 `;
 
 export const NumericResultsLi = styled.li`

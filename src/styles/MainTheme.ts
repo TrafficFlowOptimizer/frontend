@@ -28,7 +28,7 @@ export const BaseH1 = styled.h1`
 	font-size: 3em;
 `;
 
-export const CustomH1 = styled.h1`
+export const PageHeader = styled.h1`
 	font-weight: bold;
 	font-size: xx-large;;
 	margin: 1vh 1vw;
@@ -67,7 +67,7 @@ export const BaseForm = styled.form`
 
 export const BaseButtonLink = styled(Link)`
 	text-decoration: none;
-	font-size: min(16px, 1.5vw);
+	font-size: 16px;
 	color: ${LightTheme.primary};
 `;
 

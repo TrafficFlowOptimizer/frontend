@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseButtonLink, CustomH1 } from "../../styles/MainTheme";
+import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { Navbar } from "../additional/Navbar";
@@ -12,7 +12,7 @@ export function ResultsChoicePanel() {
 		<>
 			<Navbar />
 			<div>
-				<CustomH1>Choose your course of action:</CustomH1>
+				<PageHeader>Choose your course of action:</PageHeader>
 				<NeutralPositiveButton>
 					<BaseButtonLink
 						to="../results-numeric"

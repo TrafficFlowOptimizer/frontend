@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseButtonLink, CustomH1 } from "../../styles/MainTheme";
+import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { Navbar } from "../additional/Navbar";
 import { useUserContext } from "../../custom/UserContext";
@@ -12,7 +12,7 @@ export function CrossroadChoicePanel() {
 			<Navbar />
 			{/*{loggedUser !== null && (*/}
 			<div>
-				<CustomH1>Choose your course of action:</CustomH1>
+				<PageHeader>Choose your course of action:</PageHeader>
 				<PositiveButton>
 					<BaseButtonLink to="list">
 						Choose from list of previously created crossroads

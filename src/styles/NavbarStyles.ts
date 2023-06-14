@@ -13,11 +13,10 @@ export const NavbarContainer = styled.div`
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
   max-height: 80px;
-  font-size: min(1.5vw, 20px);
 `;
 
 export const NavbarLogo = styled.img`
-	width: 8vw;
-  max-width: 150px;
-  min-width: 50px;
+  height: 10dvh;
+  max-height: 100px;
+  min-height: 50px;
 `;
