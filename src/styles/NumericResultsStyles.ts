@@ -28,6 +28,7 @@ export const NumericResultsLi = styled.li`
 	width: 1580px;
 	background-color: ${(props) => props.theme.secondary};
 	border-radius: 15px;
+	border: solid ${(props) => props.theme.text} 1px;
 `;
 
 export const NumericResultsPanel = styled.div`
@@ -39,6 +40,24 @@ export const NumericResultsPanel = styled.div`
 	gap: 10px;
 	
 	margin: 0px 15px;
+`;
+
+export const LightResultsPanel = styled.div`
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: flex-start;
+	gap: 10px;
+	margin: 5px 15px;
+	border-radius: 15px;
+	border: solid ${(props) => props.theme.text} 1px;
+	padding: 5px;
+	width: 1540px;
+`;
+
+export const SingleInfoPanel = styled(NumericResultsPanel)`
+	margin: 0px;
 `;
 
 export type SequenceProps = {
@@ -68,7 +87,7 @@ export const SequenceIndex = styled.p`
 
 export const SequenceContainer = styled(NumericResultsUl)`
 	gap: 5px;
-	width: 25vw;
+	width: 80vw;
 	flex-direction: row;
 	overflow: visible;
 `;

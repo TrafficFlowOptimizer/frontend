@@ -4,16 +4,22 @@ import { Navbar } from "../additional/Navbar";
 import { BaseButtonLink } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
+import { useLocation } from "react-router-dom";
+import { FileUploader } from "../additional/FileUploader";
 
 export function AddVideos() {
+	const location = useLocation();
+	const crossroadName: string = location.state.crossroadName ?? true;
+	const crossroadId: string = location.state.crossroadId ?? true;
+
+	//TODO: style this page as a whole later on
+
 	return (
 		<>
 			<Navbar />
 			<div>
-				<h3>
-					Here will be a tool allowing user to put .mp4 or something like this
-					footage of traffic
-				</h3>
+				<h3>Add videos for crossroad: {crossroadName}</h3>
+				<FileUploader crossroadId={crossroadId} />
 				<NeutralNegativeButton>
 					<BaseButtonLink to="../crossroad-choice" relative="path">
 						Go back to crossing choice panel

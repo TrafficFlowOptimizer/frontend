@@ -22,7 +22,7 @@ export function PopUp(props: PopUpProps) {
 	const { theme } = useContext(ThemeContext);
 	const navigate = useNavigate();
 	const [optimizationDeployed, setOptimizationDeployed] = useState(false);
-	const [chosenTime, setChosenTime] = useState<number | null>(null);
+	const [chosenTime, setChosenTime] = useState<number | null | string>(null);
 
 	const startOptimization = () => {
 		setOptimizationDeployed(true);
@@ -47,7 +47,7 @@ export function PopUp(props: PopUpProps) {
 			});
 	};
 
-	const onChange = (newValue: number | null) => {
+	const onChange = (newValue: number | string | null) => {
 		setChosenTime(newValue);
 	};
 

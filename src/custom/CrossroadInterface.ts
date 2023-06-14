@@ -15,12 +15,18 @@ export type Crossroad = {
 	connectionIds: string[];
 };
 
-export type OptimizationResults = {
-	results: singleLightOptimizationResults[];
-};
 
 export type singleLightOptimizationResults = {
 	lightId: number;
 	sequence: number[];
+	direction: string;
+};
+
+export type OptimizationResults = {
+	connections: SingleConnectionOptimizationResults[];
+};
+
+export type SingleConnectionOptimizationResults = {
 	flow: number;
+	lights: singleLightOptimizationResults[];
 };

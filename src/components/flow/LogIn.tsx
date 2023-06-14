@@ -166,7 +166,7 @@ export function LogIn() {
 				</SigningUl>
 				<PositiveButton
 					type="submit"
-					disabled={!isUsernameValid && !isPasswordLongEnough}
+					disabled={!isUsernameValid || !isPasswordLongEnough}
 				>
 					Log In!
 				</PositiveButton>
