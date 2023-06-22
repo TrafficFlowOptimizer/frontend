@@ -15,11 +15,10 @@ export type Crossroad = {
 	connectionIds: string[];
 };
 
-
 export type singleLightOptimizationResults = {
 	lightId: number;
 	sequence: number[];
-	direction: string;
+	direction: TrafficLightType;
 };
 
 export type OptimizationResults = {
@@ -27,6 +26,19 @@ export type OptimizationResults = {
 };
 
 export type SingleConnectionOptimizationResults = {
-	flow: number;
+	currentFlow: number;
+	previousFlow: number;
 	lights: singleLightOptimizationResults[];
 };
+
+export enum TrafficLightType {
+	LEFT,
+	RIGHT,
+	FORWARD,
+	ARROW,
+	TURNING,
+	LEFT_RIGHT,
+	LEFT_FORWARD,
+	RIGHT_FORWARD,
+	LEFT_TURNING,
+}
