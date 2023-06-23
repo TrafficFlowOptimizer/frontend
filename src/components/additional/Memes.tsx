@@ -39,7 +39,7 @@ export function Memes() {
 				}
 				return memes[i];
 			});
-		}, 1000);
+		}, 7000);
 
 		return () => clearTimeout(timer);
 	}, []);
