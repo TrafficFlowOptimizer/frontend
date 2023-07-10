@@ -30,31 +30,6 @@ export function ResultsAsNumeric() {
 				<NumericResultsUl>
 					{parsedResults.length > 0 ? (
 						parsedResults.map((result, index) => (
-							// <NumericResultsLi key={result.lightId}>
-							// 	<NumericResultsPanel>
-							// 		<HeaderInfo>Light ID:</HeaderInfo>
-							// 		<p>light#{result.lightId}</p>
-							// 		<HeaderInfo>
-							// 			Cars passed to arrived ratio:
-							// 		</HeaderInfo>
-							// 		<p>{result.flow}</p>
-							// 	</NumericResultsPanel>
-							// 	<NumericResultsPanel>
-							// 		<HeaderInfo>Light sequence:</HeaderInfo>
-							// 		<SequenceContainer>
-							// 			{result.sequence.map((elem, index) => (
-							// 				<StyledSequence
-							// 					key={index}
-							// 					isGreen={elem === 1}
-							// 				>
-							// 					<SequenceIndex>
-							// 						{index + 1}
-							// 					</SequenceIndex>
-							// 				</StyledSequence>
-							// 			))}
-							// 		</SequenceContainer>
-							// 	</NumericResultsPanel>
-							// </NumericResultsLi>
 							<NumericResultsLi key={index}>
 								<NumericResultsPanel>
 									<CustomHeader topMargin={15} leftMargin={0}>
@@ -67,13 +42,13 @@ export function ResultsAsNumeric() {
 										Cars passed to arrived ratio:
 									</CustomHeader>
 									<CustomParagraph topMargin={15}>
-										{result.flow}
+										{result.currentFlow}
 									</CustomParagraph>
 									<CustomHeader topMargin={15} leftMargin={0}>
 										Previous ratio:
 									</CustomHeader>
 									<CustomParagraph topMargin={15}>
-										{"TBD"}
+										{result.previousFlow}
 									</CustomParagraph>
 								</NumericResultsPanel>
 								{result.lights.length > 0 ? (
