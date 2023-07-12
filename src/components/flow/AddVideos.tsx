@@ -1,11 +1,9 @@
 import React from "react";
-import { LogOut } from "../additional/LogOut";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink } from "../../styles/MainTheme";
-import { NeutralNegativeButton } from "../../styles/NeutralButton";
-import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { useLocation } from "react-router-dom";
 import { FileUploader } from "../additional/FileUploader";
+import { BaseButtonLink } from "../../styles/MainTheme";
+import { NeutralPositiveButton } from "../../styles/NeutralButton";
 
 export function AddVideos() {
 	const location = useLocation();
@@ -20,17 +18,15 @@ export function AddVideos() {
 			<div>
 				<h3>Add videos for crossroad: {crossroadName}</h3>
 				<FileUploader crossroadId={crossroadId} />
-				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossroad-choice" relative="path">
-						Go back to crossing choice panel
-					</BaseButtonLink>
-				</NeutralNegativeButton>
 				<NeutralPositiveButton>
-					<BaseButtonLink to="../results-choice" relative="path">
-						Go to results choice panel
+					<BaseButtonLink
+						to={`../crossroad-view/${crossroadId}`}
+						relative="path"
+						state={{ crossroadID: crossroadId }}
+					>
+						Back to crossing view
 					</BaseButtonLink>
 				</NeutralPositiveButton>
-				<LogOut />
 			</div>
 		</>
 	);
