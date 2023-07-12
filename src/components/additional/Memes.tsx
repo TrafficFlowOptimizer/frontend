@@ -52,8 +52,8 @@ export function Memes() {
 }
 
 export const StyledMeme = styled.img`
-	width: 500px;
-	height: 500px;
+	width: 30rem;
+	height: 30rem;
 
 	margin: 20px;
 `;

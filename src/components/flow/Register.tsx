@@ -53,9 +53,7 @@ export function Register() {
 				</SigningUl>
 			</BaseForm>
 			<PositiveButton>
-				<BaseButtonLink to="/crossroad-choice" state={{ ifNewUser: true }}>
-					Sign Up!
-				</BaseButtonLink>
+				<BaseButtonLink to="/crossroad-list">Sign Up!</BaseButtonLink>
 			</PositiveButton>
 			<ToggleSwitch />
 		</SigningContainer>

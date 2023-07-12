@@ -1,4 +1,7 @@
 import React from "react";
+import { useLocation } from "react-router-dom";
+import { OptimizationResults } from "../../custom/CrossroadInterface";
+import { Navbar } from "../additional/Navbar";
 import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
@@ -13,9 +16,6 @@ import {
 	LightResultsPanel,
 	SingleInfoPanel,
 } from "../../styles/NumericResultsStyles";
-import { Navbar } from "../additional/Navbar";
-import { useLocation } from "react-router-dom";
-import { OptimizationResults } from "../../custom/CrossroadInterface";
 
 export function ResultsAsNumeric() {
 	const location = useLocation();
@@ -81,11 +81,6 @@ export function ResultsAsNumeric() {
 												</CustomHeader>
 											</SingleInfoPanel>
 											<SingleInfoPanel>
-												{/*<HeaderInfo>Light:</HeaderInfo>*/}
-												{/*<p>#{light.lightId}</p>*/}
-												{/*<HeaderInfo>Direction:</HeaderInfo>*/}
-												{/*<p>{light.direction}</p>*/}
-												{/*<HeaderInfo>Light sequence:</HeaderInfo>*/}
 												<SequenceContainer>
 													{light.sequence.map(
 														(elem, index) => (
@@ -113,8 +108,12 @@ export function ResultsAsNumeric() {
 					)}
 				</NumericResultsUl>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossroad-choice" relative="path">
-						Go back to crossroad choice panel
+					<BaseButtonLink
+						to="../results-choice"
+						relative="path"
+						state={location.state}
+					>
+						Go back to results choice panel
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 			</div>

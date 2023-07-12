@@ -1,15 +1,15 @@
 import React, { useContext, useState } from "react";
+import axios from "axios";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
+import { OptimizationResults } from "../../../custom/CrossroadInterface";
+import { Dropdown } from "../Dropdown";
+import { Memes } from "../Memes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext } from "../../../custom/ThemeContext";
 import { DarkTheme, LightTheme } from "../../../styles/MainTheme";
 import { PositiveButton } from "../../../styles/PositiveButton";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { OptimizationResults } from "../../../custom/CrossroadInterface";
-import { useNavigate } from "react-router-dom";
-import { Memes } from "../Memes";
-import { Dropdown } from "../Dropdown";
 
 export type PopUpProps = {
 	textToDisplay: string;
@@ -39,6 +39,7 @@ export function PopUp(props: PopUpProps) {
 					state: {
 						results: optimizationData,
 						crossroadName: props.crossroadName,
+						crossroadId: props.crossroadId,
 					},
 				});
 			})
@@ -98,12 +99,12 @@ export const StyledModal = styled.div`
 	background-color: ${(props) => props.theme.primary};
 	padding: 1rem;
 	text-align: center;
-	width: 30vw;
-	height: 55vh;
+	width: calc(100% - 40vw);
+	height: calc(100% - 20vh);
 	z-index: 10;
 	position: fixed;
-	top: 20vh;
-	left: calc(50% - 15rem);
+	top: 10vh;
+	left: calc(50% - 30vw);
 
 	display: flex;
 	flex-direction: column;

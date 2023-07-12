@@ -8,6 +8,8 @@ import { useLocation } from "react-router-dom";
 export function ResultsChoicePanel() {
 	const location = useLocation();
 	const results = location.state ?? true;
+	const crossroadId = location.state.crossroadId ?? true;
+
 	return (
 		<>
 			<Navbar />
@@ -23,13 +25,21 @@ export function ResultsChoicePanel() {
 					</BaseButtonLink>
 				</NeutralPositiveButton>
 				<NeutralPositiveButton>
-					<BaseButtonLink to="../results-simulation" relative="path">
+					<BaseButtonLink
+						to="../results-simulation"
+						relative="path"
+						state={results}
+					>
 						See results as a simulation
 					</BaseButtonLink>
 				</NeutralPositiveButton>
 				<NeutralNegativeButton>
-					<BaseButtonLink to="../crossroad-choice" relative="path">
-						Go back to crossroad choice panel
+					<BaseButtonLink
+						to={`../crossroad-view/${crossroadId}`}
+						relative="path"
+						state={{ crossroadID: crossroadId }}
+					>
+						Go back to crossroad view
 					</BaseButtonLink>
 				</NeutralNegativeButton>
 			</div>

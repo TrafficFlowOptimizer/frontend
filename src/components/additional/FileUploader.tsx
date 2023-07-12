@@ -1,4 +1,11 @@
 import React, { useState } from "react";
+import axios from "axios";
+import { useThemeContext } from "../../custom/ThemeContext";
+import { useUserContext } from "../../custom/UserContext";
+import { Dropdown } from "./Dropdown";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
+import { DarkTheme, LightTheme } from "../../styles/MainTheme";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	FormGroupFiles,
@@ -9,13 +16,6 @@ import {
 	DragFileElement,
 	MainUploaderDiv,
 } from "../../styles/FileUploaderStyles";
-import { Dropdown } from "./Dropdown";
-import axios from "axios";
-import { useUserContext } from "../../custom/UserContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
-import { DarkTheme, LightTheme } from "../../styles/MainTheme";
-import { useThemeContext } from "../../custom/ThemeContext";
 
 export type FileUploaderProps = {
 	crossroadId: string;
@@ -177,6 +177,11 @@ export function FileUploader(props: FileUploaderProps) {
 				isSearchable={false}
 				onChange={onChange}
 			/>
+			<p>Dropdown for the przejazd</p>
+			<p>
+				Place for the first screen from the video and specification where the
+				lanes are
+			</p>
 		</MainUploaderDiv>
 	);
 }
