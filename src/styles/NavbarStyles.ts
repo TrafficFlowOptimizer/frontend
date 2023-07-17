@@ -1,6 +1,9 @@
 import styled from "styled-components";
 
 export const NavbarContainer = styled.div`
+	position: sticky;
+	top: 1vh;
+	z-index: 5;
 	background-color: ${(props) => props.theme.secondary};
 	display: flex;
 	flex-direction: row;

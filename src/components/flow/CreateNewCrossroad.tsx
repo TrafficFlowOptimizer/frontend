@@ -13,7 +13,7 @@ export function CreateNewCrossroad() {
 					drawing tool
 				</p>
 				<PositiveButton>
-					<BaseButtonLink to="../../add-videos" relative="path">
+					<BaseButtonLink to="../crossroad-list" relative="path">
 						Save new crossroad and proceed
 					</BaseButtonLink>
 				</PositiveButton>

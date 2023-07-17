@@ -107,7 +107,7 @@ export function LogIn() {
 					username: loginData.nickname,
 					email: "jan.kowal@gmail.com",
 				});
-				navigate("/crossroad-choice");
+				navigate("/crossroad-list");
 			})
 			.catch((error) => {
 				setBadLoginMessage("Invalid email/username or password!");
