@@ -112,7 +112,10 @@ export function ListOfCrossroads() {
 				</StyledTable>
 			)}
 			<PositiveButton>
-				<BaseButtonLink to="../new-crossroad" relative="path">
+				<BaseButtonLink
+					to="../new-crossroad/location-selection"
+					relative="path"
+				>
 					Create new crossing
 				</BaseButtonLink>
 			</PositiveButton>

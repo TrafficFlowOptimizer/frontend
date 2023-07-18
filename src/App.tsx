@@ -11,6 +11,8 @@ import { ResultsChoicePanel } from "./components/flow/ResultsChoicePanel";
 import { ResultsAsSimulation } from "./components/flow/ResultsAsSimulation";
 import { ResultsAsNumeric } from "./components/flow/ResultsAsNumeric";
 import { CrossroadView } from "./components/flow/CrossroadView";
+import { MapLeaflet } from "./components/drawing-tool/MapLeaflet";
+import { BasicInformation } from "./components/drawing-tool/BasicInformation";
 import { ThemeProvider } from "styled-components";
 import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
@@ -37,7 +39,17 @@ function App() {
 								<Route
 									path="new-crossroad"
 									element={<CreateNewCrossroad />}
-								/>
+								>
+									<Route
+										path="location-selection"
+										element={<MapLeaflet />}
+									/>
+									<Route
+										path="basic-information"
+										element={<BasicInformation />}
+									/>
+									<Route path="*" element={<PageNotFoundLanding />} />
+								</Route>
 								<Route path="add-videos" element={<AddVideos />} />
 								<Route
 									path="crossroad-view/:crossroadId"
