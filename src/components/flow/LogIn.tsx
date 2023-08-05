@@ -1,21 +1,25 @@
 import React, { useContext, useState } from "react";
-import { PositiveButton } from "../../styles/PositiveButton";
-import { RedirectionLink, BaseForm, BaseInput } from "../../styles/MainTheme";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
 import axios from "axios";
+import { ThemeContext } from "../../custom/ThemeContext";
+import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../custom/UserContext";
+import { ToggleSwitch } from "../additional/ToggleSwitch";
 import logo from "../../assets/TFO_4_but_better.png";
 import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import {
 	SigningContainer,
-	SigningLi,
 	SigningLogo,
-	SigningUl,
 	InvalidInputMessage,
 	PlaceholderSpan,
 } from "../../styles/SigningStyles";
-import { ThemeContext } from "../../custom/ThemeContext";
-import { useNavigate } from "react-router-dom";
-import { useUserContext } from "../../custom/UserContext";
+import { PositiveButton } from "../../styles/PositiveButton";
+import {
+	RedirectionLink,
+	BaseForm,
+	BaseInput,
+	BaseUl,
+	BaseLi,
+} from "../../styles/MainTheme";
 
 export type loginData = {
 	nickname: string;
@@ -122,48 +126,50 @@ export function LogIn() {
 			/>
 			<h3>Log in to process further</h3>
 			<BaseForm onSubmit={logIn}>
-				<SigningUl>
-					<SigningLi>
-						<label>username:</label>
+				<BaseUl>
+					<BaseLi>
+						<label htmlFor="username">username:</label>
 						<BaseInput
+							id="username"
 							name="nickname"
 							type="text"
 							placeholder="username"
 							onChange={onUsernameChange}
 						/>
-					</SigningLi>
+					</BaseLi>
 					{!isUsernameValid ? (
-						<SigningLi>
+						<BaseLi>
 							<InvalidInputMessage>{usernameMessage}</InvalidInputMessage>
-						</SigningLi>
+						</BaseLi>
 					) : (
-						<SigningLi>
+						<BaseLi>
 							<PlaceholderSpan></PlaceholderSpan>
-						</SigningLi>
+						</BaseLi>
 					)}
-					<SigningLi>
-						<label>password:</label>
+					<BaseLi>
+						<label htmlFor="password">password:</label>
 						<BaseInput
+							id="password"
 							name="password"
 							type="password"
 							onChange={onPasswordChange}
 						/>
-					</SigningLi>
+					</BaseLi>
 					{!isPasswordLongEnough ? (
-						<SigningLi>
+						<BaseLi>
 							<InvalidInputMessage>{passwordMessage}</InvalidInputMessage>
-						</SigningLi>
+						</BaseLi>
 					) : (
-						<SigningLi>
+						<BaseLi>
 							<PlaceholderSpan></PlaceholderSpan>
-						</SigningLi>
+						</BaseLi>
 					)}
-					<SigningLi>
+					<BaseLi>
 						<RedirectionLink to="/register" relative="path">
 							Don`t have an account? Register now.
 						</RedirectionLink>
-					</SigningLi>
-				</SigningUl>
+					</BaseLi>
+				</BaseUl>
 				<PositiveButton
 					type="submit"
 					disabled={!isUsernameValid || !isPasswordLongEnough}

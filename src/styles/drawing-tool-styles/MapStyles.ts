@@ -1,11 +1,14 @@
 import styled from "styled-components";
 
+export const CreatorInformation = styled.p`
+	text-align: center;
+`;
+
 export const mapContainerStyle = {
-	width: "calc(100vw-40px)",
-	height: "70vh",
+	width: "1250px",
+	height: "520px",
 	margin: "0px 20px",
 	border: "1px solid black",
-
 };
 
 export const LeafletContainer = styled.div`	
@@ -18,10 +21,18 @@ export const LeafletContainer = styled.div`
 
 export const WorkaroundInnerDiv = styled.div`
 	flex: 1;
-	height: 100%;
-	width: 100%;
+	height: 520px;
+	width: 1250px;
+	margin: 10px 0px;
 `;
 
+export const ButtonsDiv = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: center;
+`;
 
 export const LightMapStyles = [
 	{
