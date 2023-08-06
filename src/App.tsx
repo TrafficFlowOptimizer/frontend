@@ -17,6 +17,7 @@ import { ThemeProvider } from "styled-components";
 import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
 import { LoggedUser, UserContext } from "./custom/UserContext";
+import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -47,6 +48,10 @@ function App() {
 									<Route
 										path="basic-information"
 										element={<BasicInformation />}
+									/>
+									<Route
+										path="entrances-and-exits"
+										element={<EntrancesAndExits />}
 									/>
 									<Route path="*" element={<PageNotFoundLanding />} />
 								</Route>

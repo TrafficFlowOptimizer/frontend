@@ -1,6 +1,5 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
-import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { OptimizationResults } from "../../../custom/CrossroadInterface";
 import { Dropdown } from "../Dropdown";
@@ -9,6 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext } from "../../../custom/ThemeContext";
 import { DarkTheme, LightTheme } from "../../../styles/MainTheme";
 import { PositiveButton } from "../../../styles/PositiveButton";
+import { StyledModal, StyledMessageField } from "../../../styles/modal/ModalStyles";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
 
 export type PopUpProps = {
@@ -92,27 +92,3 @@ export function PopUp(props: PopUpProps) {
 		</StyledModal>
 	);
 }
-
-export const StyledModal = styled.div`
-	box-shadow: 0 1px 4px rgba(0, 0, 0, 0.2);
-	border-radius: 6px;
-	background-color: ${(props) => props.theme.primary};
-	padding: 1rem;
-	text-align: center;
-	width: calc(100% - 40vw);
-	height: calc(100% - 20vh);
-	z-index: 10;
-	position: fixed;
-	top: 10vh;
-	left: calc(50% - 30vw);
-
-	display: flex;
-	flex-direction: column;
-	flex-wrap: no-wrap;
-	justify-content: flex-start;
-	align-items: center;
-`;
-
-const StyledMessageField = styled.p`
-	white-space: pre-line;
-`;

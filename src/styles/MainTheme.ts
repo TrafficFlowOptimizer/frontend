@@ -65,6 +65,14 @@ export const BaseForm = styled.form`
 	gap: 1vh;
 `;
 
+export const ButtonsDiv = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: center;
+`;
+
 export const BaseButtonLink = styled(Link)`
 	text-decoration: none;
 	font-size: 16px;

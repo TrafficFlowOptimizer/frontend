@@ -1,8 +1,10 @@
-import React, { useCallback, useRef } from "react";
+import React, { useCallback, useRef, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { GoogleMap, useJsApiLoader } from "@react-google-maps/api";
 import { toPng } from "html-to-image";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { WaitingPopUp } from "../additional/Modal/WaitingPopUp";
+import { Backdrop } from "../additional/Modal/Backdrop";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	DarkMapStyles,
@@ -11,14 +13,15 @@ import {
 	LeafletContainer,
 	WorkaroundInnerDiv,
 	CreatorInformation,
-	ButtonsDiv,
 } from "../../styles/drawing-tool-styles/MapStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
-import { useNavigate } from "react-router-dom";
+import { ButtonsDiv } from "../../styles/MainTheme";
 
 export function MapLeaflet() {
 	const { theme } = useThemeContext();
 	const navigate = useNavigate();
+	const [showWaitingModal, setShowWaitingModal] = useState(false);
+
 	const { isLoaded } = useJsApiLoader({
 		id: "google-map-script",
 		googleMapsApiKey: process.env.REACT_APP_GOOGLE_MAPS_API_KEY!,
@@ -28,6 +31,8 @@ export function MapLeaflet() {
 	const screenshotRef = useRef<HTMLDivElement>(null);
 
 	const onButtonClick = useCallback(() => {
+		setShowWaitingModal(true);
+
 		if (screenshotRef.current === null) {
 			return;
 		}
@@ -79,32 +84,44 @@ export function MapLeaflet() {
 	return !isLoaded ? (
 		<LeafletContainer>Loading Error</LeafletContainer>
 	) : (
-		<LeafletContainer>
-			<CreatorInformation>
-				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				Please choose location, adjust zoom-out and press "Next" button
-				<br />
-				When creating the crossroad, you can only go forward or abort creation
-				entirely!
-				<br />
-				Take your time and customize it to your liking!
-			</CreatorInformation>
-			<WorkaroundInnerDiv ref={screenshotRef}>
-				<GoogleMap
-					mapContainerStyle={mapContainerStyle}
-					options={mapOptions}
-					center={initialCenter}
-					zoom={18}
-					onLoad={onLoad}
-					onUnmount={onUnMount}
-				/>
-			</WorkaroundInnerDiv>
-			<ButtonsDiv>
-				<PositiveButton onClick={onButtonClick}>
-					<BaseButtonLink to="../basic-information">Next</BaseButtonLink>
-				</PositiveButton>
-				<NegativeButton onClick={onAbort}>Abort</NegativeButton>
-			</ButtonsDiv>
-		</LeafletContainer>
+		<>
+			{showWaitingModal && (
+				<>
+					<WaitingPopUp
+						textToDisplay={
+							"Setting up crossroad model base and saving image in local storage..."
+						}
+						waitingTime={2}
+						whereToNavigate={"../basic-information"}
+					/>
+					<Backdrop />
+				</>
+			)}
+			<LeafletContainer>
+				<CreatorInformation>
+					{/* eslint-disable-next-line react/no-unescaped-entities */}
+					Please choose location, adjust zoom-out and press "Next" button
+					<br />
+					When creating the crossroad, you can only go forward or abort
+					creation entirely!
+					<br />
+					Take your time and customize it to your liking!
+				</CreatorInformation>
+				<WorkaroundInnerDiv ref={screenshotRef}>
+					<GoogleMap
+						mapContainerStyle={mapContainerStyle}
+						options={mapOptions}
+						center={initialCenter}
+						zoom={18}
+						onLoad={onLoad}
+						onUnmount={onUnMount}
+					/>
+				</WorkaroundInnerDiv>
+				<ButtonsDiv>
+					<PositiveButton onClick={onButtonClick}>Next</PositiveButton>
+					<NegativeButton onClick={onAbort}>Abort</NegativeButton>
+				</ButtonsDiv>
+			</LeafletContainer>
+		</>
 	);
 }

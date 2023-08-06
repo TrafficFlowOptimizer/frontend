@@ -26,14 +26,6 @@ export const WorkaroundInnerDiv = styled.div`
 	margin: 10px 0px;
 `;
 
-export const ButtonsDiv = styled.div`
-	display: flex;
-	flex-direction: row;
-	flex-wrap: no-wrap;
-	justify-content: center;
-	align-items: center;
-`;
-
 export const LightMapStyles = [
 	{
 		"featureType": "all",
