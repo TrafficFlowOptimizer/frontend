@@ -1,5 +1,4 @@
 import styled from "styled-components";
-import { ButtonColors } from "./MainTheme";
 
 export const SigningContainer = styled.div`
 	display: flex;
@@ -14,15 +13,4 @@ export const SigningContainer = styled.div`
 export const SigningLogo = styled.img`
 	width: 15vw;
 	height: 19.875h;
-`;
-
-export const InvalidInputMessage = styled.p`
-	color: ${ButtonColors.RED};
-	font-weight: bold;
-	font-size: 10px;
-`;
-
-export const PlaceholderSpan = styled.span`
-	width: 241px;
-	height: 32.5px;
 `;

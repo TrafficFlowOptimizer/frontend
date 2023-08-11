@@ -9,7 +9,7 @@ import {
 	WelcomePageOptions,
 	OptionsPositionedLi,
 } from "../../styles/WelcomePageStyles";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
+import { ToggleThemeSwitch } from "../additional/ToggleThemeSwitch";
 import { ThemeContext } from "../../custom/ThemeContext";
 
 export function Welcome() {
@@ -39,7 +39,7 @@ export function Welcome() {
 					</NeutralPositiveButton>
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={3} column={2}>
-					<ToggleSwitch />
+					<ToggleThemeSwitch />
 				</OptionsPositionedLi>
 			</WelcomePageOptions>
 		</WelcomePageContainer>

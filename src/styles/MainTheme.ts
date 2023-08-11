@@ -65,6 +65,10 @@ export const BaseForm = styled.form`
 	gap: 1vh;
 `;
 
+export const HorizontalBaseForm = styled(BaseForm)`
+	flex-direction: row;
+`;
+
 export const ButtonsDiv = styled.div`
 	display: flex;
 	flex-direction: row;
@@ -91,12 +95,23 @@ export const BaseDiv = styled.div`
 	left: 0px;
 	width: 100%;
 	height: 100%;
-	//padding-left: 15px;
-	//padding-right: 15px;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
 	font-size: 1em;
+`;
+
+export const ContainerDiv = styled.div`
+	background-color: ${(props) => props.theme.primary};
+	width: 100%;
+	height: fit-content;
+	
+	display: flex;
+	flex-direction: column;
+	flex-wrap: no-wrap;
+	
+	justify-content: space-evenly;
+	align-items: center
 `;
 
 
@@ -118,10 +133,26 @@ export const BaseUl = styled.ul`
 	align-items: flex-start;
 `;
 
+export const HorizontalBaseUl = styled(BaseUl)`
+	flex-direction: row;
+	gap: 1vw;
+`;
+
 export const BaseLi = styled.li`
 	display: flex;
 	flex-direction: row;
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	gap: 1vw;
+`;
+
+export const InvalidInputMessage = styled.p`
+	color: ${ButtonColors.RED};
+	font-weight: bold;
+	font-size: 10px;
+`;
+
+export const PlaceholderSpan = styled.span`
+	width: 241px;
+	height: 40px;
 `;

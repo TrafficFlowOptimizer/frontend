@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
+import { ToggleThemeSwitch } from "../additional/ToggleThemeSwitch";
 import { ThemeContext } from "../../custom/ThemeContext";
 import logo from "../../assets/TFO_4_but_better.png";
 import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
@@ -52,7 +52,7 @@ export function Register() {
 			<PositiveButton>
 				<BaseButtonLink to="/crossroad-list">Sign Up!</BaseButtonLink>
 			</PositiveButton>
-			<ToggleSwitch />
+			<ToggleThemeSwitch />
 		</SigningContainer>
 	);
 }

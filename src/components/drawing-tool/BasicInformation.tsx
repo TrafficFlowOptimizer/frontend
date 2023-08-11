@@ -1,52 +1,136 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
+import axios from "axios";
 import { Crossroad, CrossroadType } from "../../custom/CrossroadInterface";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { NegativeButton } from "../../styles/NegativeButton";
-import { CrossroadScreenshot } from "../../styles/drawing-tool-styles/BasicInformationStyles";
+import {
+	AdaptedInvalidInputMessage,
+	CrossroadScreenshot,
+	ValidInputMessage,
+} from "../../styles/drawing-tool-styles/BasicInformationStyles";
 import {
 	BaseForm,
 	BaseInput,
 	BaseLi,
-	BaseUl,
 	ButtonsDiv,
+	HorizontalBaseUl,
+	PlaceholderSpan,
+	ContainerDiv,
 } from "../../styles/MainTheme";
+import {
+	BASIC_INFORMATION_ERROR_MESSAGES,
+	COUNTRIES,
+	CROSSROAD_MODEL_TEMPLATE,
+} from "../../custom/drawing-tool/AuxiliaryData";
+import {
+	capitalizeFirstLetter,
+	fakeCrossroadIdGetter,
+} from "../../custom/drawing-tool/AuxiliaryFunctions";
+import { CitiesResponse } from "../../custom/drawing-tool/AuxiliaryTypes";
+import { TwoChoicesToggle } from "./TwoChoicesToggle";
 
 export function BasicInformation() {
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
 	const navigate = useNavigate();
 	const { loggedUser } = useUserContext();
 
-	const [crossroadName, setCrossroadName] = useState("");
-
-	const crossroad: Crossroad = {
-		id: "",
-		name: "",
-		location: "",
+	const [isInputValid, setInputValidity] = useState(false);
+	const [dataMessage, setDataMessage] = useState("");
+	const [crossroad, setCrossroadData] = useState<Crossroad>({
+		...CROSSROAD_MODEL_TEMPLATE,
 		creatorId: loggedUser === null ? "1" : loggedUser.id,
-		type: CrossroadType.PRIVATE,
-		roadIds: [],
-		collisionsIds: [],
-		trafficLightIds: [],
-		connectionIds: [],
-	};
+	});
 
-	//TODO: field validation!
+	const [visibilityType, setVisibilityType] = useState(CrossroadType.PRIVATE);
 
 	useEffect(() => {
 		setCrossroadImage(localStorage.getItem("crossroadMap")!);
 	}, []);
 
 	const onNext = () => {
-		// TODO: later it should have crossroad as an argument
-		navigate("../entrances-and-exits");
+		navigate("../entrances-and-exits", {
+			state: {
+				crossroad: crossroad,
+			},
+		});
 	};
 
-	const onConfirm = () => {
-		//TODO: should use all use states and set new values in crossroad object
-		alert("Inputs confirmed!");
+	const onConfirm = (event: React.SyntheticEvent) => {
+		event.preventDefault();
+
+		const target = event.target as typeof event.target & {
+			name: { value: string };
+			country: { value: string };
+			city: { value: string };
+			district: { value: string };
+		};
+
+		if (
+			target.name.value.length === 0 ||
+			target.country.value.length === 0 ||
+			target.city.value.length === 0 ||
+			target.district.value.length === 0
+		) {
+			setInputValidity(false);
+			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
+			return;
+		}
+
+		const potentialData = {
+			name: target.name.value,
+			country: capitalizeFirstLetter(target.country.value),
+			city: capitalizeFirstLetter(target.city.value),
+			district: capitalizeFirstLetter(target.district.value),
+		};
+
+		if (potentialData.country === "Usa") {
+			potentialData.country = "United States";
+		}
+
+		if (!COUNTRIES.includes(potentialData.country)) {
+			setInputValidity(false);
+			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_country);
+			return;
+		}
+
+		axios
+			.post<CitiesResponse>(
+				"https://countriesnow.space/api/v0.1/countries/cities",
+				{
+					country: potentialData.country,
+				},
+			)
+			.then((response) => {
+				console.log(potentialData.country, potentialData.city);
+				if (!response.data.data.includes(potentialData.city)) {
+					setInputValidity(false);
+					setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_city);
+					return;
+				} else {
+					setCrossroadData({
+						...crossroad,
+						id: fakeCrossroadIdGetter(),
+						name: potentialData.name,
+						location: `${
+							potentialData.country === "United States"
+								? "USA"
+								: potentialData.country
+						}, ${potentialData.city}, ${potentialData.district}`,
+						type: visibilityType,
+					});
+
+					setInputValidity(true);
+					setDataMessage("Inputs confirmed!");
+				}
+			})
+			.catch((error) => {
+				setInputValidity(false);
+				setDataMessage(`City validation error ${error}`);
+				return;
+			});
 	};
 
 	const onAbort = () => {
@@ -55,7 +139,7 @@ export function BasicInformation() {
 	};
 
 	return (
-		<div>
+		<ContainerDiv>
 			<CrossroadScreenshot
 				src={
 					crossroadImage === undefined
@@ -65,8 +149,10 @@ export function BasicInformation() {
 				alt="Map screenshot"
 			/>
 			<BaseForm onSubmit={onConfirm}>
-				<BaseUl>
-					<BaseLi>Basic information:</BaseLi>
+				<p>
+					<b>Basic information:</b>
+				</p>
+				<HorizontalBaseUl>
 					<BaseLi>
 						<label htmlFor="name">Name:</label>
 						<BaseInput id="name" type="text" />
@@ -83,23 +169,49 @@ export function BasicInformation() {
 						<label htmlFor="district">District:</label>
 						<BaseInput id="district" type="text" />
 					</BaseLi>
+				</HorizontalBaseUl>
+				<HorizontalBaseUl>
 					<BaseLi>
-						<label htmlFor="type">Type:</label>
-						{/*TODO: custom radio buttons!*/}
-						<button>PRIVATE</button>
-						<button>PUBLIC</button>
+						<TwoChoicesToggle
+							handleOnChange={() => {
+								if (visibilityType === CrossroadType.PRIVATE) {
+									setVisibilityType(CrossroadType.PUBLIC);
+								} else {
+									setVisibilityType(CrossroadType.PRIVATE);
+								}
+							}}
+							options={[CrossroadType.PRIVATE, CrossroadType.PUBLIC]}
+							name="typeChoice"
+							labelMessage="Type:"
+						/>
 					</BaseLi>
-				</BaseUl>
-				<NeutralPositiveButton type="submit" disabled={false}>
-					Confirm
-				</NeutralPositiveButton>
+					<BaseLi>
+						<NeutralPositiveButton type="submit" disabled={false}>
+							Confirm
+						</NeutralPositiveButton>
+					</BaseLi>
+				</HorizontalBaseUl>
+				{dataMessage === "" ? (
+					<PlaceholderSpan></PlaceholderSpan>
+				) : (
+					<>
+						{!isInputValid ? (
+							<AdaptedInvalidInputMessage>
+								{dataMessage}
+							</AdaptedInvalidInputMessage>
+						) : (
+							<ValidInputMessage>{dataMessage}</ValidInputMessage>
+						)}
+					</>
+				)}
 			</BaseForm>
 			<ButtonsDiv>
 				<NegativeButton onClick={onAbort}>Abort</NegativeButton>
-				<PositiveButton onClick={onNext} disabled={false}>
+				<PositiveButton onClick={onNext} disabled={!isInputValid}>
+
 					Next
 				</PositiveButton>
 			</ButtonsDiv>
-		</div>
+		</ContainerDiv>
 	);
 }

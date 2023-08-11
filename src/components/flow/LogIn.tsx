@@ -3,15 +3,10 @@ import axios from "axios";
 import { ThemeContext } from "../../custom/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
+import { ToggleThemeSwitch } from "../additional/ToggleThemeSwitch";
 import logo from "../../assets/TFO_4_but_better.png";
 import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
-import {
-	SigningContainer,
-	SigningLogo,
-	InvalidInputMessage,
-	PlaceholderSpan,
-} from "../../styles/SigningStyles";
+import { SigningContainer, SigningLogo } from "../../styles/SigningStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	RedirectionLink,
@@ -19,6 +14,8 @@ import {
 	BaseInput,
 	BaseUl,
 	BaseLi,
+	InvalidInputMessage,
+	PlaceholderSpan,
 } from "../../styles/MainTheme";
 
 export type loginData = {
@@ -81,7 +78,6 @@ export function LogIn() {
 	};
 
 	const logIn = (event: React.SyntheticEvent) => {
-		console.log("Logging in!");
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
@@ -182,7 +178,7 @@ export function LogIn() {
 					<PlaceholderSpan></PlaceholderSpan>
 				)}
 			</BaseForm>
-			<ToggleSwitch />
+			<ToggleThemeSwitch />
 		</SigningContainer>
 	);
 }
