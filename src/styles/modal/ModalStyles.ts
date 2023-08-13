@@ -1,7 +1,6 @@
 import styled from "styled-components";
 
 export const StyledModal = styled.div`
-	box-shadow: 5px 4px 3px 1px ${(props) => props.theme.id === "light" ? "#585858" : "#141413"};
 	border-radius: 6px;
 	background-color: ${(props) => props.theme.primary};
 	padding: 1rem;

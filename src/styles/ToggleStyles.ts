@@ -1,10 +1,12 @@
 import styled from "styled-components";
 import moon from "../assets/moon.svg";
 import sun from "../assets/sun.svg";
-import { ButtonColors, LightTheme } from "./MainTheme";
+import { ButtonColors, Colors, LightTheme } from "./MainTheme";
 
 export type ToggleProps = {
 	checked: boolean;
+	checkedColor?: ButtonColors | Colors;
+	uncheckedColor?: ButtonColors | Colors;
 };
 
 export const ToggleContainer = styled.div`
@@ -44,8 +46,8 @@ export const StyledToggleLabel = styled.label<ToggleProps>`
 
 
 export const AdaptedToggleLabel = styled(StyledToggleLabel)`
-	background: ${(props: ToggleProps) => (props.checked ? ButtonColors.GREEN : ButtonColors.ORANGE)};
-	border: 1px solid ${(props) => props.theme.text};
+	background: ${(props: ToggleProps) => (props.checked ? props.checkedColor : props.uncheckedColor)};
+	// border: 1px solid ${(props) => props.theme.text};
 
 	&:after {
 		background-color: ${LightTheme.primary};

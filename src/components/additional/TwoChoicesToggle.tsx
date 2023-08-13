@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import { ToggleContainer, AdaptedToggleLabel } from "../../styles/ToggleStyles";
+import { ButtonColors, Colors } from "../../styles/MainTheme";
+import styled from "styled-components";
 
 export type TwoChoicesToggleProps = {
 	handleOnChange: () => void;
 	options: any[];
 	name: string;
 	labelMessage: string;
+	colors?: (ButtonColors | Colors)[];
 };
 
 export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
@@ -14,9 +17,20 @@ export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
 
 	return (
 		<ToggleContainer>
-			<p>{props.labelMessage} </p>
+			<LabelP>
+				<strong>{props.labelMessage}</strong>
+			</LabelP>
 			<p>{props.options[1]}</p>
-			<AdaptedToggleLabel htmlFor={props.name} checked={chosen !== checkedHolder}>
+			<AdaptedToggleLabel
+				htmlFor={props.name}
+				checked={chosen !== checkedHolder}
+				checkedColor={
+					props.colors !== undefined ? props.colors[1] : ButtonColors.GREEN
+				}
+				uncheckedColor={
+					props.colors !== undefined ? props.colors[0] : ButtonColors.ORANGE
+				}
+			>
 				toggle me
 				<input
 					id={props.name}
@@ -36,3 +50,7 @@ export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
 		</ToggleContainer>
 	);
 }
+
+const LabelP = styled.p`
+	margin-right: 8px;
+`;

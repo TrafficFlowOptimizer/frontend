@@ -11,11 +11,13 @@ import {
 	LightMapStyles,
 	mapContainerStyle,
 	LeafletContainer,
-	WorkaroundInnerDiv,
-	CreatorInformation,
 } from "../../styles/drawing-tool-styles/MapStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { ButtonsDiv } from "../../styles/MainTheme";
+import {
+	WorkaroundInnerDiv,
+	CreatorInformation,
+} from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function MapLeaflet() {
 	const { theme } = useThemeContext();

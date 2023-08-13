@@ -1,4 +1,4 @@
-import { Crossroad, CrossroadType } from "../CrossroadInterface";
+import { Crossroad, CrossroadType, ExitEntrancePoint } from "../CrossroadInterface";
 
 export const COUNTRIES = [
 	"Afghanistan",
@@ -225,4 +225,12 @@ export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {
 	collisionsIds: [],
 	trafficLightIds: [],
 	connectionIds: [],
+};
+
+export const EXITS_ENTRANCES_TEMPLATE: ExitEntrancePoint = {
+	id: "",
+	type: "exit",
+	x_cord: 0,
+	y_cord: 0,
+	street: "",
 };

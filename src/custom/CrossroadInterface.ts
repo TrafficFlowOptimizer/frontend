@@ -42,3 +42,11 @@ export enum TrafficLightType {
 	RIGHT_FORWARD,
 	LEFT_TURNING,
 }
+
+export type ExitEntrancePoint = {
+	id: string;
+	type: "exit" | "entrance";
+	x_cord: number;
+	y_cord: number;
+	street: string;
+};

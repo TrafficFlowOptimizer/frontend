@@ -1,8 +1,5 @@
 import styled from "styled-components";
 
-export const CreatorInformation = styled.p`
-	text-align: center;
-`;
 
 export const mapContainerStyle = {
 	width: "1250px",
@@ -17,13 +14,6 @@ export const LeafletContainer = styled.div`
 	flex-wrap: no-wrap;
 	justify-content: center;
 	align-items: center;
-`;
-
-export const WorkaroundInnerDiv = styled.div`
-	flex: 1;
-	height: 520px;
-	width: 1250px;
-	margin: 10px 0px;
 `;
 
 export const LightMapStyles = [

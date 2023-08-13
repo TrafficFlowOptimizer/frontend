@@ -8,6 +8,11 @@ export enum ButtonColors {
 	GREEN = "#20bf55"
 }
 
+export enum Colors {
+	PRIMARY_WHITE = "#FCFAF9",
+	PRIMARY_BLACK = "#191516"
+}
+
 export const LightTheme = {
 	id: "light",
 	primary: "#FCFAF9",
@@ -111,7 +116,9 @@ export const ContainerDiv = styled.div`
 	flex-wrap: no-wrap;
 	
 	justify-content: space-evenly;
-	align-items: center
+	align-items: center;
+	
+	padding: 15px;
 `;
 
 

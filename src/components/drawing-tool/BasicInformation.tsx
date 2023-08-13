@@ -10,7 +10,7 @@ import {
 	AdaptedInvalidInputMessage,
 	CrossroadScreenshot,
 	ValidInputMessage,
-} from "../../styles/drawing-tool-styles/BasicInformationStyles";
+} from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
 	BaseForm,
 	BaseInput,
@@ -30,7 +30,8 @@ import {
 	fakeCrossroadIdGetter,
 } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { CitiesResponse } from "../../custom/drawing-tool/AuxiliaryTypes";
-import { TwoChoicesToggle } from "./TwoChoicesToggle";
+import { TwoChoicesToggle } from "../additional/TwoChoicesToggle";
+import { InputInformationSpan } from "../additional/InputInformationSpan";
 
 export function BasicInformation() {
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
@@ -104,7 +105,6 @@ export function BasicInformation() {
 				},
 			)
 			.then((response) => {
-				console.log(potentialData.country, potentialData.city);
 				if (!response.data.data.includes(potentialData.city)) {
 					setInputValidity(false);
 					setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_city);
@@ -186,29 +186,19 @@ export function BasicInformation() {
 						/>
 					</BaseLi>
 					<BaseLi>
-						<NeutralPositiveButton type="submit" disabled={false}>
+						<NeutralPositiveButton type="submit">
 							Confirm
 						</NeutralPositiveButton>
 					</BaseLi>
 				</HorizontalBaseUl>
-				{dataMessage === "" ? (
-					<PlaceholderSpan></PlaceholderSpan>
-				) : (
-					<>
-						{!isInputValid ? (
-							<AdaptedInvalidInputMessage>
-								{dataMessage}
-							</AdaptedInvalidInputMessage>
-						) : (
-							<ValidInputMessage>{dataMessage}</ValidInputMessage>
-						)}
-					</>
-				)}
+				<InputInformationSpan
+					dataMessage={dataMessage}
+					isInputValid={isInputValid}
+				/>
 			</BaseForm>
 			<ButtonsDiv>
 				<NegativeButton onClick={onAbort}>Abort</NegativeButton>
 				<PositiveButton onClick={onNext} disabled={!isInputValid}>
-
 					Next
 				</PositiveButton>
 			</ButtonsDiv>

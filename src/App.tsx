@@ -18,6 +18,7 @@ import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
 import { LoggedUser, UserContext } from "./custom/UserContext";
 import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
+import { TrafficLights } from "./components/drawing-tool/TrafficLights";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -52,6 +53,10 @@ function App() {
 									<Route
 										path="entrances-and-exits"
 										element={<EntrancesAndExits />}
+									/>
+									<Route
+										path="traffic-lights"
+										element={<TrafficLights />}
 									/>
 									<Route path="*" element={<PageNotFoundLanding />} />
 								</Route>
