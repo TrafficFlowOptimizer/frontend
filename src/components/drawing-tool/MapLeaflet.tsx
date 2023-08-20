@@ -43,9 +43,9 @@ export function MapLeaflet() {
 			cacheBust: true,
 			skipFonts: true,
 			canvasWidth: 1250,
-			canvasHeight: 520,
+			canvasHeight: 560,
 			width: 1220,
-			height: 520,
+			height: 560,
 		})
 			.then((dataUrl) => {
 				// const link = document.createElement("a");

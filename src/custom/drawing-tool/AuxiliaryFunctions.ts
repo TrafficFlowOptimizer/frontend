@@ -1,3 +1,6 @@
+import { EEIPointType } from "../CrossroadInterface";
+import { ButtonColors, Colors } from "../../styles/MainTheme";
+
 export const capitalizeFirstLetter = (str: string): string => {
 	const splits = str
 		.split(" ")
@@ -8,4 +11,16 @@ export const capitalizeFirstLetter = (str: string): string => {
 
 export const fakeCrossroadIdGetter = (): string => {
 	return "1";
+};
+
+export const matchEEIPointTypeWithColor = (
+	type: EEIPointType,
+): ButtonColors | Colors => {
+	if (type === "entrance") {
+		return ButtonColors.BLUE;
+	} else if (type === "exit") {
+		return ButtonColors.ORANGE;
+	} else {
+		return ButtonColors.GREEN;
+	}
 };

@@ -213,6 +213,7 @@ export const BASIC_INFORMATION_ERROR_MESSAGES = {
 	zero_length: "All fields require input",
 	invalid_country: "Such country doesn't exist",
 	invalid_city: "No such city in this country",
+	invalid_capacity: "Capacity needs to be a positive integer of 'infinity'",
 };
 
 export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {
@@ -229,8 +230,11 @@ export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {
 
 export const EXITS_ENTRANCES_TEMPLATE: ExitEntrancePoint = {
 	id: "",
-	type: "exit",
-	x_cord: 0,
-	y_cord: 0,
+	type: "entrance",
+	xCord: 0,
+	yCord: 0,
 	street: "",
+	capacity: -1,
 };
+
+export const EEIPointOffset = 7.5;

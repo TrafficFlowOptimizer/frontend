@@ -43,10 +43,13 @@ export enum TrafficLightType {
 	LEFT_TURNING,
 }
 
+export type EEIPointType = "exit" | "entrance" | "intermediate";
+
 export type ExitEntrancePoint = {
 	id: string;
-	type: "exit" | "entrance";
-	x_cord: number;
-	y_cord: number;
+	type: EEIPointType;
+	xCord: number;
+	yCord: number;
 	street: string;
+	capacity: number;
 };

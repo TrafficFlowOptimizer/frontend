@@ -1,6 +1,12 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { ButtonsDiv, ContainerDiv } from "../../styles/MainTheme";
+import {
+	BaseLi,
+	BaseUl,
+	ButtonColors,
+	ButtonsDiv,
+	ContainerDiv,
+} from "../../styles/MainTheme";
 import { NegativeButton } from "../../styles/NegativeButton";
 
 export function TrafficLights() {
