@@ -19,6 +19,7 @@ import { ThemeType, ThemeContext } from "./custom/ThemeContext";
 import { LoggedUser, UserContext } from "./custom/UserContext";
 import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
 import { TrafficLights } from "./components/drawing-tool/TrafficLights";
+import { Connections } from "./components/drawing-tool/Connections";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -53,6 +54,10 @@ function App() {
 									<Route
 										path="entrances-and-exits"
 										element={<EntrancesAndExits />}
+									/>
+									<Route
+										path="connections"
+										element={<Connections />}
 									/>
 									<Route
 										path="traffic-lights"

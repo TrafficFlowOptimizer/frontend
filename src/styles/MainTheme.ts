@@ -10,7 +10,8 @@ export enum ButtonColors {
 
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
-	PRIMARY_BLACK = "#191516"
+	PRIMARY_BLACK = "#191516",
+	PURPLE = "#742AFF",
 }
 
 export const LightTheme = {
@@ -58,6 +59,7 @@ export const BaseButton = styled.button`
 	
 	&:disabled {
 		background-color: ${LightTheme.secondary};
+		cursor: not-allowed;
 	}
 `;
 
@@ -128,6 +130,11 @@ export const BaseInput = styled.input`
 	border: 1px solid ${(props) => props.theme.text};
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
+	
+	&:disabled {
+	background-color: ${(props) => props.theme.secondary};
+	cursor: not-allowed;
+	}
 `;
 
 export const BaseUl = styled.ul`

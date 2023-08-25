@@ -53,3 +53,11 @@ export type ExitEntrancePoint = {
 	street: string;
 	capacity: number;
 };
+
+export type Connection = {
+	id: string;
+	name: string;
+	trafficLightIDs: string[];
+	sourceId: string;
+	targetId: string;
+};

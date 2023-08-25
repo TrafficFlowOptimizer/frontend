@@ -78,7 +78,7 @@ export function EntrancesAndExits() {
 	};
 
 	const onNext = () => {
-		navigate("../traffic-lights", {
+		navigate("../connections", {
 			state: {
 				crossroad: crossroad,
 				entrancesAndExits: exitEntrancePoints,
@@ -151,9 +151,6 @@ export function EntrancesAndExits() {
 											{point.capacity === -1
 												? "infinity"
 												: point.capacity}
-										</BaseLi>
-										<BaseLi>
-											loc: {point.xCord},{point.yCord}
 										</BaseLi>
 									</BaseUl>
 									<ButtonsDiv>
