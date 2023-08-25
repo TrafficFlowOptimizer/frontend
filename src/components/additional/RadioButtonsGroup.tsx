@@ -6,9 +6,15 @@ export type RadioGroupProps = {
 	groupLabel: string;
 	options: RadioOption[];
 	onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+	chosenValueIndex: number;
 };
 
-export function RadioButtonsGroup({ groupLabel, options, onChange }: RadioGroupProps) {
+export function RadioButtonsGroup({
+	groupLabel,
+	options,
+	onChange,
+	chosenValueIndex,
+}: RadioGroupProps) {
 	const renderOptions = () => {
 		return options.map(({ id, text }: RadioOption, index) => {
 			const shortenedOptionLabel = id.replace(/\s+/g, "");
@@ -21,7 +27,7 @@ export function RadioButtonsGroup({ groupLabel, options, onChange }: RadioGroupP
 					key={optionId}
 					id={optionId}
 					name={groupLabel}
-					defaultChecked={index === 0}
+					defaultChecked={index === chosenValueIndex}
 					onChange={onChange}
 				/>
 			);

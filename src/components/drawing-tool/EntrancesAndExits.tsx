@@ -42,15 +42,13 @@ export function EntrancesAndExits() {
 	const [templatePoint, setTemplatePoint] = useState(EXITS_ENTRANCES_TEMPLATE);
 
 	const handleMouseMove = (event: any) => {
-		const localX = event.clientX - event.target.offsetLeft;
-		const localY = event.clientY - event.target.offsetTop;
-		const tt = event.target.getBoundingClientRect();
-		const st = window.scrollY || document.documentElement.scrollTop;
-		const sl = window.scrollX || document.documentElement.scrollLeft;
-		console.log(localX, localY, event);
+		const rect = event.target.getBoundingClientRect();
+		const x = event.clientX - rect.left; //x position within the element.
+		const y = event.clientY - rect.top; //y position within the element.
+
 		setLocalMousePos({
-			x: localX - EEIPointOffset - Math.ceil(tt.left + sl),
-			y: localY - EEIPointOffset - Math.ceil(tt.top + st),
+			x: x - EEIPointOffset,
+			y: y - EEIPointOffset,
 		});
 	};
 
@@ -70,12 +68,13 @@ export function EntrancesAndExits() {
 
 	const onCloseCreator = () => {
 		setShowCreator(false);
+		setTemplatePoint(EXITS_ENTRANCES_TEMPLATE);
 	};
 
 	const onSaveCreator = (point: ExitEntrancePoint) => {
-		console.log(point);
 		setExitEntrancePoints([...exitEntrancePoints, point]);
 		onCloseCreator();
+		setTemplatePoint(EXITS_ENTRANCES_TEMPLATE);
 	};
 
 	const onNext = () => {
@@ -94,7 +93,22 @@ export function EntrancesAndExits() {
 
 	const onDeletePoint = (event: any, pointId: string, pointIdx: number) => {
 		event.stopPropagation();
-		console.log(pointId, pointIdx);
+		setExitEntrancePoints(
+			exitEntrancePoints.filter(
+				(point, idx) => pointId !== point.id && idx !== pointIdx,
+			),
+		);
+	};
+
+	const onEditPoint = (event: any, pointId: string, pointIdx: number) => {
+		event.stopPropagation();
+		setTemplatePoint(exitEntrancePoints.at(pointIdx)!);
+		setExitEntrancePoints(
+			exitEntrancePoints.filter(
+				(point, idx) => pointId !== point.id && idx !== pointIdx,
+			),
+		);
+		setShowCreator(true);
 	};
 
 	return (
@@ -132,7 +146,12 @@ export function EntrancesAndExits() {
 										<BaseLi>id: {point.id}</BaseLi>
 										<BaseLi>type: {point.type}</BaseLi>
 										<BaseLi>street: {point.street}</BaseLi>
-										<BaseLi>capacity: {point.capacity}</BaseLi>
+										<BaseLi>
+											capacity:{" "}
+											{point.capacity === -1
+												? "infinity"
+												: point.capacity}
+										</BaseLi>
 										<BaseLi>
 											loc: {point.xCord},{point.yCord}
 										</BaseLi>
@@ -152,6 +171,9 @@ export function EntrancesAndExits() {
 											color={ButtonColors.BLUE}
 											yCord={0}
 											xCord={0}
+											onClick={(e) => {
+												onEditPoint(e, point.id, idx);
+											}}
 										>
 											EDIT POINT
 										</TooltipButton>

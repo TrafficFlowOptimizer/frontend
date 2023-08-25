@@ -77,6 +77,16 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		});
 	};
 
+	const getPointType = () => {
+		if (point.type === "entrance") {
+			return 0;
+		} else if (point.type === "exit") {
+			return 1;
+		} else {
+			return 2;
+		}
+	};
+
 	return (
 		<EEModal>
 			<p>
@@ -93,6 +103,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 							groupLabel="Type:"
 							options={crossroadTypeOptions}
 							onChange={handleTypeSelection}
+							chosenValueIndex={getPointType()}
 						/>
 					</BaseLi>
 					<BaseLi>
