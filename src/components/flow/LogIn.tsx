@@ -9,13 +9,14 @@ import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import { SigningContainer, SigningLogo } from "../../styles/SigningStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
-	RedirectionLink,
 	BaseForm,
 	BaseInput,
-	BaseUl,
 	BaseLi,
-	InvalidInputMessage,
+	BaseUl,
+	ButtonColors,
+	InputInformationMessage,
 	PlaceholderSpan,
+	RedirectionLink,
 } from "../../styles/MainTheme";
 
 export type loginData = {
@@ -135,7 +136,9 @@ export function LogIn() {
 					</BaseLi>
 					{!isUsernameValid ? (
 						<BaseLi>
-							<InvalidInputMessage>{usernameMessage}</InvalidInputMessage>
+							<InputInformationMessage color={ButtonColors.RED}>
+								{usernameMessage}
+							</InputInformationMessage>
 						</BaseLi>
 					) : (
 						<BaseLi>
@@ -153,7 +156,9 @@ export function LogIn() {
 					</BaseLi>
 					{!isPasswordLongEnough ? (
 						<BaseLi>
-							<InvalidInputMessage>{passwordMessage}</InvalidInputMessage>
+							<InputInformationMessage color={ButtonColors.RED}>
+								{passwordMessage}
+							</InputInformationMessage>
 						</BaseLi>
 					) : (
 						<BaseLi>
@@ -173,7 +178,9 @@ export function LogIn() {
 					Log In!
 				</PositiveButton>
 				{badLoginMessage.length > 0 ? (
-					<InvalidInputMessage>{badLoginMessage}</InvalidInputMessage>
+					<InputInformationMessage color={ButtonColors.RED}>
+						{badLoginMessage}
+					</InputInformationMessage>
 				) : (
 					<PlaceholderSpan></PlaceholderSpan>
 				)}

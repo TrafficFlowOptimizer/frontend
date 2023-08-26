@@ -1,13 +1,12 @@
-import { PlaceholderSpan } from "../../styles/MainTheme";
-import {
-	AdaptedInvalidInputMessage,
-	ValidInputMessage,
-} from "../../styles/drawing-tool-styles/GeneralStyles";
+import { ButtonColors, Colors, PlaceholderSpan } from "../../styles/MainTheme";
+import { AdaptedInputInformationMessage } from "../../styles/drawing-tool-styles/GeneralStyles";
 import React from "react";
 
 export type InputInformationSpanProps = {
 	dataMessage: string;
 	isInputValid: boolean;
+	positiveColor: ButtonColors | Colors;
+	negativeColor: ButtonColors | Colors;
 };
 
 export function InputInformationSpan(props: InputInformationSpanProps) {
@@ -16,11 +15,13 @@ export function InputInformationSpan(props: InputInformationSpanProps) {
 	) : (
 		<>
 			{!props.isInputValid ? (
-				<AdaptedInvalidInputMessage>
+				<AdaptedInputInformationMessage color={props.negativeColor}>
 					{props.dataMessage}
-				</AdaptedInvalidInputMessage>
+				</AdaptedInputInformationMessage>
 			) : (
-				<ValidInputMessage>{props.dataMessage}</ValidInputMessage>
+				<AdaptedInputInformationMessage color={props.positiveColor}>
+					{props.dataMessage}
+				</AdaptedInputInformationMessage>
 			)}
 		</>
 	);

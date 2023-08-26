@@ -3,23 +3,6 @@ import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
 import axios from "axios";
 import { Crossroad, CrossroadType } from "../../custom/CrossroadInterface";
-import { NeutralPositiveButton } from "../../styles/NeutralButton";
-import { PositiveButton } from "../../styles/PositiveButton";
-import { NegativeButton } from "../../styles/NegativeButton";
-import {
-	AdaptedInvalidInputMessage,
-	CrossroadScreenshot,
-	ValidInputMessage,
-} from "../../styles/drawing-tool-styles/GeneralStyles";
-import {
-	BaseForm,
-	BaseInput,
-	BaseLi,
-	ButtonsDiv,
-	HorizontalBaseUl,
-	PlaceholderSpan,
-	ContainerDiv,
-} from "../../styles/MainTheme";
 import {
 	BASIC_INFORMATION_ERROR_MESSAGES,
 	COUNTRIES,
@@ -32,6 +15,19 @@ import {
 import { CitiesResponse } from "../../custom/drawing-tool/AuxiliaryTypes";
 import { TwoChoicesToggle } from "../additional/TwoChoicesToggle";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
+import { NeutralPositiveButton } from "../../styles/NeutralButton";
+import { PositiveButton } from "../../styles/PositiveButton";
+import { NegativeButton } from "../../styles/NegativeButton";
+import { CrossroadScreenshot } from "../../styles/drawing-tool-styles/GeneralStyles";
+import {
+	BaseForm,
+	BaseInput,
+	BaseLi,
+	ButtonColors,
+	ButtonsDiv,
+	ContainerDiv,
+	HorizontalBaseUl,
+} from "../../styles/MainTheme";
 
 export function BasicInformation() {
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
@@ -194,6 +190,8 @@ export function BasicInformation() {
 				<InputInformationSpan
 					dataMessage={dataMessage}
 					isInputValid={isInputValid}
+					positiveColor={ButtonColors.GREEN}
+					negativeColor={ButtonColors.RED}
 				/>
 			</BaseForm>
 			<ButtonsDiv>

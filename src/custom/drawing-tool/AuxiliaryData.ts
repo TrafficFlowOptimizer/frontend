@@ -214,6 +214,7 @@ export const BASIC_INFORMATION_ERROR_MESSAGES = {
 	invalid_country: "Such country doesn't exist",
 	invalid_city: "No such city in this country",
 	invalid_capacity: "Capacity needs to be a positive integer of 'infinity'",
+	used_id: "This id is already in use, try another one",
 };
 
 export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {

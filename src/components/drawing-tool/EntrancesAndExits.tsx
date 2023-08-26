@@ -111,6 +111,15 @@ export function EntrancesAndExits() {
 		setShowCreator(true);
 	};
 
+	const checkId = (id: string) => {
+		for (const tempPoint of exitEntrancePoints) {
+			if (tempPoint.id === id) {
+				return true;
+			}
+		}
+		return false;
+	};
+
 	return (
 		<ContainerDiv>
 			{showCreator && (
@@ -119,6 +128,7 @@ export function EntrancesAndExits() {
 						point={templatePoint}
 						closeFunction={onCloseCreator}
 						handleOnSave={onSaveCreator}
+						checkId={checkId}
 					/>
 					<Backdrop />
 				</>

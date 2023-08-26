@@ -11,7 +11,8 @@ export enum ButtonColors {
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
 	PRIMARY_BLACK = "#191516",
-	PURPLE = "#742AFF",
+	PURPLE = "#8342FB",
+	BRIGHT_RED = "#FF1700",
 }
 
 export const LightTheme = {
@@ -160,8 +161,12 @@ export const BaseLi = styled.li`
 	gap: 1vw;
 `;
 
-export const InvalidInputMessage = styled.p`
-	color: ${ButtonColors.RED};
+export type JustColorProps = {
+	color: ButtonColors | Colors;
+}
+
+export const InputInformationMessage = styled.p<JustColorProps>`
+	color: ${(props) => props.color};
 	font-weight: bold;
 	font-size: 10px;
 `;

@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BaseButton, ButtonColors, Colors, InvalidInputMessage } from "../MainTheme";
+import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainTheme";
 import Tooltip from "@mui/material/Tooltip";
 
 export const CreatorInformation = styled.p`
@@ -29,13 +29,9 @@ export const CrossroadScreenshot = styled.img`
 `;
 
 
-export const AdaptedInvalidInputMessage = styled(InvalidInputMessage)`
+export const AdaptedInputInformationMessage = styled(InputInformationMessage)`
 	font-size: 1em;
 	margin: 5px 0 15px 0;
-`;
-
-export const ValidInputMessage = styled(AdaptedInvalidInputMessage)`
-	color: ${ButtonColors.GREEN};
 `;
 
 export type EEIPointProps = {

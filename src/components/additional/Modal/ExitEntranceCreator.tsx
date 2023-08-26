@@ -13,6 +13,7 @@ import {
 	BaseInput,
 	BaseLi,
 	BaseUl,
+	ButtonColors,
 	ButtonsDiv,
 } from "../../../styles/MainTheme";
 import { NeutralPositiveButton } from "../../../styles/NeutralButton";
@@ -20,6 +21,7 @@ import { NeutralPositiveButton } from "../../../styles/NeutralButton";
 export type ExitEntranceCreatorProps = {
 	closeFunction: () => void;
 	handleOnSave: (point: ExitEntrancePoint) => void;
+	checkId: (id: string) => boolean;
 	point: ExitEntrancePoint;
 };
 
@@ -52,6 +54,9 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_capacity);
+		} else if (props.checkId(target.id.value)) {
+			setInputValidity(false);
+			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
 		} else {
 			setPoint({
 				...point,
@@ -139,6 +144,8 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 				<InputInformationSpan
 					dataMessage={dataMessage}
 					isInputValid={isInputValid}
+					positiveColor={ButtonColors.GREEN}
+					negativeColor={ButtonColors.RED}
 				/>
 			</BaseForm>
 			<ButtonsDiv>
