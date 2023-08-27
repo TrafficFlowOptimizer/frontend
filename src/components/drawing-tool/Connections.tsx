@@ -40,6 +40,9 @@ export function Connections() {
 	const crossroad: Crossroad = location.state.crossroad;
 	const exitEntrancePoints: ExitEntrancePoint[] = location.state.entrancesAndExits;
 
+	const [idInput, setIdInput] = useState("");
+	const [nameInput, setNameInput] = useState("");
+
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("");
 	const [point1ChoiceStatus, setPoint1ChoiceStatus] = useState("Source: None");
@@ -85,8 +88,8 @@ export function Connections() {
 		}
 	};
 
-	const getFreeChoicePoint = () => {
-		if (chosenPoint1 === null) {
+	const getFreeChoicePoint = (pointType: "exit" | "entrance" | "intermediate") => {
+		if (chosenPoint1 === null && pointType !== "exit") {
 			return 1;
 		} else {
 			return 2;
@@ -120,6 +123,9 @@ export function Connections() {
 		} else if (checkId(target.id.value)) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
+		} else if (checkForRepliedConnection()) {
+			setInputValidity(false);
+			setDataMessage("This connection has already been created");
 		} else if (chosenPoint2 !== null && chosenPoint1 !== null) {
 			setConnections([
 				...connections,
@@ -138,6 +144,8 @@ export function Connections() {
 			setDataMessage("New connection added!");
 			setChosenPoint1(null);
 			setChosenPoint2(null);
+			setIdInput("");
+			setNameInput("");
 		}
 	};
 
@@ -150,17 +158,30 @@ export function Connections() {
 		return false;
 	};
 
-	const getChooseButton = (pointId: string) => {
+	const checkForRepliedConnection = () => {
+		for (const con of connections) {
+			if (con.sourceId === chosenPoint1 && con.targetId === chosenPoint2) {
+				return true;
+			}
+		}
+		return false;
+	};
+
+	const getChooseButton = (
+		pointId: string,
+		pointType: "exit" | "entrance" | "intermediate",
+	) => {
+		const pointNumber = getFreeChoicePoint(pointType);
 		return (
 			<TooltipButton
 				color={ButtonColors.GREEN}
 				yCord={0}
 				xCord={0}
 				onClick={() => {
-					onAddToChosen(getFreeChoicePoint(), pointId);
+					onAddToChosen(pointNumber, pointId);
 				}}
 			>
-				ADD TO CONNECTION
+				ADD AS {pointNumber === 1 ? "SOURCE" : "TARGET"}
 			</TooltipButton>
 		);
 	};
@@ -225,9 +246,25 @@ export function Connections() {
 												REMOVE FROM CONNECTION
 											</TooltipButton>
 										)}
-										{chosenPoint1 !== point.id &&
+										{point.type !== "exit" &&
+											point.type !== "intermediate" &&
+											chosenPoint1 === null &&
+											getChooseButton(point.id, point.type)}
+										{point.type !== "entrance" &&
+											point.type !== "intermediate" &&
+											chosenPoint2 === null &&
+											getChooseButton(point.id, point.type)}
+										{point.type === "intermediate" &&
+											(chosenPoint1 === null ||
+												chosenPoint2 === null) &&
 											chosenPoint2 !== point.id &&
-											getChooseButton(point.id)}
+											chosenPoint1 !== point.id &&
+											getChooseButton(point.id, point.type)}
+										{/*{((chosenPoint1 == null &&*/}
+										{/*	point.type !== "exit") ||*/}
+										{/*	(chosenPoint2 == null &&*/}
+										{/*		point.type !== "entrance")) &&*/}
+										{/*	getChooseButton(point.id, point.type)}*/}
 									</ButtonsDiv>
 								</React.Fragment>
 							}
@@ -285,6 +322,10 @@ export function Connections() {
 						<BaseInput
 							id="id"
 							type="text"
+							value={idInput}
+							onChange={(e) => {
+								setIdInput(e.target.value);
+							}}
 							disabled={chosenPoint1 === null || chosenPoint2 === null}
 						/>
 					</BaseLi>
@@ -293,6 +334,10 @@ export function Connections() {
 						<BaseInput
 							id="name"
 							type="text"
+							value={nameInput}
+							onChange={(e) => {
+								setNameInput(e.target.value);
+							}}
 							disabled={chosenPoint1 === null || chosenPoint2 === null}
 						/>
 					</BaseLi>
