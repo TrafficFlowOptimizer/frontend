@@ -31,6 +31,7 @@ import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../custom/drawing-tool/AuxiliaryData";
+import { ConnectionMarker } from "./ConnectionMarker";
 
 export function Connections() {
 	const location = useLocation();
@@ -167,6 +168,10 @@ export function Connections() {
 		return false;
 	};
 
+	const removeConnection = (connectionId: string) => {
+		setConnections(connections.filter((con) => con.id !== connectionId));
+	};
+
 	const getChooseButton = (
 		pointId: string,
 		pointType: "exit" | "entrance" | "intermediate",
@@ -203,7 +208,30 @@ export function Connections() {
 				3. Repeat steps 1-2 for all connections you need
 			</p>
 			<BorderedWorkaroundDiv>
-				{/*TODO: draw connections as a RED LINES*/}
+				{/*TODO: tooltip for connections - positioning if possible*/}
+				{connections.length > 0 &&
+					connections.map((con) => {
+						const entrancePoint = exitEntrancePoints.filter(
+							(point) => point.id === con.sourceId,
+						)[0];
+						const exitPoint = exitEntrancePoints.filter(
+							(point) => point.id === con.targetId,
+						)[0];
+						return (
+							<ConnectionMarker
+								key={con.id}
+								thickness={3}
+								entranceX={entrancePoint.xCord}
+								entranceY={entrancePoint.yCord}
+								exitX={exitPoint.xCord}
+								exitY={exitPoint.yCord}
+								connection={con}
+								removeConnection={() => {
+									removeConnection(con.id);
+								}}
+							/>
+						);
+					})}
 				{exitEntrancePoints.length > 0 &&
 					exitEntrancePoints.map((point, idx) => (
 						<Tooltip

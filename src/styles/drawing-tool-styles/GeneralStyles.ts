@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainTheme";
 import Tooltip from "@mui/material/Tooltip";
+import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
 export const CreatorInformation = styled.p`
 	text-align: center;
@@ -67,4 +68,30 @@ export const TooltipButton = styled(BaseButton)<EEIPointProps>`
 	padding 0.5vh 0.25vw;
 	margin: 0.5vh 0.25vw;
 	background-color: ${(props) => props.color};
+`;
+
+export type ConnectionLineProps = {
+	thickness: number;
+	length: number;
+	angle: number;
+	centerX: number;
+	centerY: number;
+}
+
+export const ConnectionLine = styled.div<ConnectionLineProps>`
+	x-index: 3;
+	padding: 0px; 
+	margin: 0px; 
+	height: ${(props:ConnectionLineProps) => props.thickness}px; 
+	background-color: ${Colors.BRIGHT_RED};
+	line-height: 1px; 
+	position: absolute; 
+	left: ${(props:ConnectionLineProps) => props.centerX + EEIPointOffset}px; 
+	top: ${(props:ConnectionLineProps) => props.centerY + EEIPointOffset}px;
+	width: ${(props:ConnectionLineProps) => props.length}px;
+	-moz-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
+	-webkit-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
+	-o-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
+	-ms-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg); 
+	transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 `;
