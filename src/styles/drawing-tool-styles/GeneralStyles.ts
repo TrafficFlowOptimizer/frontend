@@ -84,6 +84,7 @@ export const ConnectionLine = styled.div<ConnectionLineProps>`
 	margin: 0px; 
 	height: ${(props:ConnectionLineProps) => props.thickness}px; 
 	background-color: ${Colors.BRIGHT_RED};
+	border: 1px solid ${Colors.PRIMARY_BLACK};
 	line-height: 1px; 
 	position: absolute; 
 	left: ${(props:ConnectionLineProps) => props.centerX + EEIPointOffset}px; 

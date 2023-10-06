@@ -1,4 +1,10 @@
-import { Crossroad, CrossroadType, ExitEntrancePoint } from "../CrossroadInterface";
+import {
+	Crossroad,
+	CrossroadType,
+	ExitEntrancePoint,
+	FirstStageTrafficLight,
+	TrafficLightType,
+} from "../CrossroadInterface";
 
 export const COUNTRIES = [
 	"Afghanistan",
@@ -239,3 +245,12 @@ export const EXITS_ENTRANCES_TEMPLATE: ExitEntrancePoint = {
 };
 
 export const EEIPointOffset = 7.5;
+
+export const FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE: FirstStageTrafficLight = {
+	light: {
+		id: "",
+		name: "",
+		direction: TrafficLightType.FORWARD,
+	},
+	eeiPointId: "",
+};

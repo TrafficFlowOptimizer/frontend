@@ -31,7 +31,7 @@ import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../custom/drawing-tool/AuxiliaryData";
-import { ConnectionMarker } from "./ConnectionMarker";
+import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 
 export function Connections() {
 	const location = useLocation();
@@ -69,6 +69,7 @@ export function Connections() {
 			state: {
 				crossroad: crossroad,
 				entrancesAndExits: exitEntrancePoints,
+				connections: connections,
 			},
 		});
 	};
@@ -217,6 +218,15 @@ export function Connections() {
 						const exitPoint = exitEntrancePoints.filter(
 							(point) => point.id === con.targetId,
 						)[0];
+
+						const buttonSettings: ButtonSettings = {
+							onButtonClickAction: () => {
+								removeConnection(con.id);
+							},
+							buttonText: "REMOVE CONNECTION",
+							buttonColor: ButtonColors.RED,
+						};
+
 						return (
 							<ConnectionMarker
 								key={con.id}
@@ -226,9 +236,8 @@ export function Connections() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
-								removeConnection={() => {
-									removeConnection(con.id);
-								}}
+								withLightIds={false}
+								buttonSettings={buttonSettings}
 							/>
 						);
 					})}
@@ -288,11 +297,6 @@ export function Connections() {
 											chosenPoint2 !== point.id &&
 											chosenPoint1 !== point.id &&
 											getChooseButton(point.id, point.type)}
-										{/*{((chosenPoint1 == null &&*/}
-										{/*	point.type !== "exit") ||*/}
-										{/*	(chosenPoint2 == null &&*/}
-										{/*		point.type !== "entrance")) &&*/}
-										{/*	getChooseButton(point.id, point.type)}*/}
 									</ButtonsDiv>
 								</React.Fragment>
 							}

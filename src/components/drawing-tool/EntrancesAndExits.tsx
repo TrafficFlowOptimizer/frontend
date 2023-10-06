@@ -17,7 +17,7 @@ import {
 	ContainerDiv,
 } from "../../styles/MainTheme";
 import { Backdrop } from "../additional/Modal/Backdrop";
-import { ExitEntranceCreator } from "../additional/Modal/ExitEntranceCreator";
+import { ExitEntranceCreator } from "../additional/Modal/drawing-tool-creators/ExitEntranceCreator";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {

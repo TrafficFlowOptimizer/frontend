@@ -20,6 +20,7 @@ import { LoggedUser, UserContext } from "./custom/UserContext";
 import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
 import { TrafficLights } from "./components/drawing-tool/TrafficLights";
 import { Connections } from "./components/drawing-tool/Connections";
+import { Collisions } from "./components/drawing-tool/Collisions";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -63,6 +64,7 @@ function App() {
 										path="traffic-lights"
 										element={<TrafficLights />}
 									/>
+									<Route path="collisions" element={<Collisions />} />
 									<Route path="*" element={<PageNotFoundLanding />} />
 								</Route>
 								<Route path="add-videos" element={<AddVideos />} />

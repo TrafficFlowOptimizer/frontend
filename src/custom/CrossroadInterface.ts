@@ -32,15 +32,15 @@ export type SingleConnectionOptimizationResults = {
 };
 
 export enum TrafficLightType {
-	LEFT,
-	RIGHT,
-	FORWARD,
-	ARROW,
-	TURNING,
-	LEFT_RIGHT,
-	LEFT_FORWARD,
-	RIGHT_FORWARD,
-	LEFT_TURNING,
+	LEFT = "LEFT",
+	RIGHT = "RIGHT",
+	FORWARD = "FORWARD",
+	ARROW = "ARROW",
+	TURNING = "TURNING",
+	LEFT_RIGHT = "LEFT_RIGHT",
+	LEFT_FORWARD = "LEFT_FORWARD",
+	RIGHT_FORWARD = "RIGHT_FORWARD",
+	LEFT_TURNING = "LEFT_TURNING",
 }
 
 export type EEIPointType = "exit" | "entrance" | "intermediate";
@@ -60,4 +60,15 @@ export type Connection = {
 	trafficLightIDs: string[];
 	sourceId: string;
 	targetId: string;
+};
+
+export type TrafficLight = {
+	id: string;
+	name: string;
+	direction: TrafficLightType;
+};
+
+export type FirstStageTrafficLight = {
+	light: TrafficLight;
+	eeiPointId: string;
 };

@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { InputInformationSpan } from "../InputInformationSpan";
-import { RadioButtonsGroup } from "../RadioButtonsGroup";
-import { EEIPointType, ExitEntrancePoint } from "../../../custom/CrossroadInterface";
-import { RadioOption } from "../RadioButton";
-import { NegativeButton } from "../../../styles/NegativeButton";
-import { PositiveButton } from "../../../styles/PositiveButton";
-import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../../custom/drawing-tool/AuxiliaryData";
-import { StyledModal } from "../../../styles/modal/ModalStyles";
+import { InputInformationSpan } from "../../InputInformationSpan";
+import { RadioButtonsGroup } from "../../RadioButtonsGroup";
+import { EEIPointType, ExitEntrancePoint } from "../../../../custom/CrossroadInterface";
+import { RadioOption } from "../../RadioButton";
+import { NegativeButton } from "../../../../styles/NegativeButton";
+import { PositiveButton } from "../../../../styles/PositiveButton";
+import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../../../custom/drawing-tool/AuxiliaryData";
+import { StyledModal } from "../../../../styles/modal/ModalStyles";
 import {
 	BaseForm,
 	BaseInput,
@@ -15,8 +15,8 @@ import {
 	BaseUl,
 	ButtonColors,
 	ButtonsDiv,
-} from "../../../styles/MainTheme";
-import { NeutralPositiveButton } from "../../../styles/NeutralButton";
+} from "../../../../styles/MainTheme";
+import { NeutralPositiveButton } from "../../../../styles/NeutralButton";
 
 export type ExitEntranceCreatorProps = {
 	closeFunction: () => void;
