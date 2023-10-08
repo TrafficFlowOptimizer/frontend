@@ -21,6 +21,7 @@ export type ConnectionCoordinates = {
 	exitY: number;
 	connection: Connection;
 	thickness: number;
+	color: Colors | ButtonColors;
 	withLightIds: boolean;
 	buttonSettings?: ButtonSettings;
 };
@@ -87,6 +88,7 @@ export function ConnectionMarker(props: ConnectionCoordinates) {
 				centerY={centerY}
 				length={length}
 				thickness={props.thickness}
+				color={props.color}
 			></ConnectionLine>
 		</Tooltip>
 	);

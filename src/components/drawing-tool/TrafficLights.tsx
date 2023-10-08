@@ -1,26 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import {
-	Connection,
-	Crossroad,
-	ExitEntrancePoint,
-	FirstStageTrafficLight,
-} from "../../custom/CrossroadInterface";
+import { Connection, Crossroad, ExitEntrancePoint, FirstStageTrafficLight } from "../../custom/CrossroadInterface";
 import { FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE } from "../../custom/drawing-tool/AuxiliaryData";
-import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
 import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { TrafficLightCreator } from "../additional/Modal/drawing-tool-creators/TrafficLightCreator";
 import { TrafficLightAssigner } from "../additional/Modal/drawing-tool-creators/TrafficLightAssigner";
-import {
-	BaseLi,
-	BaseUl,
-	ButtonColors,
-	ButtonsDiv,
-	ContainerDiv,
-} from "../../styles/MainTheme";
+import Tooltip from "@mui/material/Tooltip";
+import { Zoom } from "@mui/material";
+import { BaseLi, BaseUl, ButtonColors, ButtonsDiv, Colors, ContainerDiv } from "../../styles/MainTheme";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
@@ -28,7 +17,7 @@ import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
 	EEIPointMarker,
-	TooltipButton,
+	TooltipButton
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function TrafficLights() {
@@ -55,14 +44,6 @@ export function TrafficLights() {
 	const [connections, setConnections] = useState<Connection[]>(
 		location.state.connections,
 	);
-
-	// TODO: modal for creating a traffic light
-
-	// TODO: modal for choosing lights for connection
-
-	// TODO: id assigning function (auto-increment and stuff)
-
-	// TODO: edition and removal of lights
 
 	useEffect(() => {
 		setCrossroadImage(localStorage.getItem("crossroadMap")!);
@@ -244,6 +225,7 @@ export function TrafficLights() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
+								color={Colors.BRIGHT_RED}
 								withLightIds={lightsReady}
 								buttonSettings={
 									lightsReady ? buttonSettings : undefined

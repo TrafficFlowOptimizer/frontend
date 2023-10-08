@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import {
 	FirstStageTrafficLight,
-	TrafficLightType,
+	TrafficLightDirection,
 } from "../../../../custom/CrossroadInterface";
 import {
 	BaseForm,
@@ -32,16 +32,16 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("Confirm your choices");
 
-	const directions = new Map<TrafficLightType, number>();
-	directions.set(TrafficLightType.FORWARD, 0);
-	directions.set(TrafficLightType.LEFT, 1);
-	directions.set(TrafficLightType.RIGHT, 2);
-	directions.set(TrafficLightType.ARROW, 3);
-	directions.set(TrafficLightType.TURNING, 4);
-	directions.set(TrafficLightType.LEFT_FORWARD, 5);
-	directions.set(TrafficLightType.LEFT_RIGHT, 6);
-	directions.set(TrafficLightType.LEFT_TURNING, 7);
-	directions.set(TrafficLightType.RIGHT_FORWARD, 8);
+	const directions = new Map<TrafficLightDirection, number>();
+	directions.set(TrafficLightDirection.FORWARD, 0);
+	directions.set(TrafficLightDirection.LEFT, 1);
+	directions.set(TrafficLightDirection.RIGHT, 2);
+	directions.set(TrafficLightDirection.ARROW, 3);
+	directions.set(TrafficLightDirection.TURNING, 4);
+	directions.set(TrafficLightDirection.LEFT_FORWARD, 5);
+	directions.set(TrafficLightDirection.LEFT_RIGHT, 6);
+	directions.set(TrafficLightDirection.LEFT_TURNING, 7);
+	directions.set(TrafficLightDirection.RIGHT_FORWARD, 8);
 
 	const onConfirm = (event: React.SyntheticEvent) => {
 		event.preventDefault();
@@ -84,7 +84,7 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 	const handleDirectionSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setLight({
 			light: {
-				direction: event.target.value as TrafficLightType,
+				direction: event.target.value as TrafficLightDirection,
 				id: light.light.id,
 				name: light.light.name,
 			},

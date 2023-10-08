@@ -1,6 +1,8 @@
 import React, { useState } from "react";
 import { ToggleContainer, AdaptedToggleLabel } from "../../styles/ToggleStyles";
 import { ButtonColors, Colors } from "../../styles/MainTheme";
+import Tooltip from "@mui/material/Tooltip";
+import { Zoom } from "@mui/material";
 import styled from "styled-components";
 
 export type TwoChoicesToggleProps = {
@@ -8,7 +10,9 @@ export type TwoChoicesToggleProps = {
 	options: any[];
 	name: string;
 	labelMessage: string;
+	disabled: boolean;
 	colors?: (ButtonColors | Colors)[];
+	optionsDescriptions?: string[];
 };
 
 export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
@@ -17,10 +21,21 @@ export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
 
 	return (
 		<ToggleContainer>
-			<LabelP>
-				<strong>{props.labelMessage}</strong>
-			</LabelP>
-			<p>{props.options[1]}</p>
+			<LabelP>{props.labelMessage}</LabelP>
+			{props.optionsDescriptions ? (
+				<Tooltip
+					title={props.optionsDescriptions[1]}
+					TransitionComponent={Zoom}
+					enterDelay={75}
+					leaveDelay={450}
+					arrow
+					placement={"left"}
+				>
+					<p>{props.options[1]}</p>
+				</Tooltip>
+			) : (
+				<p>{props.options[1]}</p>
+			)}
 			<AdaptedToggleLabel
 				htmlFor={props.name}
 				checked={chosen !== checkedHolder}
@@ -30,12 +45,14 @@ export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
 				uncheckedColor={
 					props.colors !== undefined ? props.colors[0] : ButtonColors.ORANGE
 				}
+				disabled={props.disabled}
 			>
 				toggle me
 				<input
 					id={props.name}
 					type="checkbox"
 					checked={chosen !== checkedHolder}
+					disabled={props.disabled}
 					onChange={() => {
 						if (chosen !== checkedHolder) {
 							setChosen(checkedHolder);
@@ -46,7 +63,20 @@ export function TwoChoicesToggle(props: TwoChoicesToggleProps) {
 					}}
 				/>
 			</AdaptedToggleLabel>
-			<p>{props.options[0]}</p>
+			{props.optionsDescriptions ? (
+				<Tooltip
+					title={props.optionsDescriptions[0]}
+					TransitionComponent={Zoom}
+					enterDelay={75}
+					leaveDelay={450}
+					arrow
+					placement={"right"}
+				>
+					<p>{props.options[0]}</p>
+				</Tooltip>
+			) : (
+				<p>{props.options[0]}</p>
+			)}
 		</ToggleContainer>
 	);
 }

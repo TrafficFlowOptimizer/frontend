@@ -1,4 +1,4 @@
-import { EEIPointType } from "../CrossroadInterface";
+import { EEIPointType, TrafficLight } from "../CrossroadInterface";
 import { ButtonColors, Colors } from "../../styles/MainTheme";
 
 export const capitalizeFirstLetter = (str: string): string => {
@@ -23,4 +23,16 @@ export const matchEEIPointTypeWithColor = (
 	} else {
 		return ButtonColors.GREEN;
 	}
+};
+
+export const getTrafficLightName = (
+	lights: TrafficLight[],
+	lightId: string,
+): string => {
+	for (const tl of lights) {
+		if (tl.id === lightId) {
+			return tl.name;
+		}
+	}
+	return ""; //Should never happen, but it would be cleaner to throw some kind of exception here
 };

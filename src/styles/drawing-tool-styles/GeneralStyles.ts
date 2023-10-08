@@ -76,6 +76,7 @@ export type ConnectionLineProps = {
 	angle: number;
 	centerX: number;
 	centerY: number;
+	color: Colors | ButtonColors;
 }
 
 export const ConnectionLine = styled.div<ConnectionLineProps>`
@@ -83,7 +84,7 @@ export const ConnectionLine = styled.div<ConnectionLineProps>`
 	padding: 0px; 
 	margin: 0px; 
 	height: ${(props:ConnectionLineProps) => props.thickness}px; 
-	background-color: ${Colors.BRIGHT_RED};
+	background-color: ${(props) => props.color};
 	border: 1px solid ${Colors.PRIMARY_BLACK};
 	line-height: 1px; 
 	position: absolute; 

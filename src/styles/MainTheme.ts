@@ -143,7 +143,7 @@ export const BaseUl = styled.ul`
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
-	gap: 1vh;
+	gap: 0.5vh;
 	justify-content: center;
 	align-items: flex-start;
 `;
@@ -161,6 +161,10 @@ export const BaseLi = styled.li`
 	gap: 1vw;
 `;
 
+export const CenteredLi = styled(BaseLi)`
+	justify-content: center;
+`;
+
 export type JustColorProps = {
 	color: ButtonColors | Colors;
 }
@@ -174,4 +178,22 @@ export const InputInformationMessage = styled.p<JustColorProps>`
 export const PlaceholderSpan = styled.span`
 	width: 241px;
 	height: 40px;
+`;
+
+
+export const HorizontalDiv = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: no-wrap;
+	justify-content: center;
+	align-items: flex-start;
+`;
+
+export const ScrollableUl = styled(BaseUl)`
+	justify-content: start;
+	width: fit-content;
+	height: 40vh;
+	padding: 10px;
+	margin: 10px;
+	overflow-y: auto;
 `;

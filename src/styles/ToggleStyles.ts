@@ -5,6 +5,7 @@ import { ButtonColors, Colors, LightTheme } from "./MainTheme";
 
 export type ToggleProps = {
 	checked: boolean;
+	disabled?: boolean;
 	checkedColor?: ButtonColors | Colors;
 	uncheckedColor?: ButtonColors | Colors;
 };
@@ -46,7 +47,7 @@ export const StyledToggleLabel = styled.label<ToggleProps>`
 
 
 export const AdaptedToggleLabel = styled(StyledToggleLabel)`
-	background: ${(props: ToggleProps) => (props.checked ? props.checkedColor : props.uncheckedColor)};
+	background: ${(props: ToggleProps) => (props.disabled ? LightTheme.secondary : (props.checked ? props.checkedColor : props.uncheckedColor))};
 	// border: 1px solid ${(props) => props.theme.text};
 
 	&:after {

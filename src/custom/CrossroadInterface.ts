@@ -18,7 +18,7 @@ export type Crossroad = {
 export type singleLightOptimizationResults = {
 	lightId: number;
 	sequence: number[];
-	direction: TrafficLightType;
+	direction: TrafficLightDirection;
 };
 
 export type OptimizationResults = {
@@ -31,7 +31,7 @@ export type SingleConnectionOptimizationResults = {
 	lights: singleLightOptimizationResults[];
 };
 
-export enum TrafficLightType {
+export enum TrafficLightDirection {
 	LEFT = "LEFT",
 	RIGHT = "RIGHT",
 	FORWARD = "FORWARD",
@@ -65,10 +65,23 @@ export type Connection = {
 export type TrafficLight = {
 	id: string;
 	name: string;
-	direction: TrafficLightType;
+	direction: TrafficLightDirection;
 };
 
 export type FirstStageTrafficLight = {
 	light: TrafficLight;
 	eeiPointId: string;
+};
+
+export enum CollisionType {
+	HEAVY = "HEAVY",
+	LIGHT = "LIGHT",
+}
+
+export type Collision = {
+	id: string;
+	name: string;
+	type: CollisionType;
+	trafficLight1Id: string;
+	trafficLight2Id: string;
 };

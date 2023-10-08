@@ -236,6 +236,7 @@ export function Connections() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
+								color={Colors.BRIGHT_RED}
 								withLightIds={false}
 								buttonSettings={buttonSettings}
 							/>

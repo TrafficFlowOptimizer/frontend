@@ -3,7 +3,7 @@ import {
 	CrossroadType,
 	ExitEntrancePoint,
 	FirstStageTrafficLight,
-	TrafficLightType,
+	TrafficLightDirection,
 } from "../CrossroadInterface";
 
 export const COUNTRIES = [
@@ -250,7 +250,13 @@ export const FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE: FirstStageTrafficLight = {
 	light: {
 		id: "",
 		name: "",
-		direction: TrafficLightType.FORWARD,
+		direction: TrafficLightDirection.FORWARD,
 	},
 	eeiPointId: "",
 };
+
+export const HEAVY_COLLISION_DESCRIPTION =
+	"The lights cannot be green at the same time";
+
+export const LIGHT_COLLISION_DESCRIPTION =
+	"the lights can be green at the same time, but it will make cars' passage slower";

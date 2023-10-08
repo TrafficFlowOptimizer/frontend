@@ -179,6 +179,7 @@ export function BasicInformation() {
 							options={[CrossroadType.PRIVATE, CrossroadType.PUBLIC]}
 							name="typeChoice"
 							labelMessage="Type:"
+							disabled={false}
 						/>
 					</BaseLi>
 					<BaseLi>
