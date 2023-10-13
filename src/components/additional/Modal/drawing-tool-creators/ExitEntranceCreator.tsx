@@ -15,13 +15,13 @@ import {
 	BaseUl,
 	ButtonColors,
 	ButtonsDiv,
-} from "../../../../styles/MainTheme";
+} from "../../../../styles/MainStyles";
 import { NeutralPositiveButton } from "../../../../styles/NeutralButton";
 
 export type ExitEntranceCreatorProps = {
 	closeFunction: () => void;
 	handleOnSave: (point: ExitEntrancePoint) => void;
-	checkId: (id: string) => boolean;
+	checkIndex: (id: string) => boolean;
 	point: ExitEntrancePoint;
 };
 
@@ -34,7 +34,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			id: { value: string };
+			index: { value: string };
 			street: { value: string };
 			capacity: { value: string };
 		};
@@ -42,7 +42,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		const parsedCapacity = parseInt(target.capacity.value);
 
 		if (
-			target.id.value.length === 0 ||
+			target.index.value.length === 0 ||
 			target.street.value.length === 0 ||
 			target.capacity.value.length === 0
 		) {
@@ -54,13 +54,13 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_capacity);
-		} else if (props.checkId(target.id.value)) {
+		} else if (props.checkIndex(target.index.value)) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
 		} else {
 			setPoint({
 				...point,
-				id: target.id.value,
+				index: target.index.value,
 				street: target.street.value,
 				capacity: target.capacity.value === "infinity" ? -1 : parsedCapacity,
 			});
@@ -112,11 +112,11 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 						/>
 					</BaseLi>
 					<BaseLi>
-						<label htmlFor="id">ID:</label>
+						<label htmlFor="index">Id:</label>
 						<BaseInput
-							id="id"
+							id="index"
 							type="text"
-							defaultValue={point.id.toString()}
+							defaultValue={point.index.toString()}
 						/>
 					</BaseLi>
 					<BaseLi>

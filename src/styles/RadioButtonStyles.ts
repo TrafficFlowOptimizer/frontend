@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ButtonColors, DarkTheme, LightTheme } from "./MainTheme";
+import { ButtonColors, DarkTheme, LightTheme } from "./MainStyles";
 
 export const RadioButtonWrapper = styled.div`
    display: flex;

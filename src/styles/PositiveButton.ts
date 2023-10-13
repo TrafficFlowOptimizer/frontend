@@ -1,4 +1,4 @@
-import { BaseButton, ButtonColors } from "./MainTheme";
+import { BaseButton, ButtonColors } from "./MainStyles";
 import styled from "styled-components";
 
 export const PositiveButton = styled(BaseButton)`

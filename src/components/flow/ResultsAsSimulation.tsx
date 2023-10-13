@@ -1,7 +1,7 @@
 import React from "react";
 import { useLocation } from "react-router-dom";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 
 export function ResultsAsSimulation() {

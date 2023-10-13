@@ -1,4 +1,4 @@
-import { ButtonColors, Colors, PlaceholderSpan } from "../../styles/MainTheme";
+import { ButtonColors, Colors, PlaceholderSpan } from "../../styles/MainStyles";
 import { AdaptedInputInformationMessage } from "../../styles/drawing-tool-styles/GeneralStyles";
 import React from "react";
 

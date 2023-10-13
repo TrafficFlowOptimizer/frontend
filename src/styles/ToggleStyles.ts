@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import moon from "../assets/moon.svg";
 import sun from "../assets/sun.svg";
-import { ButtonColors, Colors, LightTheme } from "./MainTheme";
+import { ButtonColors, Colors, LightTheme } from "./MainStyles";
 
 export type ToggleProps = {
 	checked: boolean;

@@ -1,6 +1,6 @@
 import React, { useContext } from "react";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
-import { BaseButtonLink, BaseH1 } from "../../styles/MainTheme";
+import { BaseButtonLink, BaseH1 } from "../../styles/MainStyles";
 import logo from "../../assets/TFO_4_but_better.png";
 import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
 import {

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { StyledModal } from "../../../../styles/modal/ModalStyles";
-import { ButtonsDiv, Colors } from "../../../../styles/MainTheme";
+import { ButtonsDiv, Colors } from "../../../../styles/MainStyles";
 import { NegativeButton } from "../../../../styles/NegativeButton";
 import { PositiveButton } from "../../../../styles/PositiveButton";
 import FormControl from "@mui/material/FormControl";
@@ -13,7 +13,6 @@ import {
 } from "../../../../styles/drawing-tool-styles/MUISelectStyles";
 import MenuItem from "@mui/material/MenuItem";
 import { useThemeContext } from "../../../../custom/ThemeContext";
-import { Theme, useTheme } from "@mui/material";
 import { TrafficLight } from "../../../../custom/CrossroadInterface";
 
 export type CollisionLightAssignerProps = {
@@ -85,9 +84,13 @@ export function CollisionLightAssigner(props: CollisionLightAssignerProps) {
 						<StyledEm>{placeholder}</StyledEm>
 					</MenuItem>
 					{props.trafficLights.map((light) => (
-						<MenuItem key={light.id} value={light.id} style={getStyles()}>
+						<MenuItem
+							key={light.index}
+							value={light.index}
+							style={getStyles()}
+						>
 							<p>
-								id: {light.id}; name: {light.name}; direction:{" "}
+								id: {light.index}; name: {light.name}; direction:{" "}
 								{light.direction}
 							</p>
 						</MenuItem>

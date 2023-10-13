@@ -13,7 +13,7 @@ import {
 	LeafletContainer,
 } from "../../styles/drawing-tool-styles/MapStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
-import { ButtonsDiv } from "../../styles/MainTheme";
+import { ButtonsDiv } from "../../styles/MainStyles";
 import {
 	WorkaroundInnerDiv,
 	CreatorInformation,
@@ -46,12 +46,9 @@ export function MapLeaflet() {
 			canvasHeight: 560,
 			width: 1220,
 			height: 560,
+			includeQueryParams: true,
 		})
 			.then((dataUrl) => {
-				// const link = document.createElement("a");
-				// link.download = "my-image-name.png";
-				// link.href = dataUrl;
-				// link.click();
 				localStorage.setItem("crossroadMap", dataUrl);
 			})
 			.catch((err) => {
@@ -120,8 +117,8 @@ export function MapLeaflet() {
 					/>
 				</WorkaroundInnerDiv>
 				<ButtonsDiv>
-					<PositiveButton onClick={onButtonClick}>Next</PositiveButton>
 					<NegativeButton onClick={onAbort}>Abort</NegativeButton>
+					<PositiveButton onClick={onButtonClick}>Next</PositiveButton>
 				</ButtonsDiv>
 			</LeafletContainer>
 		</>

@@ -12,7 +12,7 @@ import {
 	RedirectionLink,
 	BaseUl,
 	BaseLi,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 
 export function Register() {
 	//might be good to create pop up about the successful creation of the account

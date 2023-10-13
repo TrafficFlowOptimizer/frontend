@@ -1,15 +1,31 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Connection, Crossroad, ExitEntrancePoint, FirstStageTrafficLight } from "../../custom/CrossroadInterface";
-import { FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE } from "../../custom/drawing-tool/AuxiliaryData";
+import {
+	Connection,
+	Crossroad,
+	ExitEntrancePoint,
+	FirstStageTrafficLight,
+} from "../../custom/CrossroadInterface";
+import {
+	FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE,
+	tooltipTheme,
+} from "../../custom/drawing-tool/AuxiliaryData";
 import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { TrafficLightCreator } from "../additional/Modal/drawing-tool-creators/TrafficLightCreator";
 import { TrafficLightAssigner } from "../additional/Modal/drawing-tool-creators/TrafficLightAssigner";
 import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
-import { BaseLi, BaseUl, ButtonColors, ButtonsDiv, Colors, ContainerDiv } from "../../styles/MainTheme";
+import { ThemeProvider, Zoom } from "@mui/material";
+import {
+	BaseLi,
+	BaseUl,
+	ButtonColors,
+	ButtonsDiv,
+	Colors,
+	ContainerDiv,
+	ScrollableUl,
+} from "../../styles/MainStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
@@ -17,7 +33,7 @@ import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
 	EEIPointMarker,
-	TooltipButton
+	TooltipButton,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function TrafficLights() {
@@ -62,7 +78,7 @@ export function TrafficLights() {
 				connections: connections,
 				trafficLights: firstStageTrafficLights.map((light, index) => ({
 					...light.light,
-					id: (index + 1).toString(),
+					index: (index + 1).toString(),
 				})),
 			},
 		});
@@ -74,15 +90,16 @@ export function TrafficLights() {
 		return newId;
 	};
 
-	const createTrafficLight = (eeiPointId: string) => {
+	const createTrafficLight = (eeiPointIndex: string) => {
 		setShowLightCreator(true);
 		setTemplateLight({
 			light: {
-				id: getNewId(),
+				id: "",
+				index: getNewId(),
 				name: FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE.light.name,
 				direction: FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE.light.direction,
 			},
-			eeiPointId: eeiPointId,
+			eeiPointIndex: eeiPointIndex,
 		});
 	};
 
@@ -100,39 +117,41 @@ export function TrafficLights() {
 		setShowLightCreator(false);
 	};
 
-	const saveAssignAndFinalTrafficLight = (lightsIds: string[]): void => {
+	const saveAssignAndFinalTrafficLight = (lightsIndexes: string[]): void => {
 		const assignedConnection = connections.filter(
-			(con) => con.id === connectionToAssign,
+			(con) => con.index === connectionToAssign,
 		)[0];
 
-		assignedConnection.trafficLightIDs = lightsIds;
+		assignedConnection.trafficLightIDs = lightsIndexes;
 		setConnections([
-			...connections.filter((con) => con.id !== assignedConnection.id),
+			...connections.filter((con) => con.index !== assignedConnection.index),
 			assignedConnection,
 		]);
 
 		setShowLightAssigner(false);
 	};
 
-	const getAllLightAssignments = (lightId: string): string => {
+	const getAllLightAssignments = (lightIndex: string): string => {
 		const allAssignments = connections.filter((con) =>
-			con.trafficLightIDs.includes(lightId),
+			con.trafficLightIDs.includes(lightIndex),
 		);
 		if (allAssignments.length > 0) {
-			return allAssignments.map((assignment) => assignment.id).join(", ");
+			return allAssignments.map((assignment) => assignment.index).join(", ");
 		}
 
 		return "None";
 	};
 
-	const onRemove = (lightId: string) => {
+	const onRemove = (lightIndex: string) => {
 		setFirstStageTrafficLights(
-			firstStageTrafficLights.filter((light) => light.light.id !== lightId),
+			firstStageTrafficLights.filter((light) => light.light.index !== lightIndex),
 		);
 		setConnections(
 			connections.map((con) => ({
 				...con,
-				trafficLightIDs: con.trafficLightIDs.filter((id) => id !== lightId),
+				trafficLightIDs: con.trafficLightIDs.filter(
+					(ind) => ind !== lightIndex,
+				),
 			})),
 		);
 	};
@@ -141,7 +160,7 @@ export function TrafficLights() {
 		setTemplateLight(light);
 		setFirstStageTrafficLights(
 			firstStageTrafficLights.filter(
-				(firstStageLight) => light.light.id !== firstStageLight.light.id,
+				(firstStageLight) => light.light.index !== firstStageLight.light.index,
 			),
 		);
 		setShowLightCreator(true);
@@ -170,11 +189,13 @@ export function TrafficLights() {
 						handleOnSave={saveAssignAndFinalTrafficLight}
 						connectionId={connectionToAssign}
 						trafficLights={firstStageTrafficLights.filter((light) => {
-							const assignedConnectionSourceId = connections.filter(
-								(con) => con.id === connectionToAssign,
+							const assignedConnectionSourceIndex = connections.filter(
+								(con) => con.index === connectionToAssign,
 							)[0].sourceId;
 
-							return light.eeiPointId === assignedConnectionSourceId;
+							return (
+								light.eeiPointIndex === assignedConnectionSourceIndex
+							);
 						})}
 					></TrafficLightAssigner>
 					<Backdrop />
@@ -201,16 +222,16 @@ export function TrafficLights() {
 				{connections.length > 0 &&
 					connections.map((con) => {
 						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
+							(point) => point.index === con.sourceId,
 						)[0];
 						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
+							(point) => point.index === con.targetId,
 						)[0];
 
 						const buttonSettings: ButtonSettings = {
 							onButtonClickAction: () => {
 								setShowLightAssigner(true);
-								setConnectionToAssign(con.id);
+								setConnectionToAssign(con.index);
 							},
 							buttonText: "ASSIGN LIGHT",
 							buttonColor: ButtonColors.BLUE,
@@ -218,7 +239,7 @@ export function TrafficLights() {
 
 						return (
 							<ConnectionMarker
-								key={con.id}
+								key={con.index}
 								thickness={3}
 								entranceX={entrancePoint.xCord}
 								entranceY={entrancePoint.yCord}
@@ -233,59 +254,63 @@ export function TrafficLights() {
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
-						const element = (
-							<ButtonsDiv>
-								<TooltipButton
-									onClick={() => {
-										createTrafficLight(point.id);
-									}}
-									color={ButtonColors.BLUE}
-									xCord={0}
-									yCord={0}
-								>
-									CREATE LIGHT
-								</TooltipButton>
-							</ButtonsDiv>
-						);
+				{exitEntrancePoints.length > 0 && (
+					<ThemeProvider theme={tooltipTheme}>
+						{" "}
+						{exitEntrancePoints.map((point, idx) => {
+							const element = (
+								<ButtonsDiv>
+									<TooltipButton
+										onClick={() => {
+											createTrafficLight(point.index);
+										}}
+										color={ButtonColors.BLUE}
+										xCord={0}
+										yCord={0}
+									>
+										CREATE LIGHT
+									</TooltipButton>
+								</ButtonsDiv>
+							);
 
-						return (
-							<Tooltip
-								key={idx}
-								title={
-									<React.Fragment>
-										<BaseUl>
-											<BaseLi>id: {point.id}</BaseLi>
-											<BaseLi>type: {point.type}</BaseLi>
-											<BaseLi>street: {point.street}</BaseLi>
-											<BaseLi>
-												capacity:{" "}
-												{point.capacity === -1
-													? "infinity"
-													: point.capacity}
-											</BaseLi>
-										</BaseUl>
-										{!lightsReady &&
-											(point.type === "entrance" ||
-												point.type === "intermediate") &&
-											element}
-									</React.Fragment>
-								}
-								TransitionComponent={Zoom}
-								enterDelay={75}
-								leaveDelay={450}
-								arrow
-							>
-								<EEIPointMarker
+							return (
+								<Tooltip
 									key={idx}
-									color={matchEEIPointTypeWithColor(point.type)}
-									yCord={point.yCord}
-									xCord={point.xCord}
-								></EEIPointMarker>
-							</Tooltip>
-						);
-					})}
+									title={
+										<React.Fragment>
+											<BaseUl>
+												<BaseLi>id: {point.index}</BaseLi>
+												<BaseLi>type: {point.type}</BaseLi>
+												<BaseLi>street: {point.street}</BaseLi>
+												<BaseLi>
+													capacity:{" "}
+													{point.capacity === -1
+														? "infinity"
+														: point.capacity}
+												</BaseLi>
+											</BaseUl>
+											{!lightsReady &&
+												(point.type === "entrance" ||
+													point.type === "intermediate") &&
+												element}
+										</React.Fragment>
+									}
+									TransitionComponent={Zoom}
+									enterDelay={75}
+									leaveDelay={450}
+									arrow
+								>
+									<EEIPointMarker
+										key={idx}
+										color={matchEEIPointTypeWithColor(point.type)}
+										yCord={point.yCord}
+										xCord={point.xCord}
+									></EEIPointMarker>
+								</Tooltip>
+							);
+						})}{" "}
+					</ThemeProvider>
+				)}
 				<CrossroadScreenshot
 					src={
 						crossroadImage === undefined
@@ -296,14 +321,14 @@ export function TrafficLights() {
 				></CrossroadScreenshot>
 			</BorderedWorkaroundDiv>
 			{firstStageTrafficLights.length > 0 && (
-				<BaseUl>
+				<ScrollableUl height={25}>
 					{firstStageTrafficLights.map((light) => (
-						<BaseLi key={light.light.id}>
+						<BaseLi key={light.light.index}>
 							<p>
 								<strong>Light name:</strong> {light.light.name}
 							</p>
 							<p>
-								<strong>At:</strong> {light.eeiPointId}
+								<strong>At:</strong> {light.eeiPointIndex}
 							</p>
 							{!lightsReady ? (
 								<NeutralPositiveButton
@@ -316,13 +341,13 @@ export function TrafficLights() {
 							) : (
 								<p>
 									<strong>Assigned to:</strong>
-									{getAllLightAssignments(light.light.id)}
+									{getAllLightAssignments(light.light.index)}
 								</p>
 							)}
 							{!lightsReady && (
 								<NegativeButton
 									onClick={() => {
-										onRemove(light.light.id);
+										onRemove(light.light.index);
 									}}
 								>
 									Remove
@@ -330,7 +355,7 @@ export function TrafficLights() {
 							)}
 						</BaseLi>
 					))}
-				</BaseUl>
+				</ScrollableUl>
 			)}
 			<ButtonsDiv>
 				<NegativeButton onClick={onAbort}>Abort</NegativeButton>

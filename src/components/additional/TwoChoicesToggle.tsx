@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { ToggleContainer, AdaptedToggleLabel } from "../../styles/ToggleStyles";
-import { ButtonColors, Colors } from "../../styles/MainTheme";
+import { ButtonColors, Colors } from "../../styles/MainStyles";
 import Tooltip from "@mui/material/Tooltip";
 import { Zoom } from "@mui/material";
 import styled from "styled-components";

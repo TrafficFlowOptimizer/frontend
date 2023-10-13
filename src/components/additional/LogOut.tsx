@@ -1,6 +1,6 @@
 import React from "react";
 import { NegativeButton } from "../../styles/NegativeButton";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink } from "../../styles/MainStyles";
 
 export function LogOut() {
 	return (

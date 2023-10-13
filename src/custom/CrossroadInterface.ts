@@ -47,6 +47,7 @@ export type EEIPointType = "exit" | "entrance" | "intermediate";
 
 export type ExitEntrancePoint = {
 	id: string;
+	index: string;
 	type: EEIPointType;
 	xCord: number;
 	yCord: number;
@@ -56,6 +57,7 @@ export type ExitEntrancePoint = {
 
 export type Connection = {
 	id: string;
+	index: string;
 	name: string;
 	trafficLightIDs: string[];
 	sourceId: string;
@@ -64,13 +66,14 @@ export type Connection = {
 
 export type TrafficLight = {
 	id: string;
+	index: string;
 	name: string;
 	direction: TrafficLightDirection;
 };
 
 export type FirstStageTrafficLight = {
 	light: TrafficLight;
-	eeiPointId: string;
+	eeiPointIndex: string;
 };
 
 export enum CollisionType {
@@ -80,6 +83,7 @@ export enum CollisionType {
 
 export type Collision = {
 	id: string;
+	index: string;
 	name: string;
 	type: CollisionType;
 	trafficLight1Id: string;

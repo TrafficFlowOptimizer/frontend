@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "../additional/Navbar";
 import { useLocation } from "react-router-dom";
 import { FileUploader } from "../additional/FileUploader";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink } from "../../styles/MainStyles";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 
 export function AddVideos() {

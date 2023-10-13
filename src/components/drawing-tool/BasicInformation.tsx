@@ -27,7 +27,7 @@ import {
 	ButtonsDiv,
 	ContainerDiv,
 	HorizontalBaseUl,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 
 export function BasicInformation() {
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);

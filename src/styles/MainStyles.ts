@@ -13,6 +13,15 @@ export enum Colors {
 	PRIMARY_BLACK = "#191516",
 	PURPLE = "#8342FB",
 	BRIGHT_RED = "#FF1700",
+	ORANGY_RED = "#eb5834",
+	ORANGE = "#eb8034",
+	ORANGY_YELLOW = "#eba834",
+	YELLOW = "#ebdb34",
+	TOXIC_GREEN = "#d8eb34",
+	LIGHT_GREEN = "#aeeb34",
+	GREEN = "#83eb34",
+	DEEP_GREEN = "#4feb34",
+	FOREST_GREEN = "#34eb58",
 }
 
 export const LightTheme = {
@@ -189,10 +198,14 @@ export const HorizontalDiv = styled.div`
 	align-items: flex-start;
 `;
 
-export const ScrollableUl = styled(BaseUl)`
+export type ScrollableProps = {
+	height: number;
+};
+
+export const ScrollableUl = styled(BaseUl)<ScrollableProps>`
 	justify-content: start;
 	width: fit-content;
-	height: 40vh;
+	height: ${(props) => props.height}vh;
 	padding: 10px;
 	margin: 10px;
 	overflow-y: auto;

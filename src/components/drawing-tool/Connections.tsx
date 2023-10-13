@@ -6,7 +6,7 @@ import {
 	ExitEntrancePoint,
 } from "../../custom/CrossroadInterface";
 import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
+import { ThemeProvider, Zoom } from "@mui/material";
 import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import {
 	BaseForm,
@@ -18,7 +18,7 @@ import {
 	Colors,
 	ContainerDiv,
 	HorizontalBaseUl,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
@@ -30,7 +30,10 @@ import {
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
 import { useThemeContext } from "../../custom/ThemeContext";
-import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../custom/drawing-tool/AuxiliaryData";
+import {
+	BASIC_INFORMATION_ERROR_MESSAGES,
+	tooltipTheme,
+} from "../../custom/drawing-tool/AuxiliaryData";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 
 export function Connections() {
@@ -41,7 +44,7 @@ export function Connections() {
 	const crossroad: Crossroad = location.state.crossroad;
 	const exitEntrancePoints: ExitEntrancePoint[] = location.state.entrancesAndExits;
 
-	const [idInput, setIdInput] = useState("");
+	const [indexInput, setIndexInput] = useState("");
 	const [nameInput, setNameInput] = useState("");
 
 	const [isInputValid, setInputValidity] = useState(false);
@@ -82,11 +85,11 @@ export function Connections() {
 		}
 	};
 
-	const onAddToChosen = (whichOne: 1 | 2, pointId: string) => {
+	const onAddToChosen = (whichOne: 1 | 2, pointIndex: string) => {
 		if (whichOne === 1) {
-			setChosenPoint1(pointId);
+			setChosenPoint1(pointIndex);
 		} else {
-			setChosenPoint2(pointId);
+			setChosenPoint2(pointIndex);
 		}
 	};
 
@@ -115,14 +118,14 @@ export function Connections() {
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			id: { value: string };
+			index: { value: string };
 			name: { value: string };
 		};
 
-		if (target.id.value.length === 0 || target.name.value.length === 0) {
+		if (target.index.value.length === 0 || target.name.value.length === 0) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
-		} else if (checkId(target.id.value)) {
+		} else if (checkIndex(target.index.value)) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
 		} else if (checkForRepliedConnection()) {
@@ -132,7 +135,8 @@ export function Connections() {
 			setConnections([
 				...connections,
 				{
-					id: target.id.value,
+					id: "",
+					index: target.index.value,
 					name: target.name.value,
 					trafficLightIDs: [],
 					sourceId: chosenPoint1,
@@ -146,14 +150,14 @@ export function Connections() {
 			setDataMessage("New connection added!");
 			setChosenPoint1(null);
 			setChosenPoint2(null);
-			setIdInput("");
+			setIndexInput("");
 			setNameInput("");
 		}
 	};
 
-	const checkId = (id: string) => {
+	const checkIndex = (index: string) => {
 		for (const tempConnection of connections) {
-			if (tempConnection.id === id) {
+			if (tempConnection.index === index) {
 				return true;
 			}
 		}
@@ -169,12 +173,12 @@ export function Connections() {
 		return false;
 	};
 
-	const removeConnection = (connectionId: string) => {
-		setConnections(connections.filter((con) => con.id !== connectionId));
+	const removeConnection = (connectionIndex: string) => {
+		setConnections(connections.filter((con) => con.index !== connectionIndex));
 	};
 
 	const getChooseButton = (
-		pointId: string,
+		pointIndex: string,
 		pointType: "exit" | "entrance" | "intermediate",
 	) => {
 		const pointNumber = getFreeChoicePoint(pointType);
@@ -184,7 +188,7 @@ export function Connections() {
 				yCord={0}
 				xCord={0}
 				onClick={() => {
-					onAddToChosen(pointNumber, pointId);
+					onAddToChosen(pointNumber, pointIndex);
 				}}
 			>
 				ADD AS {pointNumber === 1 ? "SOURCE" : "TARGET"}
@@ -209,19 +213,18 @@ export function Connections() {
 				3. Repeat steps 1-2 for all connections you need
 			</p>
 			<BorderedWorkaroundDiv>
-				{/*TODO: tooltip for connections - positioning if possible*/}
 				{connections.length > 0 &&
 					connections.map((con) => {
 						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
+							(point) => point.index === con.sourceId,
 						)[0];
 						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
+							(point) => point.index === con.targetId,
 						)[0];
 
 						const buttonSettings: ButtonSettings = {
 							onButtonClickAction: () => {
-								removeConnection(con.id);
+								removeConnection(con.index);
 							},
 							buttonText: "REMOVE CONNECTION",
 							buttonColor: ButtonColors.RED,
@@ -229,7 +232,7 @@ export function Connections() {
 
 						return (
 							<ConnectionMarker
-								key={con.id}
+								key={con.index}
 								thickness={3}
 								entranceX={entrancePoint.xCord}
 								entranceY={entrancePoint.yCord}
@@ -242,83 +245,95 @@ export function Connections() {
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => (
-						<Tooltip
-							key={idx}
-							title={
-								<React.Fragment>
-									<BaseUl>
-										<BaseLi>id: {point.id}</BaseLi>
-										<BaseLi>type: {point.type}</BaseLi>
-										<BaseLi>street: {point.street}</BaseLi>
-										<BaseLi>
-											capacity:{" "}
-											{point.capacity === -1
-												? "infinity"
-												: point.capacity}
-										</BaseLi>
-									</BaseUl>
-									<ButtonsDiv>
-										{chosenPoint1 === point.id && (
-											<TooltipButton
-												color={ButtonColors.RED}
-												yCord={0}
-												xCord={0}
-												onClick={() => {
-													onRemoveFromChosen(1);
-												}}
-											>
-												REMOVE FROM CONNECTION
-											</TooltipButton>
-										)}
-										{chosenPoint2 === point.id && (
-											<TooltipButton
-												color={ButtonColors.RED}
-												yCord={0}
-												xCord={0}
-												onClick={() => {
-													onRemoveFromChosen(2);
-												}}
-											>
-												REMOVE FROM CONNECTION
-											</TooltipButton>
-										)}
-										{point.type !== "exit" &&
-											point.type !== "intermediate" &&
-											chosenPoint1 === null &&
-											getChooseButton(point.id, point.type)}
-										{point.type !== "entrance" &&
-											point.type !== "intermediate" &&
-											chosenPoint2 === null &&
-											getChooseButton(point.id, point.type)}
-										{point.type === "intermediate" &&
-											(chosenPoint1 === null ||
-												chosenPoint2 === null) &&
-											chosenPoint2 !== point.id &&
-											chosenPoint1 !== point.id &&
-											getChooseButton(point.id, point.type)}
-									</ButtonsDiv>
-								</React.Fragment>
-							}
-							TransitionComponent={Zoom}
-							enterDelay={75}
-							leaveDelay={450}
-							arrow
-						>
-							<EEIPointMarker
+				{exitEntrancePoints.length > 0 && (
+					<ThemeProvider theme={tooltipTheme}>
+						{exitEntrancePoints.map((point, idx) => (
+							<Tooltip
 								key={idx}
-								color={
-									chosenPoint1 === point.id ||
-									chosenPoint2 === point.id
-										? Colors.PURPLE
-										: matchEEIPointTypeWithColor(point.type)
+								title={
+									<React.Fragment>
+										<BaseUl>
+											<BaseLi>id: {point.index}</BaseLi>
+											<BaseLi>type: {point.type}</BaseLi>
+											<BaseLi>street: {point.street}</BaseLi>
+											<BaseLi>
+												capacity:{" "}
+												{point.capacity === -1
+													? "infinity"
+													: point.capacity}
+											</BaseLi>
+										</BaseUl>
+										<ButtonsDiv>
+											{chosenPoint1 === point.index && (
+												<TooltipButton
+													color={ButtonColors.RED}
+													yCord={0}
+													xCord={0}
+													onClick={() => {
+														onRemoveFromChosen(1);
+													}}
+												>
+													REMOVE FROM CONNECTION
+												</TooltipButton>
+											)}
+											{chosenPoint2 === point.index && (
+												<TooltipButton
+													color={ButtonColors.RED}
+													yCord={0}
+													xCord={0}
+													onClick={() => {
+														onRemoveFromChosen(2);
+													}}
+												>
+													REMOVE FROM CONNECTION
+												</TooltipButton>
+											)}
+											{point.type !== "exit" &&
+												point.type !== "intermediate" &&
+												chosenPoint1 === null &&
+												getChooseButton(
+													point.index,
+													point.type,
+												)}
+											{point.type !== "entrance" &&
+												point.type !== "intermediate" &&
+												chosenPoint2 === null &&
+												getChooseButton(
+													point.index,
+													point.type,
+												)}
+											{point.type === "intermediate" &&
+												(chosenPoint1 === null ||
+													chosenPoint2 === null) &&
+												chosenPoint2 !== point.index &&
+												chosenPoint1 !== point.index &&
+												getChooseButton(
+													point.index,
+													point.type,
+												)}
+										</ButtonsDiv>
+									</React.Fragment>
 								}
-								yCord={point.yCord}
-								xCord={point.xCord}
-							></EEIPointMarker>
-						</Tooltip>
-					))}
+								TransitionComponent={Zoom}
+								enterDelay={75}
+								leaveDelay={450}
+								arrow
+							>
+								<EEIPointMarker
+									key={idx}
+									color={
+										chosenPoint1 === point.index ||
+										chosenPoint2 === point.index
+											? Colors.PURPLE
+											: matchEEIPointTypeWithColor(point.type)
+									}
+									yCord={point.yCord}
+									xCord={point.xCord}
+								></EEIPointMarker>
+							</Tooltip>
+						))}{" "}
+					</ThemeProvider>
+				)}
 				<CrossroadScreenshot
 					src={
 						crossroadImage === undefined
@@ -351,13 +366,13 @@ export function Connections() {
 			<BaseForm onSubmit={onConfirm}>
 				<HorizontalBaseUl>
 					<BaseLi>
-						<label htmlFor="id">ID:</label>
+						<label htmlFor="index">ID:</label>
 						<BaseInput
-							id="id"
+							id="index"
 							type="text"
-							value={idInput}
+							value={indexInput}
 							onChange={(e) => {
-								setIdInput(e.target.value);
+								setIndexInput(e.target.value);
 							}}
 							disabled={chosenPoint1 === null || chosenPoint2 === null}
 						/>

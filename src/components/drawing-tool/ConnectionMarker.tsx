@@ -10,9 +10,10 @@ import {
 	ButtonColors,
 	ButtonsDiv,
 	Colors,
-} from "../../styles/MainTheme";
-import { Zoom } from "@mui/material";
+} from "../../styles/MainStyles";
+import { ThemeProvider, Zoom } from "@mui/material";
 import Tooltip from "@mui/material/Tooltip";
+import { tooltipTheme } from "../../custom/drawing-tool/AuxiliaryData";
 
 export type ConnectionCoordinates = {
 	entranceX: number;
@@ -46,50 +47,62 @@ export function ConnectionMarker(props: ConnectionCoordinates) {
 		(180 / Math.PI);
 
 	return (
-		<Tooltip
-			title={
-				<React.Fragment>
-					<BaseUl>
-						<BaseLi>id: {props.connection.id}</BaseLi>
-						<BaseLi>name: {props.connection.name}</BaseLi>
-						<BaseLi>sourceId: {props.connection.sourceId}</BaseLi>
-						<BaseLi>targetId: {props.connection.targetId}</BaseLi>
-						{props.withLightIds && (
-							<BaseLi>
-								lightsIDs:{" "}
-								{props.connection.trafficLightIDs.length > 0
-									? props.connection.trafficLightIDs.join(", ")
-									: "None"}
-							</BaseLi>
+		<ThemeProvider theme={tooltipTheme}>
+			<Tooltip
+				PopperProps={{
+					modifiers: [
+						{
+							name: "offset",
+							options: {
+								offset: [-length / 8, -length / 4],
+							},
+						},
+					],
+				}}
+				title={
+					<React.Fragment>
+						<BaseUl>
+							<BaseLi>id: {props.connection.index}</BaseLi>
+							<BaseLi>name: {props.connection.name}</BaseLi>
+							<BaseLi>sourceId: {props.connection.sourceId}</BaseLi>
+							<BaseLi>targetId: {props.connection.targetId}</BaseLi>
+							{props.withLightIds && (
+								<BaseLi>
+									lightsIDs:{" "}
+									{props.connection.trafficLightIDs.length > 0
+										? props.connection.trafficLightIDs.join(", ")
+										: "None"}
+								</BaseLi>
+							)}
+						</BaseUl>
+						{props.buttonSettings && (
+							<ButtonsDiv>
+								<TooltipButton
+									color={props.buttonSettings.buttonColor}
+									xCord={0}
+									yCord={0}
+									onClick={props.buttonSettings.onButtonClickAction}
+								>
+									{props.buttonSettings.buttonText}
+								</TooltipButton>
+							</ButtonsDiv>
 						)}
-					</BaseUl>
-					{props.buttonSettings && (
-						<ButtonsDiv>
-							<TooltipButton
-								color={props.buttonSettings.buttonColor}
-								xCord={0}
-								yCord={0}
-								onClick={props.buttonSettings.onButtonClickAction}
-							>
-								{props.buttonSettings.buttonText}
-							</TooltipButton>
-						</ButtonsDiv>
-					)}
-				</React.Fragment>
-			}
-			TransitionComponent={Zoom}
-			enterDelay={75}
-			leaveDelay={450}
-			placement={"right-end"}
-		>
-			<ConnectionLine
-				angle={angle}
-				centerX={centerX}
-				centerY={centerY}
-				length={length}
-				thickness={props.thickness}
-				color={props.color}
-			></ConnectionLine>
-		</Tooltip>
+					</React.Fragment>
+				}
+				TransitionComponent={Zoom}
+				enterDelay={75}
+				leaveDelay={450}
+				placement={"right-end"}
+			>
+				<ConnectionLine
+					angle={angle}
+					centerX={centerX}
+					centerY={centerY}
+					length={length}
+					thickness={props.thickness}
+					color={props.color}
+				></ConnectionLine>
+			</Tooltip>
+		</ThemeProvider>
 	);
 }

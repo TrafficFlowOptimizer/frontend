@@ -5,6 +5,8 @@ import {
 	FirstStageTrafficLight,
 	TrafficLightDirection,
 } from "../CrossroadInterface";
+import { createTheme } from "@mui/material";
+import { Colors } from "../../styles/MainStyles";
 
 export const COUNTRIES = [
 	"Afghanistan",
@@ -209,7 +211,7 @@ export const COUNTRIES = [
 	"Uzbekistan",
 	"Venezuela",
 	"Vietnam",
-	"Virgin Islands (US)",
+	"Virgin Islands",
 	"Yemen",
 	"Zambia",
 	"Zimbabwe",
@@ -237,6 +239,7 @@ export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {
 
 export const EXITS_ENTRANCES_TEMPLATE: ExitEntrancePoint = {
 	id: "",
+	index: "",
 	type: "entrance",
 	xCord: 0,
 	yCord: 0,
@@ -249,10 +252,11 @@ export const EEIPointOffset = 7.5;
 export const FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE: FirstStageTrafficLight = {
 	light: {
 		id: "",
+		index: "",
 		name: "",
 		direction: TrafficLightDirection.FORWARD,
 	},
-	eeiPointId: "",
+	eeiPointIndex: "",
 };
 
 export const HEAVY_COLLISION_DESCRIPTION =
@@ -260,3 +264,24 @@ export const HEAVY_COLLISION_DESCRIPTION =
 
 export const LIGHT_COLLISION_DESCRIPTION =
 	"the lights can be green at the same time, but it will make cars' passage slower";
+
+export const tooltipTheme = createTheme({
+	components: {
+		MuiTooltip: {
+			styleOverrides: {
+				tooltip: {
+					width: "12vw",
+					height: "fit-content",
+					fontSize: "12px",
+					color: `${Colors.PRIMARY_WHITE}`,
+					backgroundColor: "rgba(25, 21, 22,0.7)",
+					paddingRight: "5px",
+					display: "flex",
+					flexDirection: "column",
+					justifyContent: "flex-start",
+					alignItems: "center",
+				},
+			},
+		},
+	},
+});

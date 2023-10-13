@@ -1,5 +1,5 @@
 import { EEIPointType, TrafficLight } from "../CrossroadInterface";
-import { ButtonColors, Colors } from "../../styles/MainTheme";
+import { ButtonColors, Colors } from "../../styles/MainStyles";
 
 export const capitalizeFirstLetter = (str: string): string => {
 	const splits = str
@@ -27,10 +27,10 @@ export const matchEEIPointTypeWithColor = (
 
 export const getTrafficLightName = (
 	lights: TrafficLight[],
-	lightId: string,
+	lightIndex: string,
 ): string => {
 	for (const tl of lights) {
-		if (tl.id === lightId) {
+		if (tl.index === lightIndex) {
 			return tl.name;
 		}
 	}

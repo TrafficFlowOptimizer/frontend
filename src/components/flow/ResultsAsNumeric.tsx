@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { OptimizationResults } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
+import { BaseButtonLink, PageHeader } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	NumericResultsUl,

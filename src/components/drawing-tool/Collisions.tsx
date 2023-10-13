@@ -7,7 +7,7 @@ import {
 	ButtonColors,
 	ButtonsDiv,
 	Colors,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -26,7 +26,7 @@ import {
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
+import { ThemeProvider, Zoom } from "@mui/material";
 import {
 	getTrafficLightName,
 	matchEEIPointTypeWithColor,
@@ -40,12 +40,13 @@ import {
 	BASIC_INFORMATION_ERROR_MESSAGES,
 	HEAVY_COLLISION_DESCRIPTION,
 	LIGHT_COLLISION_DESCRIPTION,
+	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
 import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
 } from "../../styles/NeutralButton";
-import { ContainerDiv } from "../../styles/MainTheme";
+import { ContainerDiv } from "../../styles/MainStyles";
 import { WaitingPopUp } from "../additional/Modal/WaitingPopUp";
 
 export function Collisions() {
@@ -112,9 +113,13 @@ export function Collisions() {
 
 	const onSave = () => {
 		setCollisions(
-			collisions.map((col, index) => ({ ...col, id: (index + 1).toString() })),
+			collisions.map((col, index) => ({ ...col, index: (index + 1).toString() })),
 		);
 		//TODO: save screenshot and Crossroad, EEIPoints, Connections, Lights, Collisions to DB (BE endpoint)
+		crossroad.roadIds = exitEntrancePoints.map((eeiPoint) => eeiPoint.index);
+		crossroad.connectionIds = connections.map((con) => con.index);
+		crossroad.trafficLightIds = trafficLights.map((tl) => tl.index);
+		crossroad.collisionsIds = collisions.map((col) => col.index);
 
 		//TMP
 		localStorage.setItem("crossroad", JSON.stringify(crossroad));
@@ -148,7 +153,8 @@ export function Collisions() {
 			setCollisions([
 				...collisions,
 				{
-					id: getNewId(),
+					id: "",
+					index: getNewId(),
 					name: target.name.value,
 					type: collisionType,
 					trafficLight1Id: chosenLight1,
@@ -198,8 +204,8 @@ export function Collisions() {
 		setShowCollisionAssigner(false);
 	};
 
-	const onRemoveCollision = (collisionId: string) => {
-		setCollisions(collisions.filter((col) => col.id !== collisionId));
+	const onRemoveCollision = (collisionIndex: string) => {
+		setCollisions(collisions.filter((col) => col.index !== collisionIndex));
 	};
 
 	return (
@@ -244,17 +250,17 @@ export function Collisions() {
 				{connections.length > 0 &&
 					connections.map((con) => {
 						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
+							(point) => point.index === con.sourceId,
 						)[0];
 						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
+							(point) => point.index === con.targetId,
 						)[0];
 
 						const buttonSettings: ButtonSettings = {
 							onButtonClickAction: () => {
 								setTemplateTrafficLights(
 									trafficLights.filter((tl) =>
-										con.trafficLightIDs.includes(tl.id),
+										con.trafficLightIDs.includes(tl.index),
 									),
 								);
 								setShowCollisionAssigner(true);
@@ -267,7 +273,7 @@ export function Collisions() {
 
 						return (
 							<ConnectionMarker
-								key={con.id}
+								key={con.index}
 								thickness={3}
 								entranceX={entrancePoint.xCord}
 								entranceY={entrancePoint.yCord}
@@ -277,47 +283,52 @@ export function Collisions() {
 								color={Colors.BRIGHT_RED}
 								withLightIds={true}
 								buttonSettings={
-									chosenLight1 === null || chosenLight2 === null
+									chosenLight1 === null ||
+									(chosenLight2 === null &&
+										!con.trafficLightIDs.includes(chosenLight1))
 										? buttonSettings
 										: undefined
 								}
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
-						return (
-							<Tooltip
-								key={idx}
-								title={
-									<React.Fragment>
-										<BaseUl>
-											<BaseLi>id: {point.id}</BaseLi>
-											<BaseLi>type: {point.type}</BaseLi>
-											<BaseLi>street: {point.street}</BaseLi>
-											<BaseLi>
-												capacity:{" "}
-												{point.capacity === -1
-													? "infinity"
-													: point.capacity}
-											</BaseLi>
-										</BaseUl>
-									</React.Fragment>
-								}
-								TransitionComponent={Zoom}
-								enterDelay={75}
-								leaveDelay={450}
-								arrow
-							>
-								<EEIPointMarker
+				{exitEntrancePoints.length > 0 && (
+					<ThemeProvider theme={tooltipTheme}>
+						{exitEntrancePoints.map((point, idx) => {
+							return (
+								<Tooltip
 									key={idx}
-									color={matchEEIPointTypeWithColor(point.type)}
-									yCord={point.yCord}
-									xCord={point.xCord}
-								></EEIPointMarker>
-							</Tooltip>
-						);
-					})}
+									title={
+										<React.Fragment>
+											<BaseUl>
+												<BaseLi>id: {point.index}</BaseLi>
+												<BaseLi>type: {point.type}</BaseLi>
+												<BaseLi>street: {point.street}</BaseLi>
+												<BaseLi>
+													capacity:{" "}
+													{point.capacity === -1
+														? "infinity"
+														: point.capacity}
+												</BaseLi>
+											</BaseUl>
+										</React.Fragment>
+									}
+									TransitionComponent={Zoom}
+									enterDelay={75}
+									leaveDelay={450}
+									arrow
+								>
+									<EEIPointMarker
+										key={idx}
+										color={matchEEIPointTypeWithColor(point.type)}
+										yCord={point.yCord}
+										xCord={point.xCord}
+									></EEIPointMarker>
+								</Tooltip>
+							);
+						})}
+					</ThemeProvider>
+				)}
 				<CrossroadScreenshot
 					src={
 						crossroadImage === undefined
@@ -405,7 +416,7 @@ export function Collisions() {
 			{collisions.length > 0 && (
 				<BaseUl>
 					{collisions.map((col) => (
-						<BaseLi key={col.id}>
+						<BaseLi key={col.index}>
 							<p>
 								<strong>name: </strong>
 								{col.name}
@@ -418,7 +429,9 @@ export function Collisions() {
 								<strong>type: </strong>
 								{col.type}
 							</p>
-							<NegativeButton onClick={() => onRemoveCollision(col.id)}>
+							<NegativeButton
+								onClick={() => onRemoveCollision(col.index)}
+							>
 								Remove
 							</NegativeButton>
 						</BaseLi>

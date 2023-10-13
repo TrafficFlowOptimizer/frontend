@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { FirstStageTrafficLight } from "../../../../custom/CrossroadInterface";
-import { ButtonsDiv, Colors } from "../../../../styles/MainTheme";
+import { ButtonsDiv, Colors } from "../../../../styles/MainStyles";
 import { NegativeButton } from "../../../../styles/NegativeButton";
 import { PositiveButton } from "../../../../styles/PositiveButton";
 import styled from "styled-components";
@@ -101,12 +101,12 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 					</MenuItem>
 					{props.trafficLights.map((light) => (
 						<MenuItem
-							key={light.light.id}
-							value={light.light.id}
+							key={light.light.index}
+							value={light.light.index}
 							style={getStyles(light.light.name, chosenLights, muiTheme)}
 						>
 							<p>
-								id: {light.light.id}; name: {light.light.name};
+								id: {light.light.index}; name: {light.light.name};
 								direction: {light.light.direction}
 							</p>
 						</MenuItem>

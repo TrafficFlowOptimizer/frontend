@@ -5,7 +5,7 @@ import { useUserContext } from "../../custom/UserContext";
 import { Dropdown } from "./Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
-import { DarkTheme, LightTheme } from "../../styles/MainTheme";
+import { DarkTheme, LightTheme } from "../../styles/MainStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	FormGroupFiles,

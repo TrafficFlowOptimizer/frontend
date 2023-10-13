@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainTheme";
+import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainStyles";
 import Tooltip from "@mui/material/Tooltip";
 import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
@@ -27,6 +27,7 @@ export const CrossroadScreenshot = styled.img`
 	height: 560px;
 	object-fit: cover;
 	flex: 0;
+	z-index: 2;
 `;
 
 

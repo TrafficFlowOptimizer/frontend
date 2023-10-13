@@ -24,20 +24,23 @@ import {
 	ButtonsDiv,
 	HorizontalDiv,
 	ScrollableUl,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { ButtonSettings, ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
+import { ThemeProvider, Zoom } from "@mui/material";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
 	EEIPointMarker,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
-import { CROSSROAD_MODEL_TEMPLATE } from "../../custom/drawing-tool/AuxiliaryData";
+import {
+	CROSSROAD_MODEL_TEMPLATE,
+	tooltipTheme,
+} from "../../custom/drawing-tool/AuxiliaryData";
 
 export function CrossroadView() {
 	const navigate = useNavigate();
@@ -130,65 +133,70 @@ export function CrossroadView() {
 					<Backdrop />
 				</>
 			)}
-			<PageHeader>{crossroad.name} view page</PageHeader>
+			<PageHeader>{crossroad.name}</PageHeader>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
 						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
+							// (point) => point.id === con.sourceId, <- final version, after BE changes
+							(point) => point.index === con.sourceId,
 						)[0];
 						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
+							// (point) => point.id === con.targetId, <- final version, after BE changes
+							(point) => point.index === con.targetId,
 						)[0];
 
 						return (
 							<ConnectionMarker
-								key={con.id}
+								key={con.index}
 								thickness={3}
 								entranceX={entrancePoint.xCord}
 								entranceY={entrancePoint.yCord}
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
-								color={Colors.BRIGHT_RED} //TODO: make color dependent on collisions or lack of thereof
+								color={Colors.BRIGHT_RED}
 								withLightIds={true}
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
-						return (
-							<Tooltip
-								key={idx}
-								title={
-									<React.Fragment>
-										<BaseUl>
-											<BaseLi>id: {point.id}</BaseLi>
-											<BaseLi>type: {point.type}</BaseLi>
-											<BaseLi>street: {point.street}</BaseLi>
-											<BaseLi>
-												capacity:{" "}
-												{point.capacity === -1
-													? "infinity"
-													: point.capacity}
-											</BaseLi>
-										</BaseUl>
-									</React.Fragment>
-								}
-								TransitionComponent={Zoom}
-								enterDelay={75}
-								leaveDelay={450}
-								arrow
-							>
-								<EEIPointMarker
-									key={idx}
-									color={matchEEIPointTypeWithColor(point.type)}
-									yCord={point.yCord}
-									xCord={point.xCord}
-								></EEIPointMarker>
-							</Tooltip>
-						);
-					})}
+				{exitEntrancePoints.length > 0 && (
+					<ThemeProvider theme={tooltipTheme}>
+						{exitEntrancePoints.map((point, idx) => {
+							return (
+								<Tooltip
+									key={point.index}
+									title={
+										<React.Fragment>
+											<BaseUl>
+												<BaseLi>id: {point.index}</BaseLi>
+												<BaseLi>type: {point.type}</BaseLi>
+												<BaseLi>street: {point.street}</BaseLi>
+												<BaseLi>
+													capacity:{" "}
+													{point.capacity === -1
+														? "infinity"
+														: point.capacity}
+												</BaseLi>
+											</BaseUl>
+										</React.Fragment>
+									}
+									TransitionComponent={Zoom}
+									enterDelay={75}
+									leaveDelay={450}
+									arrow
+								>
+									<EEIPointMarker
+										key={idx}
+										color={matchEEIPointTypeWithColor(point.type)}
+										yCord={point.yCord}
+										xCord={point.xCord}
+									></EEIPointMarker>
+								</Tooltip>
+							);
+						})}
+					</ThemeProvider>
+				)}
 				<CrossroadScreenshot
 					src={
 						crossroadImage === undefined
@@ -200,14 +208,14 @@ export function CrossroadView() {
 			</BorderedWorkaroundDiv>
 			<HorizontalDiv>
 				{trafficLights.length > 0 ? (
-					<ScrollableUl>
+					<ScrollableUl height={40}>
 						<BaseLi>
 							<p>
 								<strong>TrafficLights:</strong>
 							</p>
 						</BaseLi>
 						{trafficLights.map((light) => (
-							<BaseLi key={light.id}>
+							<BaseLi key={`${light.index}light`}>
 								<p>
 									<strong>Light name:</strong> {light.name}
 								</p>
@@ -223,7 +231,7 @@ export function CrossroadView() {
 					</p>
 				)}
 				{collisions.length > 0 ? (
-					<ScrollableUl>
+					<ScrollableUl height={40}>
 						<BaseLi>
 							<p>
 								<strong>Collisions:</strong>

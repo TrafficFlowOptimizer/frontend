@@ -14,7 +14,7 @@ import { CrossroadView } from "./components/flow/CrossroadView";
 import { MapLeaflet } from "./components/drawing-tool/MapLeaflet";
 import { BasicInformation } from "./components/drawing-tool/BasicInformation";
 import { ThemeProvider } from "styled-components";
-import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
+import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainStyles";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
 import { LoggedUser, UserContext } from "./custom/UserContext";
 import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";

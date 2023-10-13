@@ -6,7 +6,7 @@ import { Dropdown } from "../Dropdown";
 import { Memes } from "../Memes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext } from "../../../custom/ThemeContext";
-import { DarkTheme, LightTheme } from "../../../styles/MainTheme";
+import { DarkTheme, LightTheme } from "../../../styles/MainStyles";
 import { PositiveButton } from "../../../styles/PositiveButton";
 import { StyledModal, StyledMessageField } from "../../../styles/modal/ModalStyles";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";

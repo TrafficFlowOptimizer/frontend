@@ -17,7 +17,7 @@ import {
 	InputInformationMessage,
 	PlaceholderSpan,
 	RedirectionLink,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 
 export type loginData = {
 	nickname: string;

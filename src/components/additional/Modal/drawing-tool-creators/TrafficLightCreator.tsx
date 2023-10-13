@@ -10,7 +10,7 @@ import {
 	BaseUl,
 	ButtonColors,
 	ButtonsDiv,
-} from "../../../../styles/MainTheme";
+} from "../../../../styles/MainStyles";
 import { NegativeButton } from "../../../../styles/NegativeButton";
 import { PositiveButton } from "../../../../styles/PositiveButton";
 import { RadioButtonsGroup } from "../../RadioButtonsGroup";
@@ -58,11 +58,12 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 		else {
 			setLight({
 				light: {
+					index: light.light.index,
 					id: light.light.id,
 					name: target.name.value,
 					direction: light.light.direction,
 				},
-				eeiPointId: light.eeiPointId,
+				eeiPointIndex: light.eeiPointIndex,
 			});
 			setInputValidity(true);
 			setDataMessage("Inputs confirmed!");
@@ -84,11 +85,12 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 	const handleDirectionSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setLight({
 			light: {
+				index: light.light.index,
 				direction: event.target.value as TrafficLightDirection,
 				id: light.light.id,
 				name: light.light.name,
 			},
-			eeiPointId: light.eeiPointId,
+			eeiPointIndex: light.eeiPointIndex,
 		});
 		setInputValidity(false);
 		setDataMessage("Confirm your choices");
@@ -106,7 +108,7 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 			<BaseForm onSubmit={onConfirm}>
 				<BaseUl>
 					<BaseLi>
-						<p>ID: {light.light.id}</p>
+						<p>ID: {light.light.index}</p>
 					</BaseLi>
 					<BaseLi>
 						<label htmlFor="name">Name:</label>

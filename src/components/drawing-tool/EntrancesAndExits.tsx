@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import Tooltip from "@mui/material/Tooltip";
-import { Zoom } from "@mui/material";
+import { ThemeProvider, Zoom } from "@mui/material";
 import { Crossroad, ExitEntrancePoint } from "../../custom/CrossroadInterface";
 import {
 	CrossroadScreenshot,
@@ -15,7 +15,7 @@ import {
 	ButtonColors,
 	ButtonsDiv,
 	ContainerDiv,
-} from "../../styles/MainTheme";
+} from "../../styles/MainStyles";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { ExitEntranceCreator } from "../additional/Modal/drawing-tool-creators/ExitEntranceCreator";
 import { NegativeButton } from "../../styles/NegativeButton";
@@ -23,6 +23,7 @@ import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	EEIPointOffset,
 	EXITS_ENTRANCES_TEMPLATE,
+	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
 import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
 
@@ -91,29 +92,29 @@ export function EntrancesAndExits() {
 		localStorage.removeItem("crossroadMap");
 	};
 
-	const onDeletePoint = (event: any, pointId: string, pointIdx: number) => {
+	const onDeletePoint = (event: any, pointIndex: string, pointIdx: number) => {
 		event.stopPropagation();
 		setExitEntrancePoints(
 			exitEntrancePoints.filter(
-				(point, idx) => pointId !== point.id && idx !== pointIdx,
+				(point, idx) => pointIndex !== point.index && idx !== pointIdx,
 			),
 		);
 	};
 
-	const onEditPoint = (event: any, pointId: string, pointIdx: number) => {
+	const onEditPoint = (event: any, pointIndex: string, pointIdx: number) => {
 		event.stopPropagation();
 		setTemplatePoint(exitEntrancePoints.at(pointIdx)!);
 		setExitEntrancePoints(
 			exitEntrancePoints.filter(
-				(point, idx) => pointId !== point.id && idx !== pointIdx,
+				(point, idx) => pointIndex !== point.index && idx !== pointIdx,
 			),
 		);
 		setShowCreator(true);
 	};
 
-	const checkId = (id: string) => {
+	const checkIndex = (index: string) => {
 		for (const tempPoint of exitEntrancePoints) {
-			if (tempPoint.id === id) {
+			if (tempPoint.index === index) {
 				return true;
 			}
 		}
@@ -128,7 +129,7 @@ export function EntrancesAndExits() {
 						point={templatePoint}
 						closeFunction={onCloseCreator}
 						handleOnSave={onSaveCreator}
-						checkId={checkId}
+						checkIndex={checkIndex}
 					/>
 					<Backdrop />
 				</>
@@ -146,60 +147,63 @@ export function EntrancesAndExits() {
 				3. Repeat steps 1-2 for all entrances, exits and inters you need
 			</p>
 			<BorderedWorkaroundDiv onClick={onMapClick}>
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => (
-						<Tooltip
-							key={idx}
-							title={
-								<React.Fragment>
-									<BaseUl>
-										<BaseLi>id: {point.id}</BaseLi>
-										<BaseLi>type: {point.type}</BaseLi>
-										<BaseLi>street: {point.street}</BaseLi>
-										<BaseLi>
-											capacity:{" "}
-											{point.capacity === -1
-												? "infinity"
-												: point.capacity}
-										</BaseLi>
-									</BaseUl>
-									<ButtonsDiv>
-										<TooltipButton
-											color={ButtonColors.RED}
-											yCord={0}
-											xCord={0}
-											onClick={(e) => {
-												onDeletePoint(e, point.id, idx);
-											}}
-										>
-											DELETE POINT
-										</TooltipButton>
-										<TooltipButton
-											color={ButtonColors.BLUE}
-											yCord={0}
-											xCord={0}
-											onClick={(e) => {
-												onEditPoint(e, point.id, idx);
-											}}
-										>
-											EDIT POINT
-										</TooltipButton>
-									</ButtonsDiv>
-								</React.Fragment>
-							}
-							TransitionComponent={Zoom}
-							enterDelay={75}
-							leaveDelay={450}
-							arrow
-						>
-							<EEIPointMarker
+				{exitEntrancePoints.length > 0 && (
+					<ThemeProvider theme={tooltipTheme}>
+						{exitEntrancePoints.map((point, idx) => (
+							<Tooltip
 								key={idx}
-								color={matchEEIPointTypeWithColor(point.type)}
-								yCord={point.yCord}
-								xCord={point.xCord}
-							></EEIPointMarker>
-						</Tooltip>
-					))}
+								title={
+									<React.Fragment>
+										<BaseUl>
+											<BaseLi>id: {point.index}</BaseLi>
+											<BaseLi>type: {point.type}</BaseLi>
+											<BaseLi>street: {point.street}</BaseLi>
+											<BaseLi>
+												capacity:{" "}
+												{point.capacity === -1
+													? "infinity"
+													: point.capacity}
+											</BaseLi>
+										</BaseUl>
+										<ButtonsDiv>
+											<TooltipButton
+												color={ButtonColors.RED}
+												yCord={0}
+												xCord={0}
+												onClick={(e) => {
+													onDeletePoint(e, point.index, idx);
+												}}
+											>
+												DELETE POINT
+											</TooltipButton>
+											<TooltipButton
+												color={ButtonColors.BLUE}
+												yCord={0}
+												xCord={0}
+												onClick={(e) => {
+													onEditPoint(e, point.index, idx);
+												}}
+											>
+												EDIT POINT
+											</TooltipButton>
+										</ButtonsDiv>
+									</React.Fragment>
+								}
+								TransitionComponent={Zoom}
+								enterDelay={75}
+								leaveDelay={450}
+								arrow
+							>
+								<EEIPointMarker
+									key={idx}
+									color={matchEEIPointTypeWithColor(point.type)}
+									yCord={point.yCord}
+									xCord={point.xCord}
+								></EEIPointMarker>
+							</Tooltip>
+						))}
+					</ThemeProvider>
+				)}
 				<CrossroadScreenshot
 					onMouseMove={handleMouseMove}
 					src={

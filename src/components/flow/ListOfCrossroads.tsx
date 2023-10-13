@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Crossroad } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, ButtonsDiv } from "../../styles/MainTheme";
+import { BaseButtonLink, ButtonsDiv } from "../../styles/MainStyles";
 import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
