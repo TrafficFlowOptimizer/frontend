@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainStyles";
+import { BaseButton, ButtonColors, Colors, InputInformationMessage, LightColors } from "../MainStyles";
 import Tooltip from "@mui/material/Tooltip";
 import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
@@ -37,7 +37,7 @@ export const AdaptedInputInformationMessage = styled(InputInformationMessage)`
 `;
 
 export type EEIPointProps = {
-	color: ButtonColors | Colors;
+	color: ButtonColors | Colors | LightColors;
 	xCord: number;
 	yCord: number;
 }

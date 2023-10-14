@@ -15,6 +15,7 @@ import {
 	StyledItemTr,
 	StyledItemTd,
 } from "../../styles/CrossroadListStyles";
+import { CROSSROAD_MODEL_TEMPLATE } from "../../custom/drawing-tool/AuxiliaryData";
 
 export type tableCrossroadState = "chosen" | "not chosen";
 
@@ -38,7 +39,11 @@ export function ListOfCrossroads() {
 
 	useEffect(() => {
 		const tmpCrossroad: Crossroad = JSON.parse(localStorage.getItem("crossroad")!);
-		setListOfCrossroads([tmpCrossroad]);
+		if (tmpCrossroad != null) {
+			setListOfCrossroads([tmpCrossroad]);
+		} else {
+			setListOfCrossroads([CROSSROAD_MODEL_TEMPLATE]);
+		}
 	}, []);
 
 	const handleChooseButton = (
