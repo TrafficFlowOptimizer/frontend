@@ -9,7 +9,10 @@ import {
 	LightColors,
 	PageHeader,
 } from "../../styles/MainStyles";
-import { NeutralNegativeButton } from "../../styles/NeutralButton";
+import {
+	NeutralNegativeButton,
+	NeutralPositiveButton,
+} from "../../styles/NeutralButton";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
@@ -29,42 +32,10 @@ import {
 	ExitEntrancePoint,
 	TrafficLight,
 } from "../../custom/CrossroadInterface";
+import { StyledItemTd } from "../../styles/CrossroadListStyles";
+import { tableCrossroadState } from "./ListOfCrossroads";
 
-export const LightColor = (lightSequence: number[]) => {
-	const lights = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
-	const [count, setColor] = useState(0);
-	useEffect(() => {
-		const interval = setInterval(() => {
-			setColor((count) => (count + 1) % lightSequence.length);
-		}, timeDelta);
-		return () => clearInterval(interval);
-	}, []);
-	return lights[lightSequence[count]];
-};
-
-export const CarNumber = (
-	spawnChance: number,
-	spawnAmount: number,
-	goAmount: number,
-	canGo: boolean,
-) => {
-	const [count, setNumber] = useState(0);
-
-	useEffect(() => {
-		const interval = setInterval(() => {
-			const prob = getRandomInt(100) + 1;
-			if (prob < spawnChance && canGo) {
-				setNumber((count) => Math.max(0, count + spawnAmount - goAmount));
-			} else if (prob < spawnChance && !canGo) {
-				setNumber((count) => count + spawnAmount);
-			} else if (prob >= spawnChance && canGo) {
-				setNumber((count) => Math.max(0, count - goAmount));
-			}
-		}, timeDelta);
-		return () => clearInterval(interval);
-	}, [spawnChance, spawnAmount, goAmount, canGo]);
-	return <h3>{count}</h3>;
-};
+export type pauseButtonState = "paused" | "running";
 
 function getRandomInt(max: number) {
 	return Math.floor(Math.random() * max);
@@ -103,6 +74,59 @@ export function ResultsAsSimulation() {
 	);
 	const collisions: Collision[] = JSON.parse(localStorage.getItem("collisions")!);
 
+	const [running, setRunning] = useState(false);
+
+	const LightColor = (lightSequence: number[]) => {
+		const lights = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
+		const [count, setColor] = useState(0);
+		useEffect(() => {
+			if (!running) {
+				return;
+			}
+			const interval = setInterval(() => {
+				setColor((count) => (count + 1) % lightSequence.length);
+			}, timeDelta);
+			return () => clearInterval(interval);
+		}, [running]);
+		return lights[lightSequence[count]];
+	};
+
+	const CarNumber = (
+		spawnChance: number,
+		spawnAmount: number,
+		goAmount: number,
+		canGo: boolean,
+	) => {
+		const [count, setNumber] = useState(0);
+
+		useEffect(() => {
+			if (!running) {
+				return;
+			}
+			const interval = setInterval(() => {
+				const prob = getRandomInt(100) + 1;
+				if (prob < spawnChance && canGo) {
+					setNumber((count) => Math.max(0, count + spawnAmount - goAmount));
+				} else if (prob < spawnChance && !canGo) {
+					setNumber((count) => count + spawnAmount);
+				} else if (prob >= spawnChance && canGo) {
+					setNumber((count) => Math.max(0, count - goAmount));
+				}
+			}, timeDelta);
+			return () => clearInterval(interval);
+		}, [spawnChance, spawnAmount, goAmount, canGo, running]);
+		return <h3>{count}</h3>;
+	};
+
+	const handleChooseButton = (current_state: pauseButtonState) => {
+		console.log(current_state, running);
+		if (current_state === "paused") {
+			setRunning(false);
+		} else {
+			setRunning(true);
+		}
+	};
+
 	return (
 		<ContainerDiv>
 			<Navbar />
@@ -137,18 +161,18 @@ export function ResultsAsSimulation() {
 				{exitEntrancePoints.length > 0 && (
 					<ThemeProvider theme={tooltipTheme}>
 						{exitEntrancePoints.map((point, idx) => {
-							let color;
+							let lightColor;
 							let carNumber;
 							if (point.type != "exit") {
-								color = LightColor(lights[idx / 2]);
+								lightColor = LightColor(lights[idx / 2]);
 								carNumber = CarNumber(
 									carSpawningChances[idx / 2],
 									1,
 									2,
-									color != LightColors.RED,
+									lightColor != LightColors.RED,
 								);
 							} else {
-								color = LightColors.BLACK;
+								lightColor = LightColors.BLACK;
 								carNumber = <h1>{}</h1>;
 							}
 
@@ -156,7 +180,7 @@ export function ResultsAsSimulation() {
 								<div key={idx}>
 									<EEIPointMarker
 										key={idx}
-										color={color}
+										color={lightColor}
 										yCord={point.yCord}
 										xCord={point.xCord}
 									>
@@ -176,6 +200,24 @@ export function ResultsAsSimulation() {
 					alt="Map screenshot"
 				></CrossroadScreenshot>
 			</BorderedWorkaroundDiv>
+			<tbody>
+				<StyledItemTd>
+					{!running ? (
+						<NeutralNegativeButton
+							onClick={() => handleChooseButton("running")}
+						>
+							Resume
+						</NeutralNegativeButton>
+					) : (
+						<NeutralPositiveButton
+							onClick={() => handleChooseButton("paused")}
+						>
+							Pause
+						</NeutralPositiveButton>
+					)}
+				</StyledItemTd>
+			</tbody>
+
 			<NeutralNegativeButton>
 				<BaseButtonLink
 					to="../results-choice"
