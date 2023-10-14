@@ -3,10 +3,6 @@ import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../Ma
 import Tooltip from "@mui/material/Tooltip";
 import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
-export const CreatorInformation = styled.p`
-	text-align: center;
-`;
-
 export const WorkaroundInnerDiv = styled.div`
 	flex: 1;
 	height: 560px;
@@ -97,4 +93,12 @@ export const ConnectionLine = styled.div<ConnectionLineProps>`
 	-o-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 	-ms-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg); 
 	transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
+`;
+
+export const InstructionP = styled.p`
+	margin: 20px;
+	text-align: left;
+	
+	width: 70%;
+	height: fit-content;
 `;

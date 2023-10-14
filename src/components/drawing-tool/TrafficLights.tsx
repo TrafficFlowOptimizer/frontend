@@ -10,7 +10,10 @@ import {
 	FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE,
 	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
-import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
+import {
+	getNewId,
+	matchEEIPointTypeWithColor,
+} from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { TrafficLightCreator } from "../additional/Modal/drawing-tool-creators/TrafficLightCreator";
@@ -34,6 +37,7 @@ import {
 	CrossroadScreenshot,
 	EEIPointMarker,
 	TooltipButton,
+	InstructionP,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function TrafficLights() {
@@ -84,19 +88,12 @@ export function TrafficLights() {
 		});
 	};
 
-	const getNewId = () => {
-		const newId = firstFreeId.toString();
-		setFirstFreeId(firstFreeId + 1);
-		return newId;
-	};
-
 	const createTrafficLight = (eeiPointIndex: string) => {
 		setShowLightCreator(true);
 		setTemplateLight({
 			light: {
 				id: "",
-				index: getNewId(),
-				name: FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE.light.name,
+				index: getNewId(firstFreeId, setFirstFreeId),
 				direction: FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE.light.direction,
 			},
 			eeiPointIndex: eeiPointIndex,
@@ -201,7 +198,7 @@ export function TrafficLights() {
 					<Backdrop />
 				</>
 			)}
-			<p>
+			<InstructionP>
 				<strong>Traffic Lights</strong>
 				<br />
 				Please follow these steps:
@@ -217,7 +214,7 @@ export function TrafficLights() {
 				<br />
 				4. Then click on a connection and assign all traffic lights that use it.
 				Repeat it until you mark all connections accordingly to your wish
-			</p>
+			</InstructionP>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
@@ -248,6 +245,7 @@ export function TrafficLights() {
 								connection={con}
 								color={Colors.BRIGHT_RED}
 								withLightIds={lightsReady}
+								withTooltip={lightsReady}
 								buttonSettings={
 									lightsReady ? buttonSettings : undefined
 								}
@@ -273,7 +271,18 @@ export function TrafficLights() {
 								</ButtonsDiv>
 							);
 
-							return (
+							const eeiPoint = (
+								<EEIPointMarker
+									key={idx}
+									color={matchEEIPointTypeWithColor(point.type)}
+									yCord={point.yCord}
+									xCord={point.xCord}
+								></EEIPointMarker>
+							);
+
+							return lightsReady ? (
+								eeiPoint
+							) : (
 								<Tooltip
 									key={idx}
 									title={
@@ -300,12 +309,7 @@ export function TrafficLights() {
 									leaveDelay={450}
 									arrow
 								>
-									<EEIPointMarker
-										key={idx}
-										color={matchEEIPointTypeWithColor(point.type)}
-										yCord={point.yCord}
-										xCord={point.xCord}
-									></EEIPointMarker>
+									{eeiPoint}
 								</Tooltip>
 							);
 						})}{" "}
@@ -325,10 +329,13 @@ export function TrafficLights() {
 					{firstStageTrafficLights.map((light) => (
 						<BaseLi key={light.light.index}>
 							<p>
-								<strong>Light name:</strong> {light.light.name}
+								<strong>Light id:</strong> {light.light.index}
 							</p>
 							<p>
 								<strong>At:</strong> {light.eeiPointIndex}
+							</p>
+							<p>
+								<strong>Direction:</strong> {light.light.direction}
 							</p>
 							{!lightsReady ? (
 								<NeutralPositiveButton

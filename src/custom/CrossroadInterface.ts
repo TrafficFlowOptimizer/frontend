@@ -32,15 +32,17 @@ export type SingleConnectionOptimizationResults = {
 };
 
 export enum TrafficLightDirection {
+	ENTIRE = "ENTIRE",
 	LEFT = "LEFT",
 	RIGHT = "RIGHT",
 	FORWARD = "FORWARD",
-	ARROW = "ARROW",
-	TURNING = "TURNING",
+	ARROW_LEFT = "ARROW_LEFT",
+	ARROW_RIGHT = "ARROW_RIGHT",
+	UTURN = "U_TURN",
 	LEFT_RIGHT = "LEFT_RIGHT",
 	LEFT_FORWARD = "LEFT_FORWARD",
 	RIGHT_FORWARD = "RIGHT_FORWARD",
-	LEFT_TURNING = "LEFT_TURNING",
+	UTURN_LEFT = "UTURN_LEFT ",
 }
 
 export type EEIPointType = "exit" | "entrance" | "intermediate";
@@ -67,7 +69,6 @@ export type Connection = {
 export type TrafficLight = {
 	id: string;
 	index: string;
-	name: string;
 	direction: TrafficLightDirection;
 };
 
@@ -76,16 +77,11 @@ export type FirstStageTrafficLight = {
 	eeiPointIndex: string;
 };
 
-export enum CollisionType {
-	HEAVY = "HEAVY",
-	LIGHT = "LIGHT",
-}
-
 export type Collision = {
 	id: string;
 	index: string;
 	name: string;
-	type: CollisionType;
-	trafficLight1Id: string;
-	trafficLight2Id: string;
+	bothLightsCanBeOn: boolean;
+	connection1Id: string;
+	connection2Id: string;
 };

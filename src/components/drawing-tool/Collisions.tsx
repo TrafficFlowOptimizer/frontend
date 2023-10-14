@@ -1,4 +1,28 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import {
+	Collision,
+	Connection,
+	Crossroad,
+	ExitEntrancePoint,
+	TrafficLight,
+} from "../../custom/CrossroadInterface";
+import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
+import {
+	getConnectionName,
+	getNewId,
+	matchEEIPointTypeWithColor,
+} from "../../custom/drawing-tool/AuxiliaryFunctions";
+import { InputInformationSpan } from "../additional/InputInformationSpan";
+import { useThemeContext } from "../../custom/ThemeContext";
+import { Backdrop } from "../additional/Modal/Backdrop";
+import { WaitingPopUp } from "../additional/Modal/WaitingPopUp";
+import { Checkbox } from "../additional/Checkbox";
+import {
+	BorderedWorkaroundDiv,
+	CrossroadScreenshot,
+	EEIPointMarker,
+} from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
 	BaseForm,
 	BaseInput,
@@ -10,44 +34,16 @@ import {
 } from "../../styles/MainStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
-import { useLocation, useNavigate } from "react-router-dom";
-import {
-	Collision,
-	CollisionType,
-	Connection,
-	Crossroad,
-	ExitEntrancePoint,
-	TrafficLight,
-} from "../../custom/CrossroadInterface";
-import {
-	BorderedWorkaroundDiv,
-	CrossroadScreenshot,
-	EEIPointMarker,
-} from "../../styles/drawing-tool-styles/GeneralStyles";
-import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
-import Tooltip from "@mui/material/Tooltip";
-import { ThemeProvider, Zoom } from "@mui/material";
-import {
-	getTrafficLightName,
-	matchEEIPointTypeWithColor,
-} from "../../custom/drawing-tool/AuxiliaryFunctions";
-import { InputInformationSpan } from "../additional/InputInformationSpan";
-import { useThemeContext } from "../../custom/ThemeContext";
-import { TwoChoicesToggle } from "../additional/TwoChoicesToggle";
-import { Backdrop } from "../additional/Modal/Backdrop";
-import { CollisionLightAssigner } from "../additional/Modal/drawing-tool-creators/CollisionLightAssigner";
 import {
 	BASIC_INFORMATION_ERROR_MESSAGES,
-	HEAVY_COLLISION_DESCRIPTION,
-	LIGHT_COLLISION_DESCRIPTION,
-	tooltipTheme,
+	LIGHTS_TURNED_ON_COLLISION_DESCRIPTION,
 } from "../../custom/drawing-tool/AuxiliaryData";
 import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
 } from "../../styles/NeutralButton";
 import { ContainerDiv } from "../../styles/MainStyles";
-import { WaitingPopUp } from "../additional/Modal/WaitingPopUp";
+import { InstructionP } from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function Collisions() {
 	const { theme } = useThemeContext();
@@ -55,8 +51,8 @@ export function Collisions() {
 	const location = useLocation();
 
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
-	const firstLightMark = "1st light:";
-	const secondLightMark = "2nd light:";
+	const firstConnectionMark = "1st connection:";
+	const secondConnectionMark = "2nd connection:";
 
 	const crossroad: Crossroad = location.state.crossroad;
 	const exitEntrancePoints: ExitEntrancePoint[] = location.state.entrancesAndExits;
@@ -64,46 +60,36 @@ export function Collisions() {
 	const trafficLights: TrafficLight[] = location.state.trafficLights;
 
 	const [collisions, setCollisions] = useState<Collision[]>([]);
-	const [templateTrafficLights, setTemplateTrafficLights] = useState<TrafficLight[]>(
-		[],
-	);
 
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("");
-	const [showCollisionAssigner, setShowCollisionAssigner] = useState(false);
 	const [showWaitingModal, setShowWaitingModal] = useState(false);
 
-	const [light1ChoiceStatus, setLight1ChoiceStatus] = useState(
-		`${firstLightMark} None`,
+	const [connection1ChoiceStatus, setConnection1ChoiceStatus] = useState(
+		`${firstConnectionMark} None`,
 	);
-	const [light2ChoiceStatus, setLight2ChoiceStatus] = useState(
-		`${secondLightMark} None`,
+	const [connection2ChoiceStatus, setConnection2ChoiceStatus] = useState(
+		`${secondConnectionMark} None`,
 	);
-	const [chosenLight1, setChosenLight1] = useState<string | null>(null);
-	const [chosenLight2, setChosenLight2] = useState<string | null>(null);
+	const [chosenConnection1, setChosenConnection1] = useState<string | null>(null);
+	const [chosenConnection2, setChosenConnection2] = useState<string | null>(null);
 
 	const [firstFreeId, setFirstFreeId] = useState(1);
 
 	const [nameInput, setNameInput] = useState("");
-	const [collisionType, setCollisionType] = useState(CollisionType.HEAVY);
+	const [canBothLightsBeOn, setCanBothLightsBeOn] = useState(false);
 
 	useEffect(() => {
 		setCrossroadImage(localStorage.getItem("crossroadMap")!);
 	}, []); //This is a deprecated way to do this, should be addressed in the next refactor
 
-	const getNewId = () => {
-		const newId = firstFreeId.toString();
-		setFirstFreeId(firstFreeId + 1);
-		return newId;
-	};
-
 	const checkForRepliedCollision = () => {
 		for (const col of collisions) {
 			if (
-				(col.trafficLight1Id === chosenLight1 &&
-					col.trafficLight2Id === chosenLight2) ||
-				(col.trafficLight1Id === chosenLight2 &&
-					col.trafficLight2Id === chosenLight1)
+				(col.connection1Id === chosenConnection1 &&
+					col.connection2Id === chosenConnection2) ||
+				(col.connection1Id === chosenConnection2 &&
+					col.connection2Id === chosenConnection1)
 			) {
 				return true;
 			}
@@ -149,59 +135,57 @@ export function Collisions() {
 		} else if (checkForRepliedCollision()) {
 			setInputValidity(false);
 			setDataMessage("This collision has already been created");
-		} else if (chosenLight2 !== null && chosenLight1 !== null) {
+		} else if (chosenConnection2 !== null && chosenConnection1 !== null) {
 			setCollisions([
 				...collisions,
 				{
 					id: "",
-					index: getNewId(),
+					index: getNewId(firstFreeId, setFirstFreeId),
 					name: target.name.value,
-					type: collisionType,
-					trafficLight1Id: chosenLight1,
-					trafficLight2Id: chosenLight2,
+					bothLightsCanBeOn: canBothLightsBeOn,
+					connection1Id: chosenConnection1,
+					connection2Id: chosenConnection2,
 				},
 			]);
 
-			setLight1ChoiceStatus(`${firstLightMark} None`);
-			setLight2ChoiceStatus(`${secondLightMark} None`);
+			setConnection1ChoiceStatus(`${firstConnectionMark} None`);
+			setConnection2ChoiceStatus(`${secondConnectionMark} None`);
 			setInputValidity(true);
 			setDataMessage("New collision added!");
-			setChosenLight1(null);
-			setChosenLight2(null);
+			setChosenConnection1(null);
+			setChosenConnection2(null);
 			setNameInput("");
+			setCanBothLightsBeOn(false);
 		}
 	};
 
 	const onResetCollision = () => {
-		setChosenLight1(null);
-		setChosenLight2(null);
-		setLight1ChoiceStatus(`${firstLightMark} None`);
-		setLight2ChoiceStatus(`${secondLightMark} None`);
+		setChosenConnection1(null);
+		setChosenConnection2(null);
+		setConnection1ChoiceStatus(`${firstConnectionMark} None`);
+		setConnection2ChoiceStatus(`${secondConnectionMark} None`);
+		setNameInput("");
+		setDataMessage("Confirm your inputs!");
 	};
 
-	const onCloseAssigner = () => {
-		setShowCollisionAssigner(false);
-	};
-
-	const saveLightAssignment = (lightId: string) => {
-		if (chosenLight1 === null) {
-			setChosenLight1(lightId);
-			setLight1ChoiceStatus(
-				`${firstLightMark} id->${lightId}; name->${getTrafficLightName(
-					trafficLights,
-					lightId,
+	const saveConnectionAssignment = (connectionId: string) => {
+		if (chosenConnection1 === null) {
+			setChosenConnection1(connectionId);
+			setConnection1ChoiceStatus(
+				`${firstConnectionMark} id->${connectionId}; name->${getConnectionName(
+					connections,
+					connectionId,
 				)}`,
 			);
 		} else {
-			setChosenLight2(lightId);
-			setLight2ChoiceStatus(
-				`${secondLightMark} id->${lightId}; name->${getTrafficLightName(
-					trafficLights,
-					lightId,
+			setChosenConnection2(connectionId);
+			setConnection2ChoiceStatus(
+				`${secondConnectionMark} id->${connectionId}; name->${getConnectionName(
+					connections,
+					connectionId,
 				)}`,
 			);
 		}
-		setShowCollisionAssigner(false);
 	};
 
 	const onRemoveCollision = (collisionIndex: string) => {
@@ -210,16 +194,6 @@ export function Collisions() {
 
 	return (
 		<ContainerDiv>
-			{showCollisionAssigner && (
-				<>
-					<CollisionLightAssigner
-						closeFunction={onCloseAssigner}
-						handleOnSave={saveLightAssignment}
-						trafficLights={templateTrafficLights}
-					/>
-					<Backdrop />
-				</>
-			)}
 			{showWaitingModal && (
 				<>
 					<WaitingPopUp
@@ -230,22 +204,23 @@ export function Collisions() {
 					<Backdrop />
 				</>
 			)}
-			<p>
+			<InstructionP>
 				<strong>Collisions</strong>
 				<br />
 				Please follow these steps:
 				<br />
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				1. Hover on connection to choose one of it's lights for collision.
-				Repeat this step twice for one collision.
+				1. Hover on connection to choose one of it for collision. Repeat this
+				step twice for one collision.
 				<br />
-				2. When both lights are chosen fill the name input and choose collision
-				type. If you made a mistake picking lights you can always reset your
+				2. When both connections are chosen fill the name input and choose if
+				for those two their lights can be on at the same time (checkbox). If you
+				made a mistake picking connections you can always reset your
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
 				choices with 'Reset collision' button
 				<br />
 				3. Repeat steps 1-2 until you have all collisions you wanted.
-			</p>
+			</InstructionP>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
@@ -258,16 +233,11 @@ export function Collisions() {
 
 						const buttonSettings: ButtonSettings = {
 							onButtonClickAction: () => {
-								setTemplateTrafficLights(
-									trafficLights.filter((tl) =>
-										con.trafficLightIDs.includes(tl.index),
-									),
-								);
-								setShowCollisionAssigner(true);
+								saveConnectionAssignment(con.index);
 							},
-							buttonText: `Choose ${
-								chosenLight1 === null ? "1st" : "2nd"
-							} light`,
+							buttonText: `Choose as ${
+								chosenConnection1 === null ? "1st" : "2nd"
+							} connection`,
 							buttonColor: ButtonColors.BLUE,
 						};
 
@@ -280,55 +250,34 @@ export function Collisions() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
-								color={Colors.BRIGHT_RED}
+								color={
+									chosenConnection1 === con.index ||
+									chosenConnection2 === con.index
+										? Colors.PURPLE
+										: Colors.BRIGHT_RED
+								}
 								withLightIds={true}
+								withTooltip={true}
 								buttonSettings={
-									chosenLight1 === null ||
-									(chosenLight2 === null &&
-										!con.trafficLightIDs.includes(chosenLight1))
+									chosenConnection1 !== con.index &&
+									chosenConnection2 !== con.index
 										? buttonSettings
 										: undefined
 								}
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 && (
-					<ThemeProvider theme={tooltipTheme}>
-						{exitEntrancePoints.map((point, idx) => {
-							return (
-								<Tooltip
-									key={idx}
-									title={
-										<React.Fragment>
-											<BaseUl>
-												<BaseLi>id: {point.index}</BaseLi>
-												<BaseLi>type: {point.type}</BaseLi>
-												<BaseLi>street: {point.street}</BaseLi>
-												<BaseLi>
-													capacity:{" "}
-													{point.capacity === -1
-														? "infinity"
-														: point.capacity}
-												</BaseLi>
-											</BaseUl>
-										</React.Fragment>
-									}
-									TransitionComponent={Zoom}
-									enterDelay={75}
-									leaveDelay={450}
-									arrow
-								>
-									<EEIPointMarker
-										key={idx}
-										color={matchEEIPointTypeWithColor(point.type)}
-										yCord={point.yCord}
-										xCord={point.xCord}
-									></EEIPointMarker>
-								</Tooltip>
-							);
-						})}
-					</ThemeProvider>
-				)}
+				{exitEntrancePoints.length > 0 &&
+					exitEntrancePoints.map((point, idx) => {
+						return (
+							<EEIPointMarker
+								key={idx}
+								color={matchEEIPointTypeWithColor(point.type)}
+								yCord={point.yCord}
+								xCord={point.xCord}
+							></EEIPointMarker>
+						);
+					})}
 				<CrossroadScreenshot
 					src={
 						crossroadImage === undefined
@@ -339,7 +288,7 @@ export function Collisions() {
 				></CrossroadScreenshot>
 			</BorderedWorkaroundDiv>
 			<InputInformationSpan
-				dataMessage={light1ChoiceStatus}
+				dataMessage={connection1ChoiceStatus}
 				isInputValid={true}
 				positiveColor={
 					theme === "dark" ? Colors.PRIMARY_WHITE : Colors.PRIMARY_BLACK
@@ -349,7 +298,7 @@ export function Collisions() {
 				}
 			/>
 			<InputInformationSpan
-				dataMessage={light2ChoiceStatus}
+				dataMessage={connection2ChoiceStatus}
 				isInputValid={true}
 				positiveColor={
 					theme === "dark" ? Colors.PRIMARY_WHITE : Colors.PRIMARY_BLACK
@@ -369,39 +318,38 @@ export function Collisions() {
 							onChange={(e) => {
 								setNameInput(e.target.value);
 							}}
-							disabled={chosenLight1 === null || chosenLight2 === null}
+							disabled={
+								chosenConnection1 === null || chosenConnection2 === null
+							}
 						/>
 					</BaseLi>
 					<BaseLi>
-						<TwoChoicesToggle
-							handleOnChange={() => {
-								if (collisionType === CollisionType.HEAVY) {
-									setCollisionType(CollisionType.LIGHT);
-								} else {
-									setCollisionType(CollisionType.HEAVY);
-								}
-							}}
-							options={[CollisionType.HEAVY, CollisionType.LIGHT]}
-							name="typeChoice"
-							labelMessage="Type:"
-							optionsDescriptions={[
-								HEAVY_COLLISION_DESCRIPTION,
-								LIGHT_COLLISION_DESCRIPTION,
-							]}
-							disabled={chosenLight2 === null}
+						<Checkbox
+							label={"Lights can be turned on at the same time"}
+							description={LIGHTS_TURNED_ON_COLLISION_DESCRIPTION}
+							withTooltip={true}
+							isChecked={canBothLightsBeOn}
+							disabled={
+								chosenConnection1 === null || chosenConnection2 === null
+							}
+							onChangeAction={setCanBothLightsBeOn}
 						/>
 					</BaseLi>
 				</BaseUl>
 				<ButtonsDiv>
 					<NeutralPositiveButton
 						type="submit"
-						disabled={chosenLight1 === null || chosenLight2 === null}
+						disabled={
+							chosenConnection1 === null || chosenConnection2 === null
+						}
 					>
 						Add collision
 					</NeutralPositiveButton>
 					<NeutralNegativeButton
 						onClick={onResetCollision}
-						disabled={chosenLight1 === null && chosenLight2 === null}
+						disabled={
+							chosenConnection1 === null && chosenConnection2 === null
+						}
 					>
 						Reset collision
 					</NeutralNegativeButton>
@@ -422,12 +370,14 @@ export function Collisions() {
 								{col.name}
 							</p>
 							<p>
-								<strong>lights: </strong>
-								{col.trafficLight1Id}&{col.trafficLight2Id}
+								<strong>connections: </strong>
+								{col.connection1Id}&{col.connection2Id}
 							</p>
 							<p>
-								<strong>type: </strong>
-								{col.type}
+								<strong>
+									Can lights be turned on at the same time:{" "}
+								</strong>
+								{col.bothLightsCanBeOn ? "Yes" : "No"}
 							</p>
 							<NegativeButton
 								onClick={() => onRemoveCollision(col.index)}

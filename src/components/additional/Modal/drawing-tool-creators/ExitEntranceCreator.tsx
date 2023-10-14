@@ -34,18 +34,13 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			index: { value: string };
 			street: { value: string };
 			capacity: { value: string };
 		};
 
 		const parsedCapacity = parseInt(target.capacity.value);
 
-		if (
-			target.index.value.length === 0 ||
-			target.street.value.length === 0 ||
-			target.capacity.value.length === 0
-		) {
+		if (target.street.value.length === 0 || target.capacity.value.length === 0) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
 		} else if (
@@ -54,13 +49,9 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_capacity);
-		} else if (props.checkIndex(target.index.value)) {
-			setInputValidity(false);
-			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
 		} else {
 			setPoint({
 				...point,
-				index: target.index.value,
 				street: target.street.value,
 				capacity: target.capacity.value === "infinity" ? -1 : parsedCapacity,
 			});
@@ -112,12 +103,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 						/>
 					</BaseLi>
 					<BaseLi>
-						<label htmlFor="index">Id:</label>
-						<BaseInput
-							id="index"
-							type="text"
-							defaultValue={point.index.toString()}
-						/>
+						<p>ID: {point.index}</p>
 					</BaseLi>
 					<BaseLi>
 						<label htmlFor="street">Street:</label>

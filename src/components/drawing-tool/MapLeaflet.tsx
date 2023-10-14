@@ -16,7 +16,7 @@ import { NegativeButton } from "../../styles/NegativeButton";
 import { ButtonsDiv } from "../../styles/MainStyles";
 import {
 	WorkaroundInnerDiv,
-	CreatorInformation,
+	InstructionP,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 
 export function MapLeaflet() {
@@ -97,7 +97,7 @@ export function MapLeaflet() {
 				</>
 			)}
 			<LeafletContainer>
-				<CreatorInformation>
+				<InstructionP>
 					{/* eslint-disable-next-line react/no-unescaped-entities */}
 					Please choose location, adjust zoom-out and press "Next" button
 					<br />
@@ -105,7 +105,7 @@ export function MapLeaflet() {
 					creation entirely!
 					<br />
 					Take your time and customize it to your liking!
-				</CreatorInformation>
+				</InstructionP>
 				<WorkaroundInnerDiv ref={screenshotRef}>
 					<GoogleMap
 						mapContainerStyle={mapContainerStyle}

@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Crossroad } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, ButtonsDiv } from "../../styles/MainStyles";
+import { BaseButtonLink, ButtonsDiv, ContainerDiv } from "../../styles/MainStyles";
 import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
@@ -60,7 +60,7 @@ export function ListOfCrossroads() {
 	};
 
 	return (
-		<>
+		<ContainerDiv>
 			<Navbar />
 			{listOfCrossroads.length == 0 ? (
 				<p>No crossings available</p>
@@ -132,6 +132,6 @@ export function ListOfCrossroads() {
 					Go to crossroad view
 				</NeutralPositiveButton>
 			</ButtonsDiv>
-		</>
+		</ContainerDiv>
 	);
 }
