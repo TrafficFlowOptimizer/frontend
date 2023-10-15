@@ -1,4 +1,4 @@
-import { EEIPointType, TrafficLight } from "../CrossroadInterface";
+import { Connection, EEIPointType } from "../CrossroadInterface";
 import { ButtonColors, Colors } from "../../styles/MainStyles";
 
 export const capitalizeFirstLetter = (str: string): string => {
@@ -25,14 +25,23 @@ export const matchEEIPointTypeWithColor = (
 	}
 };
 
-export const getTrafficLightName = (
-	lights: TrafficLight[],
-	lightIndex: string,
+export const getConnectionName = (
+	connections: Connection[],
+	connectionIndex: string,
 ): string => {
-	for (const tl of lights) {
-		if (tl.index === lightIndex) {
-			return tl.name;
+	for (const con of connections) {
+		if (connectionIndex === con.index) {
+			return con.name;
 		}
 	}
 	return ""; //Should never happen, but it would be cleaner to throw some kind of exception here
+};
+
+export const getNewId = (
+	firstFreeId: number,
+	setNewFreeId: (arg: number) => void,
+): string => {
+	const newId = firstFreeId.toString();
+	setNewFreeId(firstFreeId + 1);
+	return newId;
 };

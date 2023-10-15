@@ -253,17 +253,14 @@ export const FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE: FirstStageTrafficLight = {
 	light: {
 		id: "",
 		index: "",
-		name: "",
 		direction: TrafficLightDirection.FORWARD,
 	},
 	eeiPointIndex: "",
 };
 
-export const HEAVY_COLLISION_DESCRIPTION =
-	"The lights cannot be green at the same time";
-
-export const LIGHT_COLLISION_DESCRIPTION =
-	"the lights can be green at the same time, but it will make cars' passage slower";
+export const LIGHTS_TURNED_ON_COLLISION_DESCRIPTION =
+	"Whether the lights on both connections can be green at the same time or not." +
+	"\nIf yes the collision is avoidable, but it will make cars' passage slower.\nIf not, the collision is inevitable and the lights have to be turned green one by one.";
 
 export const tooltipTheme = createTheme({
 	components: {
@@ -285,3 +282,7 @@ export const tooltipTheme = createTheme({
 		},
 	},
 });
+
+export const TOOLTIP_ENTRANCE_DELAY = 20;
+
+export const TOOLTIP_LEAVE_DELAY = 100;

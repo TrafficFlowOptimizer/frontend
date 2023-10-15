@@ -13,11 +13,23 @@ import { VideosList } from "./VideosList";
 import { useLocation, useNavigate } from "react-router-dom";
 import { PopUp } from "../additional/Modal/PopUp";
 import { Backdrop } from "../additional/Modal/Backdrop";
+import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
+import Tooltip from "@mui/material/Tooltip";
+import { ThemeProvider, Zoom } from "@mui/material";
+import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
+import {
+	CROSSROAD_MODEL_TEMPLATE,
+	tooltipTheme,
+} from "../../custom/drawing-tool/AuxiliaryData";
+import {
+	BorderedWorkaroundDiv,
+	CrossroadScreenshot,
+	EEIPointMarker,
+} from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
 	BaseButtonLink,
 	BaseLi,
 	BaseUl,
-	ButtonColors,
 	Colors,
 	PageHeader,
 	ContainerDiv,
@@ -28,19 +40,6 @@ import {
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { PositiveButton } from "../../styles/PositiveButton";
-import { ButtonSettings, ConnectionMarker } from "../drawing-tool/ConnectionMarker";
-import Tooltip from "@mui/material/Tooltip";
-import { ThemeProvider, Zoom } from "@mui/material";
-import {
-	BorderedWorkaroundDiv,
-	CrossroadScreenshot,
-	EEIPointMarker,
-} from "../../styles/drawing-tool-styles/GeneralStyles";
-import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
-import {
-	CROSSROAD_MODEL_TEMPLATE,
-	tooltipTheme,
-} from "../../custom/drawing-tool/AuxiliaryData";
 
 export function CrossroadView() {
 	const navigate = useNavigate();
@@ -157,6 +156,7 @@ export function CrossroadView() {
 								connection={con}
 								color={Colors.BRIGHT_RED}
 								withLightIds={true}
+								withTooltip={true}
 							/>
 						);
 					})}
@@ -217,7 +217,7 @@ export function CrossroadView() {
 						{trafficLights.map((light) => (
 							<BaseLi key={`${light.index}light`}>
 								<p>
-									<strong>Light name:</strong> {light.name}
+									<strong>Light id:</strong> {light.index}
 								</p>
 								<p>
 									<strong>Type:</strong> {light.direction}
@@ -245,11 +245,13 @@ export function CrossroadView() {
 								</p>
 								<p>
 									<strong>lights: </strong>
-									{col.trafficLight1Id}&{col.trafficLight2Id}
+									{col.connection1Id}&{col.connection2Id}
 								</p>
 								<p>
-									<strong>type: </strong>
-									{col.type}
+									<strong>
+										Can lights be turned on at the same time:{" "}
+									</strong>
+									{col.bothLightsCanBeOn ? "Yes" : "No"}
 								</p>
 							</BaseLi>
 						))}

@@ -54,7 +54,7 @@ export const BaseH1 = styled.h1`
 export const PageHeader = styled.h1`
 	font-weight: bold;
 	font-size: xx-large;;
-	margin: 1vh 1vw;
+	margin: 1.5vh 1vw;
 `;
 
 export const BaseButton = styled.button`
@@ -65,13 +65,12 @@ export const BaseButton = styled.button`
 	padding 1vh 0.5vw 1vh 0.5vw;
 	margin: 1vh 0.5vw 1vh 0.5vw;
 	border: none;
-	border-radius: 12px;
+	border-radius: 5px;
 	transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
 	&:hover:enabled {
 		cursor: pointer;
 		z-index: 10;
 		transform: scale(1.1);
-		box-shadow: 5px 4px 3px 1px ${(props) => props.theme.id === "light" ? "#585858" : "#141413"};
 	}
 	
 	&:disabled {

@@ -3,23 +3,30 @@ import {
 	FirstStageTrafficLight,
 	TrafficLightDirection,
 } from "../../../../custom/CrossroadInterface";
+import { useThemeContext } from "../../../../custom/ThemeContext";
+import { InputInformationSpan } from "../../InputInformationSpan";
 import {
 	BaseForm,
-	BaseInput,
-	BaseLi,
-	BaseUl,
 	ButtonColors,
 	ButtonsDiv,
+	Colors,
 } from "../../../../styles/MainStyles";
 import { NegativeButton } from "../../../../styles/NegativeButton";
 import { PositiveButton } from "../../../../styles/PositiveButton";
-import { RadioButtonsGroup } from "../../RadioButtonsGroup";
 import { NeutralPositiveButton } from "../../../../styles/NeutralButton";
-import { InputInformationSpan } from "../../InputInformationSpan";
-import { RadioOption } from "../../RadioButton";
 import styled from "styled-components";
 import { StyledModal } from "../../../../styles/modal/ModalStyles";
-import { BASIC_INFORMATION_ERROR_MESSAGES } from "../../../../custom/drawing-tool/AuxiliaryData";
+import FormControl from "@mui/material/FormControl";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import {
+	ChosenEm,
+	SELECT_ITEM_HEIGHT,
+	SELECT_ITEM_PADDING_TOP,
+	SELECT_WIDTH,
+	StyledEm,
+} from "../../../../styles/drawing-tool-styles/MUISelectStyles";
+import MenuItem from "@mui/material/MenuItem";
 
 export type TrafficLightCreatorProps = {
 	closeFunction: () => void;
@@ -28,77 +35,67 @@ export type TrafficLightCreatorProps = {
 };
 
 export function TrafficLightCreator(props: TrafficLightCreatorProps) {
+	const { theme } = useThemeContext();
+
 	const [light, setLight] = useState(props.trafficLight);
+	const [chosenLightType, setChosenLightType] = useState<string>("");
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("Confirm your choices");
 
-	const directions = new Map<TrafficLightDirection, number>();
-	directions.set(TrafficLightDirection.FORWARD, 0);
-	directions.set(TrafficLightDirection.LEFT, 1);
-	directions.set(TrafficLightDirection.RIGHT, 2);
-	directions.set(TrafficLightDirection.ARROW, 3);
-	directions.set(TrafficLightDirection.TURNING, 4);
-	directions.set(TrafficLightDirection.LEFT_FORWARD, 5);
-	directions.set(TrafficLightDirection.LEFT_RIGHT, 6);
-	directions.set(TrafficLightDirection.LEFT_TURNING, 7);
-	directions.set(TrafficLightDirection.RIGHT_FORWARD, 8);
-
-	const onConfirm = (event: React.SyntheticEvent) => {
-		event.preventDefault();
-
-		const target = event.target as typeof event.target & {
-			name: { value: string };
-		};
-
-		if (target.name.value.length === 0) {
-			setInputValidity(false);
-			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
-		}
-		//maybe some other checks should be performed
-		else {
-			setLight({
-				light: {
-					index: light.light.index,
-					id: light.light.id,
-					name: target.name.value,
-					direction: light.light.direction,
-				},
-				eeiPointIndex: light.eeiPointIndex,
-			});
-			setInputValidity(true);
-			setDataMessage("Inputs confirmed!");
-		}
+	const placeholder = "Select light type";
+	const MenuProps = {
+		PaperProps: {
+			style: {
+				maxHeight: SELECT_ITEM_HEIGHT * 4.5 + SELECT_ITEM_PADDING_TOP,
+				width: "fit-content",
+				backgroundColor:
+					theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
+			},
+		},
 	};
 
-	const lightDirectionOptions: RadioOption[] = [
-		{ id: "FORWARD", text: "FORWARD" },
-		{ id: "LEFT", text: "LEFT" },
-		{ id: "RIGHT", text: "RIGHT" },
-		{ id: "ARROW", text: "ARROW" },
-		{ id: "TURNING", text: "TURNING" },
-		{ id: "LEFT_FORWARD", text: "LEFT_FORWARD" },
-		{ id: "LEFT_RIGHT", text: "LEFT_RIGHT" },
-		{ id: "LEFT_TURNING", text: "LEFT_TURNING" },
-		{ id: "RIGHT_FORWARD", text: "RIGHT_FORWARD" },
-	];
+	function getStyles() {
+		return {
+			backgroundColor:
+				theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
+			color: theme === "dark" ? Colors.PRIMARY_WHITE : Colors.PRIMARY_BLACK,
+		};
+	}
 
-	const handleDirectionSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
-		setLight({
-			light: {
-				index: light.light.index,
-				direction: event.target.value as TrafficLightDirection,
-				id: light.light.id,
-				name: light.light.name,
-			},
-			eeiPointIndex: light.eeiPointIndex,
-		});
+	const handleChange = (event: SelectChangeEvent) => {
+		setChosenLightType(event.target.value);
 		setInputValidity(false);
 		setDataMessage("Confirm your choices");
 	};
 
-	const getLightDirection = () => {
-		return directions.get(light.light.direction)!;
+	const onConfirm = (event: React.SyntheticEvent) => {
+		event.preventDefault();
+
+		setLight({
+			light: {
+				index: light.light.index,
+				id: light.light.id,
+				direction: chosenLightType as TrafficLightDirection,
+			},
+			eeiPointIndex: light.eeiPointIndex,
+		});
+		setInputValidity(true);
+		setDataMessage("Inputs confirmed!");
 	};
+
+	const lightDirectionOptions = [
+		"ENTIRE",
+		"FORWARD",
+		"LEFT",
+		"RIGHT",
+		"ARROW_LEFT",
+		"ARROW_RIGHT",
+		"UTURN",
+		"LEFT_RIGHT",
+		"LEFT_FORWARD",
+		"RIGHT_FORWARD",
+		"UTURN_LEFT",
+	];
 
 	return (
 		<TrafficLightsCreatorModal>
@@ -106,27 +103,40 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 				<strong>Traffic Light Creator</strong>
 			</p>
 			<BaseForm onSubmit={onConfirm}>
-				<BaseUl>
-					<BaseLi>
-						<p>ID: {light.light.index}</p>
-					</BaseLi>
-					<BaseLi>
-						<label htmlFor="name">Name:</label>
-						<BaseInput
-							id="name"
-							type="text"
-							defaultValue={light.light.name}
-						/>
-					</BaseLi>
-					<BaseLi>
-						<RadioButtonsGroup
-							groupLabel="Direction:"
-							options={lightDirectionOptions}
-							onChange={handleDirectionSelection}
-							chosenValueIndex={getLightDirection()}
-						/>
-					</BaseLi>
-				</BaseUl>
+				<p>ID: {light.light.index}</p>
+				<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
+					<Select
+						displayEmpty
+						value={chosenLightType}
+						onChange={handleChange}
+						input={<OutlinedInput />}
+						renderValue={(selected) => {
+							if (selected.length === 0) {
+								return <StyledEm>{placeholder}</StyledEm>;
+							}
+
+							return <ChosenEm>{selected}</ChosenEm>;
+						}}
+						MenuProps={MenuProps}
+						inputProps={{
+							"aria-label": "Without label",
+							"background-color": `${
+								theme === "dark"
+									? Colors.PRIMARY_BLACK
+									: Colors.PRIMARY_WHITE
+							}`,
+						}}
+					>
+						<MenuItem disabled value="">
+							<StyledEm>{placeholder}</StyledEm>
+						</MenuItem>
+						{lightDirectionOptions.map((light, index) => (
+							<MenuItem key={index} value={light} style={getStyles()}>
+								<p>{light}</p>
+							</MenuItem>
+						))}
+					</Select>
+				</FormControl>
 				<NeutralPositiveButton type="submit">Confirm</NeutralPositiveButton>
 				<InputInformationSpan
 					dataMessage={dataMessage}
@@ -151,9 +161,9 @@ export function TrafficLightCreator(props: TrafficLightCreatorProps) {
 }
 
 const TrafficLightsCreatorModal = styled(StyledModal)`
-	width: fit-content;
+	width: 25vw;
 	height: fit-content;
-	left: calc(50% - 12vw);
+	left: calc(50% - 15vw);
 	top: calc(20% - 18vh);
 	
 	padding 20px 70px;

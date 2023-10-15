@@ -15,7 +15,8 @@ export const NavbarContainer = styled.div`
 	margin: 1vh 1vw;
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
-  max-height: 80px;
+  max-height: 80px;  
+  width: 60%;
 `;
 
 export const NavbarLogo = styled.img`

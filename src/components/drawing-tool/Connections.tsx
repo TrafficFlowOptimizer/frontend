@@ -7,7 +7,10 @@ import {
 } from "../../custom/CrossroadInterface";
 import Tooltip from "@mui/material/Tooltip";
 import { ThemeProvider, Zoom } from "@mui/material";
-import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
+import {
+	getNewId,
+	matchEEIPointTypeWithColor,
+} from "../../custom/drawing-tool/AuxiliaryFunctions";
 import {
 	BaseForm,
 	BaseInput,
@@ -26,12 +29,15 @@ import {
 	CrossroadScreenshot,
 	EEIPointMarker,
 	TooltipButton,
+	InstructionP,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
 import { useThemeContext } from "../../custom/ThemeContext";
 import {
 	BASIC_INFORMATION_ERROR_MESSAGES,
+	TOOLTIP_ENTRANCE_DELAY,
+	TOOLTIP_LEAVE_DELAY,
 	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
 import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
@@ -44,7 +50,6 @@ export function Connections() {
 	const crossroad: Crossroad = location.state.crossroad;
 	const exitEntrancePoints: ExitEntrancePoint[] = location.state.entrancesAndExits;
 
-	const [indexInput, setIndexInput] = useState("");
 	const [nameInput, setNameInput] = useState("");
 
 	const [isInputValid, setInputValidity] = useState(false);
@@ -57,6 +62,10 @@ export function Connections() {
 	const [chosenPoint1, setChosenPoint1] = useState<string | null>(null);
 	const [chosenPoint2, setChosenPoint2] = useState<string | null>(null);
 	const [connections, setConnections] = useState<Connection[]>([]);
+
+	const [firstFreeId, setFirstFreeId] = useState(1);
+
+	const [showConnectionsTooltips, setShowConnectionsTooltips] = useState(true);
 
 	useEffect(() => {
 		setCrossroadImage(localStorage.getItem("crossroadMap")!);
@@ -72,7 +81,10 @@ export function Connections() {
 			state: {
 				crossroad: crossroad,
 				entrancesAndExits: exitEntrancePoints,
-				connections: connections,
+				connections: connections.map((con, index) => ({
+					...con,
+					index: (index + 1).toString(),
+				})),
 			},
 		});
 	};
@@ -82,6 +94,10 @@ export function Connections() {
 			setChosenPoint1(null);
 		} else {
 			setChosenPoint2(null);
+		}
+
+		if (chosenPoint2 === null && chosenPoint1 === null) {
+			setShowConnectionsTooltips(true);
 		}
 	};
 
@@ -118,25 +134,22 @@ export function Connections() {
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			index: { value: string };
 			name: { value: string };
 		};
 
-		if (target.index.value.length === 0 || target.name.value.length === 0) {
+		if (target.name.value.length === 0) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
-		} else if (checkIndex(target.index.value)) {
-			setInputValidity(false);
-			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.used_id);
 		} else if (checkForRepliedConnection()) {
 			setInputValidity(false);
 			setDataMessage("This connection has already been created");
 		} else if (chosenPoint2 !== null && chosenPoint1 !== null) {
+			setShowConnectionsTooltips(true);
 			setConnections([
 				...connections,
 				{
 					id: "",
-					index: target.index.value,
+					index: getNewId(firstFreeId, setFirstFreeId),
 					name: target.name.value,
 					trafficLightIDs: [],
 					sourceId: chosenPoint1,
@@ -150,18 +163,8 @@ export function Connections() {
 			setDataMessage("New connection added!");
 			setChosenPoint1(null);
 			setChosenPoint2(null);
-			setIndexInput("");
 			setNameInput("");
 		}
-	};
-
-	const checkIndex = (index: string) => {
-		for (const tempConnection of connections) {
-			if (tempConnection.index === index) {
-				return true;
-			}
-		}
-		return false;
 	};
 
 	const checkForRepliedConnection = () => {
@@ -189,6 +192,7 @@ export function Connections() {
 				xCord={0}
 				onClick={() => {
 					onAddToChosen(pointNumber, pointIndex);
+					setShowConnectionsTooltips(false);
 				}}
 			>
 				ADD AS {pointNumber === 1 ? "SOURCE" : "TARGET"}
@@ -198,7 +202,7 @@ export function Connections() {
 
 	return (
 		<ContainerDiv>
-			<p>
+			<InstructionP>
 				<strong>Connections</strong>
 				<br />
 				Please follow these steps:
@@ -211,7 +215,7 @@ export function Connections() {
 				2. Fill-in the name and id fields and save the connection
 				<br />
 				3. Repeat steps 1-2 for all connections you need
-			</p>
+			</InstructionP>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
@@ -241,6 +245,7 @@ export function Connections() {
 								connection={con}
 								color={Colors.BRIGHT_RED}
 								withLightIds={false}
+								withTooltip={showConnectionsTooltips}
 								buttonSettings={buttonSettings}
 							/>
 						);
@@ -315,8 +320,8 @@ export function Connections() {
 									</React.Fragment>
 								}
 								TransitionComponent={Zoom}
-								enterDelay={75}
-								leaveDelay={450}
+								enterDelay={TOOLTIP_ENTRANCE_DELAY}
+								leaveDelay={TOOLTIP_LEAVE_DELAY}
 								arrow
 							>
 								<EEIPointMarker
@@ -365,18 +370,6 @@ export function Connections() {
 			/>
 			<BaseForm onSubmit={onConfirm}>
 				<HorizontalBaseUl>
-					<BaseLi>
-						<label htmlFor="index">ID:</label>
-						<BaseInput
-							id="index"
-							type="text"
-							value={indexInput}
-							onChange={(e) => {
-								setIndexInput(e.target.value);
-							}}
-							disabled={chosenPoint1 === null || chosenPoint2 === null}
-						/>
-					</BaseLi>
 					<BaseLi>
 						<label htmlFor="name">Name:</label>
 						<BaseInput

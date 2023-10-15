@@ -16,6 +16,11 @@ import FormControl from "@mui/material/FormControl";
 import Select, { SelectChangeEvent } from "@mui/material/Select";
 import { Theme, useTheme } from "@mui/material";
 import { useThemeContext } from "../../../../custom/ThemeContext";
+import {
+	SELECT_ITEM_HEIGHT,
+	SELECT_ITEM_PADDING_TOP,
+	SELECT_WIDTH,
+} from "../../../../styles/drawing-tool-styles/MUISelectStyles";
 
 export type TrafficLightAssignerProps = {
 	closeFunction: () => void;
@@ -31,13 +36,10 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 
 	const placeholder = "Select all lights for this connection";
 	const replacementInfo = "New choices fully replace old ones";
-	const ITEM_HEIGHT = 48;
-	const ITEM_PADDING_TOP = 8;
-	const WIDTH = 400;
 	const MenuProps = {
 		PaperProps: {
 			style: {
-				maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+				maxHeight: SELECT_ITEM_HEIGHT * 4.5 + SELECT_ITEM_PADDING_TOP,
 				width: "fit-content",
 				backgroundColor:
 					theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
@@ -72,7 +74,7 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 			<p>
 				<strong>Traffic Light Assigner</strong>
 			</p>
-			<FormControl sx={{ m: 1, width: WIDTH, mt: 3 }}>
+			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
 				<Select
 					multiple
 					displayEmpty
@@ -103,11 +105,11 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 						<MenuItem
 							key={light.light.index}
 							value={light.light.index}
-							style={getStyles(light.light.name, chosenLights, muiTheme)}
+							style={getStyles(light.light.index, chosenLights, muiTheme)}
 						>
 							<p>
-								id: {light.light.index}; name: {light.light.name};
-								direction: {light.light.direction}
+								id: {light.light.index}; direction:
+								{light.light.direction}
 							</p>
 						</MenuItem>
 					))}

@@ -4,10 +4,17 @@ import Tooltip from "@mui/material/Tooltip";
 import { ThemeProvider, Zoom } from "@mui/material";
 import { Crossroad, ExitEntrancePoint } from "../../custom/CrossroadInterface";
 import {
+	getNewId,
+	matchEEIPointTypeWithColor,
+} from "../../custom/drawing-tool/AuxiliaryFunctions";
+import { Backdrop } from "../additional/Modal/Backdrop";
+import { ExitEntranceCreator } from "../additional/Modal/drawing-tool-creators/ExitEntranceCreator";
+import {
 	CrossroadScreenshot,
 	BorderedWorkaroundDiv,
 	TooltipButton,
 	EEIPointMarker,
+	InstructionP,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
 	BaseLi,
@@ -16,8 +23,6 @@ import {
 	ButtonsDiv,
 	ContainerDiv,
 } from "../../styles/MainStyles";
-import { Backdrop } from "../additional/Modal/Backdrop";
-import { ExitEntranceCreator } from "../additional/Modal/drawing-tool-creators/ExitEntranceCreator";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
@@ -25,7 +30,6 @@ import {
 	EXITS_ENTRANCES_TEMPLATE,
 	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
-import { matchEEIPointTypeWithColor } from "../../custom/drawing-tool/AuxiliaryFunctions";
 
 export function EntrancesAndExits() {
 	const navigate = useNavigate();
@@ -41,6 +45,8 @@ export function EntrancesAndExits() {
 
 	const [localMousePos, setLocalMousePos] = useState({ x: 0, y: 0 });
 	const [templatePoint, setTemplatePoint] = useState(EXITS_ENTRANCES_TEMPLATE);
+
+	const [firstFreeId, setFirstFreeId] = useState(1);
 
 	const handleMouseMove = (event: any) => {
 		const rect = event.target.getBoundingClientRect();
@@ -61,6 +67,7 @@ export function EntrancesAndExits() {
 		event.preventDefault();
 		setTemplatePoint({
 			...templatePoint,
+			index: getNewId(firstFreeId, setFirstFreeId),
 			xCord: localMousePos.x,
 			yCord: localMousePos.y,
 		});
@@ -82,7 +89,10 @@ export function EntrancesAndExits() {
 		navigate("../connections", {
 			state: {
 				crossroad: crossroad,
-				entrancesAndExits: exitEntrancePoints,
+				entrancesAndExits: exitEntrancePoints.map((eeiPoint, index) => ({
+					...eeiPoint,
+					index: (index + 1).toString(),
+				})),
 			},
 		});
 	};
@@ -134,7 +144,7 @@ export function EntrancesAndExits() {
 					<Backdrop />
 				</>
 			)}
-			<p>
+			<InstructionP>
 				<strong>Entrances & Exits</strong>
 				<br />
 				Please follow these steps:
@@ -145,7 +155,7 @@ export function EntrancesAndExits() {
 				2. Fill-in the input fields in the creator and save the point
 				<br />
 				3. Repeat steps 1-2 for all entrances, exits and inters you need
-			</p>
+			</InstructionP>
 			<BorderedWorkaroundDiv onClick={onMapClick}>
 				{exitEntrancePoints.length > 0 && (
 					<ThemeProvider theme={tooltipTheme}>
