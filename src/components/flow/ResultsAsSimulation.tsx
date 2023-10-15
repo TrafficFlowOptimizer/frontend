@@ -34,6 +34,14 @@ import {
 } from "../../custom/CrossroadInterface";
 import { StyledItemTd } from "../../styles/CrossroadListStyles";
 import { tableCrossroadState } from "./ListOfCrossroads";
+import {
+	initConnections,
+	initExitEntrancePoints,
+	initCrossroad,
+	initLights,
+	initCollisions,
+} from "../../assets/InitData";
+// import { initImage } from "../../assets/crossroad.png";
 
 export type pauseButtonState = "paused" | "running";
 
@@ -51,8 +59,48 @@ const lights = [
 		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
 		1, 1, 1,
 	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0,
+	],
+	[
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		1, 1, 1,
+	],
 ];
-const carSpawningChances = [25, 75];
+const carSpawningChances = [25, 75, 25, 75, 25, 75, 25, 75, 25, 75];
+
+localStorage.setItem("crossroad", JSON.stringify(initCrossroad));
+localStorage.setItem("lights", JSON.stringify(initLights));
+localStorage.setItem("eeiPoints", JSON.stringify(initExitEntrancePoints));
+localStorage.setItem("connections", JSON.stringify(initConnections));
+localStorage.setItem("collisions", JSON.stringify(initCollisions));
+// localStorage.setItem("crossroadImage", initImage);
+// localStorage.setItem('eeiPoints',JSON.stringify(initExitEntrancePoints));
 
 export function ResultsAsSimulation() {
 	const location = useLocation();
@@ -60,7 +108,9 @@ export function ResultsAsSimulation() {
 
 	const navigate = useNavigate();
 	const crossroadID: string = location.state.crossroadID ?? true; //idea: just get crossroadID here and fetch it again (newest data and easier in routing)
-	const [crossroad, setCrossroad] = useState<Crossroad>(CROSSROAD_MODEL_TEMPLATE);
+	const [crossroad, setCrossroad] = useState<Crossroad>(
+		JSON.parse(localStorage.getItem("crossroad")!),
+	);
 	const [showLoadingModal, setShowLoadingModal] = useState(false);
 
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
@@ -164,9 +214,9 @@ export function ResultsAsSimulation() {
 							let lightColor;
 							let carNumber;
 							if (point.type != "exit") {
-								lightColor = LightColor(lights[idx / 2]);
+								lightColor = LightColor(lights[idx]);
 								carNumber = CarNumber(
-									carSpawningChances[idx / 2],
+									carSpawningChances[idx],
 									1,
 									2,
 									lightColor != LightColors.RED,
