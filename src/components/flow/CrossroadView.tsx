@@ -244,7 +244,7 @@ export function CrossroadView() {
 									{col.name}
 								</p>
 								<p>
-									<strong>lights: </strong>
+									<strong>connections: </strong>
 									{col.connection1Id}&{col.connection2Id}
 								</p>
 								<p>

@@ -15,31 +15,36 @@ import {
 	StyledItemTr,
 	StyledItemTd,
 } from "../../styles/CrossroadListStyles";
+import { useUserContext } from "../../custom/UserContext";
 
 export type tableCrossroadState = "chosen" | "not chosen";
 
 export function ListOfCrossroads() {
+	const { loggedUser } = useUserContext();
 	const navigate = useNavigate();
 	const [listOfCrossroads, setListOfCrossroads] = useState<Crossroad[]>([]);
 	const [chosenCrossroadId, setChosenCrossroadId] = useState<string | null>(null);
 
-	// useEffect(() => {
-	//
-	// 	axios
-	// 		.get<Crossroad[]>("/crossroad")
-	// 		.then((response) => {
-	// 			const crossingsData: Crossroad[] = response.data;
-	// 			setListOfCrossroads(crossingsData);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error(error);
-	// 		});
-	// }, []); //using useEffect here is deprecated
-
 	useEffect(() => {
-		const tmpCrossroad: Crossroad = JSON.parse(localStorage.getItem("crossroad")!);
-		setListOfCrossroads([tmpCrossroad]);
-	}, []);
+		if (loggedUser !== null) {
+			axios
+				.get<Crossroad[]>("/crossroad", {
+					params: { userId: loggedUser.id },
+					headers: { Authorization: `Bearer ${loggedUser.jwtToken}` },
+				})
+				.then((response) => {
+					const tmpCrossroad: Crossroad = JSON.parse(
+						localStorage.getItem("crossroad")!,
+					);
+
+					const crossingsData: Crossroad[] = response.data;
+					setListOfCrossroads([...crossingsData, tmpCrossroad]);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, []); //using useEffect here is deprecated
 
 	const handleChooseButton = (
 		crossroad_id: string,

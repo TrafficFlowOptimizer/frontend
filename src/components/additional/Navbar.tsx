@@ -3,8 +3,8 @@ import { useThemeContext } from "../../custom/ThemeContext";
 import { useUserContext } from "../../custom/UserContext";
 import { LogOut } from "./LogOut";
 import { ToggleThemeSwitch } from "./ToggleThemeSwitch";
-import logo from "../../assets/TFO_4_but_better.png";
-import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
+import logo from "../../assets/tfo_logos/TFO_4_but_better.png";
+import dm_logo from "../../assets/tfo_logos/TFO_4_dark_mode_but_better.png";
 import { NavbarContainer, NavbarLogo, InsideDiv } from "../../styles/NavbarStyles";
 
 export function Navbar() {

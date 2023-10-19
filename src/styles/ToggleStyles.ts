@@ -1,6 +1,6 @@
 import styled from "styled-components";
-import moon from "../assets/moon.svg";
-import sun from "../assets/sun.svg";
+import moon from "../assets/svgs/moon.svg";
+import sun from "../assets/svgs/sun.svg";
 import { ButtonColors, Colors, LightTheme } from "./MainStyles";
 
 export type ToggleProps = {

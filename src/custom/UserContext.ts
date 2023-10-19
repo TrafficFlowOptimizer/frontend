@@ -4,6 +4,7 @@ export type LoggedUser = {
 	id: string;
 	username: string;
 	email: string;
+	jwtToken: string;
 };
 
 export type LoggedUserContent = {

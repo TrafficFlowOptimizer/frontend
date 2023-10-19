@@ -80,9 +80,8 @@ export function TrafficLights() {
 				crossroad: crossroad,
 				entrancesAndExits: exitEntrancePoints,
 				connections: connections,
-				trafficLights: firstStageTrafficLights.map((light, index) => ({
+				trafficLights: firstStageTrafficLights.map((light) => ({
 					...light.light,
-					index: (index + 1).toString(),
 				})),
 			},
 		});
@@ -209,8 +208,8 @@ export function TrafficLights() {
 				2. Create the light in modal creator
 				<br />
 				3. You can repeat points 1-2 as many times as you need. After you create
-				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				all the lights press 'LIGHTS READY' button
+				{/* eslint-disable-next-line react/no-unescaped-entities */} all the
+				lights press 'LIGHTS READY' button
 				<br />
 				4. Then click on a connection and assign all traffic lights that use it.
 				Repeat it until you mark all connections accordingly to your wish
@@ -369,13 +368,24 @@ export function TrafficLights() {
 				<PositiveButton disabled={!lightsReady} onClick={onNext}>
 					Next
 				</PositiveButton>
-				<NeutralPositiveButton
-					onClick={() => {
-						setLightsReady(!lightsReady);
-					}}
-				>
-					{lightsReady ? "Back to lights creation" : "Lights created"}
-				</NeutralPositiveButton>
+				{!lightsReady && (
+					<NeutralPositiveButton
+						onClick={() => {
+							setFirstStageTrafficLights(
+								firstStageTrafficLights.map((light, index) => ({
+									...light,
+									light: {
+										...light.light,
+										index: (index + 1).toString(),
+									},
+								})),
+							);
+							setLightsReady(!lightsReady);
+						}}
+					>
+						Lights created - proceed
+					</NeutralPositiveButton>
+				)}
 			</ButtonsDiv>
 		</ContainerDiv>
 	);

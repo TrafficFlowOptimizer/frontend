@@ -2,7 +2,7 @@ import React from "react";
 import { Navbar } from "../additional/Navbar";
 import { useLocation } from "react-router-dom";
 import { FileUploader } from "../additional/FileUploader";
-import { BaseButtonLink } from "../../styles/MainStyles";
+import { BaseButtonLink, ButtonsDiv, ContainerDiv } from "../../styles/MainStyles";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 
 export function AddVideos() {
@@ -13,21 +13,23 @@ export function AddVideos() {
 	//TODO: style this page as a whole later on
 
 	return (
-		<>
+		<ContainerDiv>
 			<Navbar />
 			<div>
 				<h3>Add videos for crossroad: {crossroadName}</h3>
 				<FileUploader crossroadId={crossroadId} />
-				<NeutralPositiveButton>
-					<BaseButtonLink
-						to={`../crossroad-view/${crossroadId}`}
-						relative="path"
-						state={{ crossroadID: crossroadId }}
-					>
-						Back to crossing view
-					</BaseButtonLink>
-				</NeutralPositiveButton>
+				<ButtonsDiv>
+					<NeutralPositiveButton>
+						<BaseButtonLink
+							to={`../crossroad-view/${crossroadId}`}
+							relative="path"
+							state={{ crossroadID: crossroadId }}
+						>
+							Back to crossing view
+						</BaseButtonLink>
+					</NeutralPositiveButton>
+				</ButtonsDiv>
 			</div>
-		</>
+		</ContainerDiv>
 	);
 }

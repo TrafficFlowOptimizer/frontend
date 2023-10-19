@@ -210,8 +210,8 @@ export function Collisions() {
 				Please follow these steps:
 				<br />
 				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				1. Hover on connection to choose one of it for collision. Repeat this
-				step twice for one collision.
+				1. Hover on connection to be able to choose it for collision. Repeat
+				this step twice for one collision.
 				<br />
 				2. When both connections are chosen fill the name input and choose if
 				for those two their lights can be on at the same time (checkbox). If you
