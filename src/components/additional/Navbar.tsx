@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { useUserContext } from "../../custom/UserContext";
 import { LogOut } from "./LogOut";
@@ -9,7 +9,18 @@ import { NavbarContainer, NavbarLogo, InsideDiv } from "../../styles/NavbarStyle
 
 export function Navbar() {
 	const { theme } = useThemeContext();
-	const { loggedUser } = useUserContext();
+	const { loggedUser, setLoggedUser } = useUserContext();
+
+	useEffect(() => {
+		if (loggedUser === null) {
+			const userSessionStorageData = sessionStorage.getItem("loggedUser");
+
+			if (userSessionStorageData !== null) {
+				setLoggedUser(JSON.parse(userSessionStorageData));
+			}
+		}
+	}, []);
+
 	return (
 		<NavbarContainer>
 			<InsideDiv>

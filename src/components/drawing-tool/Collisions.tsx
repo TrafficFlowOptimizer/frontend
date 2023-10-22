@@ -11,6 +11,7 @@ import { ButtonSettings, ConnectionMarker } from "./ConnectionMarker";
 import {
 	getConnectionName,
 	getNewId,
+	getUserJWTToken,
 	matchEEIPointTypeWithColor,
 } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { InputInformationSpan } from "../additional/InputInformationSpan";
@@ -31,6 +32,7 @@ import {
 	ButtonColors,
 	ButtonsDiv,
 	Colors,
+	PlaceholderSpan,
 } from "../../styles/MainStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import { PositiveButton } from "../../styles/PositiveButton";
@@ -44,9 +46,15 @@ import {
 } from "../../styles/NeutralButton";
 import { ContainerDiv } from "../../styles/MainStyles";
 import { InstructionP } from "../../styles/drawing-tool-styles/GeneralStyles";
+import axios from "axios";
+import { CrossroadDescriptionRequest } from "../../custom/CrossRoadRestTypes";
+import { useUserContext } from "../../custom/UserContext";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
 
 export function Collisions() {
 	const { theme } = useThemeContext();
+	const { loggedUser } = useUserContext();
 	const navigate = useNavigate();
 	const location = useLocation();
 
@@ -64,6 +72,9 @@ export function Collisions() {
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("");
 	const [showWaitingModal, setShowWaitingModal] = useState(false);
+	const [showFailureAlert, setShowFailureAlert] = useState(false);
+
+	const [failureMessage, setFailureMessage] = useState("");
 
 	const [connection1ChoiceStatus, setConnection1ChoiceStatus] = useState(
 		`${firstConnectionMark} None`,
@@ -71,8 +82,8 @@ export function Collisions() {
 	const [connection2ChoiceStatus, setConnection2ChoiceStatus] = useState(
 		`${secondConnectionMark} None`,
 	);
-	const [chosenConnection1, setChosenConnection1] = useState<string | null>(null);
-	const [chosenConnection2, setChosenConnection2] = useState<string | null>(null);
+	const [chosenConnection1, setChosenConnection1] = useState<number | null>(null);
+	const [chosenConnection2, setChosenConnection2] = useState<number | null>(null);
 
 	const [firstFreeId, setFirstFreeId] = useState(1);
 
@@ -98,23 +109,87 @@ export function Collisions() {
 	};
 
 	const onSave = () => {
-		setCollisions(
-			collisions.map((col, index) => ({ ...col, index: (index + 1).toString() })),
-		);
-		//TODO: save screenshot and Crossroad, EEIPoints, Connections, Lights, Collisions to DB (BE endpoint)
+		setCollisions(collisions.map((col, index) => ({ ...col, index: index + 1 })));
+		//TODO: save screenshot (BE endpoint)
 		crossroad.roadIds = exitEntrancePoints.map((eeiPoint) => eeiPoint.index);
 		crossroad.connectionIds = connections.map((con) => con.index);
 		crossroad.trafficLightIds = trafficLights.map((tl) => tl.index);
-		crossroad.collisionsIds = collisions.map((col) => col.index);
+		crossroad.collisionIds = collisions.map((col) => col.index);
 
-		//TMP
-		localStorage.setItem("crossroad", JSON.stringify(crossroad));
-		localStorage.setItem("eeiPoints", JSON.stringify(exitEntrancePoints));
-		localStorage.setItem("connections", JSON.stringify(connections));
-		localStorage.setItem("trafficLights", JSON.stringify(trafficLights));
-		localStorage.setItem("collisions", JSON.stringify(collisions));
+		const crossroadRequest: Omit<Crossroad, "id"> = {
+			name: crossroad.name,
+			location: crossroad.location,
+			type: crossroad.type,
+			creatorId: crossroad.creatorId,
+			roadIds: crossroad.roadIds,
+			collisionIds: crossroad.collisionIds,
+			connectionIds: crossroad.connectionIds,
+			trafficLightIds: crossroad.trafficLightIds,
+		};
+
+		const postData: CrossroadDescriptionRequest = {
+			crossroad: crossroadRequest,
+			roads: exitEntrancePoints.map((eeiP) => ({
+				index: eeiP.index,
+				type: eeiP.type,
+				name: eeiP.name,
+				capacity: eeiP.capacity,
+				xCord: eeiP.xCord,
+				yCord: eeiP.yCord,
+			})),
+			collisions: collisions.map((col) => ({
+				index: col.index,
+				name: col.name,
+				bothLightsCanBeOn: col.bothLightsCanBeOn,
+				connection1Id: col.connection1Id,
+				connection2Id: col.connection2Id,
+			})),
+			connections: connections.map((con) => ({
+				index: con.index,
+				name: con.name,
+				trafficLightIds: con.trafficLightIds,
+				sourceId: con.sourceId,
+				targetId: con.targetId,
+			})),
+			trafficLights: trafficLights.map((tl) => ({
+				index: tl.index,
+				direction: tl.direction,
+			})),
+		};
+
+		// console.log(JSON.stringify(postData));
 
 		setShowWaitingModal(true);
+
+		axios
+			.post<boolean>("/crossroad", postData, {
+				headers: {
+					Authorization: `Bearer ${
+						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
+					}`,
+				},
+			})
+			.then((response) => {
+				const answer: boolean = response.data;
+
+				if (answer) {
+					setShowWaitingModal(true);
+					navigate("../../crossroad-list");
+				} else {
+					setFailureMessage("Request was denied by the TFO DB!");
+					setShowFailureAlert(true);
+					setTimeout(() => {
+						setShowFailureAlert(false);
+					}, 5000);
+				}
+			})
+			.catch((error) => {
+				setFailureMessage(`Request failed: ${error.code}!`);
+				setShowFailureAlert(true);
+				setTimeout(() => {
+					setShowFailureAlert(false);
+				}, 5000);
+			});
 	};
 
 	const onAbort = () => {
@@ -168,7 +243,7 @@ export function Collisions() {
 		setDataMessage("Confirm your inputs!");
 	};
 
-	const saveConnectionAssignment = (connectionId: string) => {
+	const saveConnectionAssignment = (connectionId: number) => {
 		if (chosenConnection1 === null) {
 			setChosenConnection1(connectionId);
 			setConnection1ChoiceStatus(
@@ -188,12 +263,21 @@ export function Collisions() {
 		}
 	};
 
-	const onRemoveCollision = (collisionIndex: string) => {
+	const onRemoveCollision = (collisionIndex: number) => {
 		setCollisions(collisions.filter((col) => col.index !== collisionIndex));
 	};
 
 	return (
 		<ContainerDiv>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showFailureAlert}
+				autoHideDuration={1000}
+			>
+				<Alert variant="filled" severity="error">
+					<strong>{failureMessage}</strong>
+				</Alert>
+			</Snackbar>
 			{showWaitingModal && (
 				<>
 					<WaitingPopUp
@@ -388,6 +472,7 @@ export function Collisions() {
 					))}
 				</BaseUl>
 			)}
+			<PlaceholderSpan></PlaceholderSpan>
 			<ButtonsDiv>
 				<NegativeButton onClick={onAbort}>Abort</NegativeButton>
 				<PositiveButton onClick={onSave}>Save & Proceed</PositiveButton>

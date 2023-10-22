@@ -33,12 +33,8 @@ export function ListOfCrossroads() {
 					headers: { Authorization: `Bearer ${loggedUser.jwtToken}` },
 				})
 				.then((response) => {
-					const tmpCrossroad: Crossroad = JSON.parse(
-						localStorage.getItem("crossroad")!,
-					);
-
 					const crossingsData: Crossroad[] = response.data;
-					setListOfCrossroads([...crossingsData, tmpCrossroad]);
+					setListOfCrossroads(crossingsData);
 				})
 				.catch((error) => {
 					console.error(error);

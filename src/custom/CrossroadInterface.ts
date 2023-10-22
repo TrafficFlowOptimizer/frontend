@@ -1,6 +1,6 @@
 export enum CrossroadType {
-	PRIVATE = "private",
-	PUBLIC = "public",
+	PRIVATE = "PRIVATE",
+	PUBLIC = "PUBLIC",
 }
 
 export type Crossroad = {
@@ -9,10 +9,10 @@ export type Crossroad = {
 	location: string;
 	creatorId: string;
 	type: CrossroadType;
-	roadIds: string[];
-	collisionsIds: string[];
-	trafficLightIds: string[];
-	connectionIds: string[];
+	roadIds: number[];
+	collisionIds: number[];
+	trafficLightIds: number[];
+	connectionIds: number[];
 };
 
 export type singleLightOptimizationResults = {
@@ -45,43 +45,43 @@ export enum TrafficLightDirection {
 	UTURN_LEFT = "UTURN_LEFT ",
 }
 
-export type EEIPointType = "exit" | "entrance" | "intermediate";
+export type EEIPointType = "EXIT" | "ENTRANCE" | "INTERMEDIATE";
 
 export type ExitEntrancePoint = {
 	id: string;
-	index: string;
+	index: number;
 	type: EEIPointType;
 	xCord: number;
 	yCord: number;
-	street: string;
+	name: string;
 	capacity: number;
 };
 
 export type Connection = {
 	id: string;
-	index: string;
+	index: number;
 	name: string;
-	trafficLightIDs: string[];
-	sourceId: string;
-	targetId: string;
+	trafficLightIds: number[];
+	sourceId: number;
+	targetId: number;
 };
 
 export type TrafficLight = {
 	id: string;
-	index: string;
+	index: number;
 	direction: TrafficLightDirection;
 };
 
 export type FirstStageTrafficLight = {
 	light: TrafficLight;
-	eeiPointIndex: string;
+	eeiPointIndex: number;
 };
 
 export type Collision = {
 	id: string;
-	index: string;
+	index: number;
 	name: string;
 	bothLightsCanBeOn: boolean;
-	connection1Id: string;
-	connection2Id: string;
+	connection1Id: number;
+	connection2Id: number;
 };

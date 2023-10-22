@@ -21,7 +21,7 @@ import { NeutralPositiveButton } from "../../../../styles/NeutralButton";
 export type ExitEntranceCreatorProps = {
 	closeFunction: () => void;
 	handleOnSave: (point: ExitEntrancePoint) => void;
-	checkIndex: (id: string) => boolean;
+	checkIndex: (id: number) => boolean;
 	point: ExitEntrancePoint;
 };
 
@@ -34,13 +34,13 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			street: { value: string };
+			name: { value: string };
 			capacity: { value: string };
 		};
 
 		const parsedCapacity = parseInt(target.capacity.value);
 
-		if (target.street.value.length === 0 || target.capacity.value.length === 0) {
+		if (target.name.value.length === 0 || target.capacity.value.length === 0) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.zero_length);
 		} else if (
@@ -52,7 +52,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 		} else {
 			setPoint({
 				...point,
-				street: target.street.value,
+				name: target.name.value,
 				capacity: target.capacity.value === "infinity" ? -1 : parsedCapacity,
 			});
 			setInputValidity(true);
@@ -61,9 +61,9 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 	};
 
 	const crossroadTypeOptions: RadioOption[] = [
-		{ id: "entrance", text: "entrance" },
-		{ id: "exit", text: "exit" },
-		{ id: "intermediate", text: "intermediate" },
+		{ id: "ENTRANCE", text: "ENTRANCE" },
+		{ id: "EXIT", text: "EXIT" },
+		{ id: "INTERMEDIATE", text: "INTERMEDIATE" },
 	];
 
 	const handleTypeSelection = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -74,9 +74,9 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 	};
 
 	const getPointType = () => {
-		if (point.type === "entrance") {
+		if (point.type === "ENTRANCE") {
 			return 0;
-		} else if (point.type === "exit") {
+		} else if (point.type === "EXIT") {
 			return 1;
 		} else {
 			return 2;
@@ -106,11 +106,11 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 						<p>ID: {point.index}</p>
 					</BaseLi>
 					<BaseLi>
-						<label htmlFor="street">Street:</label>
+						<label htmlFor="name">Name:</label>
 						<BaseInput
-							id="street"
+							id="name"
 							type="text"
-							defaultValue={point.street.toString()}
+							defaultValue={point.name.toString()}
 						/>
 					</BaseLi>
 					<BaseLi>

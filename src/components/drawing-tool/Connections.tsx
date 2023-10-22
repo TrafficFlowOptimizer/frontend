@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import {
 	Connection,
 	Crossroad,
+	EEIPointType,
 	ExitEntrancePoint,
 } from "../../custom/CrossroadInterface";
 import Tooltip from "@mui/material/Tooltip";
@@ -59,8 +60,8 @@ export function Connections() {
 
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
 
-	const [chosenPoint1, setChosenPoint1] = useState<string | null>(null);
-	const [chosenPoint2, setChosenPoint2] = useState<string | null>(null);
+	const [chosenPoint1, setChosenPoint1] = useState<number | null>(null);
+	const [chosenPoint2, setChosenPoint2] = useState<number | null>(null);
 	const [connections, setConnections] = useState<Connection[]>([]);
 
 	const [firstFreeId, setFirstFreeId] = useState(1);
@@ -83,7 +84,7 @@ export function Connections() {
 				entrancesAndExits: exitEntrancePoints,
 				connections: connections.map((con, index) => ({
 					...con,
-					index: (index + 1).toString(),
+					index: index + 1,
 				})),
 			},
 		});
@@ -101,7 +102,7 @@ export function Connections() {
 		}
 	};
 
-	const onAddToChosen = (whichOne: 1 | 2, pointIndex: string) => {
+	const onAddToChosen = (whichOne: 1 | 2, pointIndex: number) => {
 		if (whichOne === 1) {
 			setChosenPoint1(pointIndex);
 		} else {
@@ -109,8 +110,8 @@ export function Connections() {
 		}
 	};
 
-	const getFreeChoicePoint = (pointType: "exit" | "entrance" | "intermediate") => {
-		if (chosenPoint1 === null && pointType !== "exit") {
+	const getFreeChoicePoint = (pointType: EEIPointType) => {
+		if (chosenPoint1 === null && pointType !== "EXIT") {
 			return 1;
 		} else {
 			return 2;
@@ -151,7 +152,7 @@ export function Connections() {
 					id: "",
 					index: getNewId(firstFreeId, setFirstFreeId),
 					name: target.name.value,
-					trafficLightIDs: [],
+					trafficLightIds: [],
 					sourceId: chosenPoint1,
 					targetId: chosenPoint2,
 				},
@@ -176,14 +177,11 @@ export function Connections() {
 		return false;
 	};
 
-	const removeConnection = (connectionIndex: string) => {
+	const removeConnection = (connectionIndex: number) => {
 		setConnections(connections.filter((con) => con.index !== connectionIndex));
 	};
 
-	const getChooseButton = (
-		pointIndex: string,
-		pointType: "exit" | "entrance" | "intermediate",
-	) => {
+	const getChooseButton = (pointIndex: number, pointType: EEIPointType) => {
 		const pointNumber = getFreeChoicePoint(pointType);
 		return (
 			<TooltipButton
@@ -260,7 +258,7 @@ export function Connections() {
 										<BaseUl>
 											<BaseLi>id: {point.index}</BaseLi>
 											<BaseLi>type: {point.type}</BaseLi>
-											<BaseLi>street: {point.street}</BaseLi>
+											<BaseLi>street: {point.name}</BaseLi>
 											<BaseLi>
 												capacity:{" "}
 												{point.capacity === -1
@@ -293,21 +291,21 @@ export function Connections() {
 													REMOVE FROM CONNECTION
 												</TooltipButton>
 											)}
-											{point.type !== "exit" &&
-												point.type !== "intermediate" &&
+											{point.type !== "EXIT" &&
+												point.type !== "INTERMEDIATE" &&
 												chosenPoint1 === null &&
 												getChooseButton(
 													point.index,
 													point.type,
 												)}
-											{point.type !== "entrance" &&
-												point.type !== "intermediate" &&
+											{point.type !== "ENTRANCE" &&
+												point.type !== "INTERMEDIATE" &&
 												chosenPoint2 === null &&
 												getChooseButton(
 													point.index,
 													point.type,
 												)}
-											{point.type === "intermediate" &&
+											{point.type === "INTERMEDIATE" &&
 												(chosenPoint1 === null ||
 													chosenPoint2 === null) &&
 												chosenPoint2 !== point.index &&

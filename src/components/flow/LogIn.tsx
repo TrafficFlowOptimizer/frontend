@@ -113,6 +113,15 @@ export function LogIn() {
 					email: "",
 					jwtToken: responseData.token,
 				});
+				sessionStorage.setItem(
+					"loggedUser",
+					JSON.stringify({
+						id: responseData.id,
+						username: loginData.username,
+						email: "",
+						jwtToken: responseData.token,
+					}),
+				);
 				navigate("/crossroad-list");
 			})
 			.catch((error) => {
