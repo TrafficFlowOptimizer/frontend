@@ -161,12 +161,22 @@ export function Collisions() {
 
 		setShowWaitingModal(true);
 
+		const crossroadData = new FormData();
+		crossroadData.append("description", JSON.stringify(postData));
+
+		if (crossroadImage !== undefined) {
+			crossroadData.append("image", crossroadImage);
+		} else {
+			crossroadData.append("image", "");
+		}
+
 		axios
-			.post<boolean>("/crossroad", postData, {
+			.post<boolean>("/crossroad", crossroadData, {
 				headers: {
 					Authorization: `Bearer ${
 						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
 					}`,
+					"Content-Type": "multipart/form-data",
 				},
 			})
 			.then((response) => {

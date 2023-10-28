@@ -87,6 +87,7 @@ export function CrossroadView() {
 				setConnections(crossingsData.connections);
 				setTrafficLights(crossingsData.trafficLights);
 				setCollisions(crossingsData.collisions);
+				setCrossroadImage(crossingsData.image);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -101,8 +102,8 @@ export function CrossroadView() {
 		if (crossroad !== null) {
 			navigate("../../add-videos", {
 				state: {
-					crossroadId: crossroad.id,
-					crossroadName: crossroad.name,
+					crossroad: crossroad,
+					connections: connections,
 				},
 			});
 		}

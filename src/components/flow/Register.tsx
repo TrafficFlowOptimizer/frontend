@@ -30,7 +30,7 @@ export type RegisterData = {
 	id: string;
 	firstName: string; //TODO: delete after BE refactor - redundant
 	lastName: string; //TODO: delete after BE refactor - redundant
-	nickname: string; //TODO: rename after BE refactor
+	username: string; //TODO: rename after BE refactor
 	email: string;
 	password: string;
 };
@@ -66,7 +66,7 @@ export function Register() {
 			id: "",
 			firstName: "placeholder",
 			lastName: "placeholder",
-			nickname: target.username.value,
+			username: target.username.value,
 			email: target.email.value,
 			password: target.password.value,
 		};

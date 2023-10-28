@@ -2,10 +2,9 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { useUserContext } from "../../custom/UserContext";
-import { Dropdown } from "./Dropdown";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
-import { DarkTheme, LightTheme } from "../../styles/MainStyles";
+import { Colors, DarkTheme, LightTheme } from "../../styles/MainStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	FormGroupFiles,
@@ -16,9 +15,24 @@ import {
 	DragFileElement,
 	MainUploaderDiv,
 } from "../../styles/FileUploaderStyles";
+import {
+	ChosenEm,
+	SELECT_ITEM_HEIGHT,
+	SELECT_ITEM_PADDING_TOP,
+	SELECT_WIDTH,
+	StyledEm,
+} from "../../styles/drawing-tool-styles/MUISelectStyles";
+import Select, { SelectChangeEvent } from "@mui/material/Select";
+import FormControl from "@mui/material/FormControl";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import MenuItem from "@mui/material/MenuItem";
+import { VideoCordsSelector } from "./Modal/VideoCordsSelector";
+import { Backdrop } from "./Modal/Backdrop";
+import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
 
 export type FileUploaderProps = {
 	crossroadId: string;
+	connections: ResponseConnection[];
 };
 
 export type VideoResponseMessage = {
@@ -28,14 +42,14 @@ export type VideoResponseMessage = {
 export function FileUploader(props: FileUploaderProps) {
 	const { theme } = useThemeContext();
 	const { loggedUser } = useUserContext();
-	const [chosenHour, setChosenHour] = useState<string | number | null>(null);
+	const [chosenHour, setChosenHour] = useState<string>("");
 	const [videoToUpload, setVideoToUpload] = useState<File | null>(null);
 	const [uploadMessage, setUploadMessage] = useState("");
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
-	const onChange = (newValue: number | string | null) => {
-		setChosenHour(newValue);
-	};
+	const [showCordsSelector, setShowCordsSelector] = useState(false);
+	const [chosenConnectionIds, setChosenConnectionIds] = useState<string[]>([]);
+
 	const [dragActive, setDragActive] = React.useState(false);
 	const handleDrag = (e: any) => {
 		e.preventDefault();
@@ -56,6 +70,57 @@ export function FileUploader(props: FileUploaderProps) {
 			handleFiles(e.dataTransfer.files);
 		}
 	};
+
+	const placeholder = "Select hour when the video was recorded";
+	const MenuProps = {
+		PaperProps: {
+			style: {
+				maxHeight: SELECT_ITEM_HEIGHT * 4.5 + SELECT_ITEM_PADDING_TOP,
+				width: "fit-content",
+				backgroundColor:
+					theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
+			},
+		},
+	};
+
+	function getStyles() {
+		return {
+			backgroundColor:
+				theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
+			color: theme === "dark" ? Colors.PRIMARY_WHITE : Colors.PRIMARY_BLACK,
+		};
+	}
+
+	const handleHourChange = (event: SelectChangeEvent) => {
+		setChosenHour(event.target.value);
+	};
+
+	const hourOptions = [
+		"0:00 - 1:00",
+		"1:00 - 2:00",
+		"2:00 - 3:00",
+		"3:00 - 4:00",
+		"4:00 - 5:00",
+		"5:00 - 6:00",
+		"6:00 - 7:00",
+		"7:00 - 8:00",
+		"8:00 - 9:00",
+		"9:00 - 10:00",
+		"10:00 - 11:00",
+		"11:00 - 12:00",
+		"12:00 - 13:00",
+		"13:00 - 14:00",
+		"14:00 - 15:00",
+		"15:00 - 16:00",
+		"16:00 - 17:00",
+		"17:00 - 18:00",
+		"18:00 - 19:00",
+		"19:00 - 20:00",
+		"20:00 - 21:00",
+		"21:00 - 22:00",
+		"22:00 - 23:00",
+		"23:00 - 0:00",
+	];
 
 	const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
 		e.preventDefault();
@@ -102,6 +167,15 @@ export function FileUploader(props: FileUploaderProps) {
 
 	return (
 		<MainUploaderDiv>
+			{showCordsSelector && (
+				<>
+					<VideoCordsSelector
+						connections={props.connections}
+						setChosenConnectionIds={setChosenConnectionIds}
+					/>
+					<Backdrop />
+				</>
+			)}
 			<UploaderForm onDragEnter={handleDrag} onSubmit={(e) => e.preventDefault()}>
 				<FormFileInput
 					ref={inputRef}
@@ -140,48 +214,45 @@ export function FileUploader(props: FileUploaderProps) {
 				)}
 			</UploaderForm>
 			<PositiveButton
-				disabled={chosenHour === null || videoToUpload === null}
+				disabled={chosenHour === "" || videoToUpload === null}
 				onClick={sendVideos}
 			>
 				Send video to server
 			</PositiveButton>
 			{uploadMessage != "" && <p>{uploadMessage}</p>}
-			<Dropdown
-				placeholder="Select time of the video"
-				options={[
-					"0:00 - 1:00",
-					"1:00 - 2:00",
-					"2:00 - 3:00",
-					"3:00 - 4:00",
-					"4:00 - 5:00",
-					"5:00 - 6:00",
-					"6:00 - 7:00",
-					"7:00 - 8:00",
-					"8:00 - 9:00",
-					"9:00 - 10:00",
-					"10:00 - 11:00",
-					"11:00 - 12:00",
-					"12:00 - 13:00",
-					"13:00 - 14:00",
-					"14:00 - 15:00",
-					"15:00 - 16:00",
-					"16:00 - 17:00",
-					"17:00 - 18:00",
-					"18:00 - 19:00",
-					"19:00 - 20:00",
-					"20:00 - 21:00",
-					"21:00 - 22:00",
-					"22:00 - 23:00",
-					"23:00 - 0:00",
-				]}
-				isSearchable={false}
-				onChange={onChange}
-			/>
-			<p>Dropdown for the przejazd</p>
-			<p>
-				Place for the first screen from the video and specification where the
-				lanes are
-			</p>
+			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
+				<Select
+					displayEmpty
+					value={chosenHour}
+					onChange={handleHourChange}
+					input={<OutlinedInput />}
+					renderValue={(selected) => {
+						if (selected.length === 0) {
+							return <StyledEm>{placeholder}</StyledEm>;
+						}
+
+						return <ChosenEm>{selected}</ChosenEm>;
+					}}
+					MenuProps={MenuProps}
+					inputProps={{
+						"aria-label": "Without label",
+						"background-color": `${
+							theme === "dark"
+								? Colors.PRIMARY_BLACK
+								: Colors.PRIMARY_WHITE
+						}`,
+					}}
+				>
+					<MenuItem disabled value="">
+						<StyledEm>{placeholder}</StyledEm>
+					</MenuItem>
+					{hourOptions.map((hour, index) => (
+						<MenuItem key={index} value={hour} style={getStyles()}>
+							<p>{hour}</p>
+						</MenuItem>
+					))}
+				</Select>
+			</FormControl>
 		</MainUploaderDiv>
 	);
 }
