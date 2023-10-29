@@ -51,7 +51,6 @@ import { CrossroadDescriptionRequest } from "../../custom/CrossRoadRestTypes";
 import { useUserContext } from "../../custom/UserContext";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
-
 export function Collisions() {
 	const { theme } = useThemeContext();
 	const { loggedUser } = useUserContext();
