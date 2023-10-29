@@ -232,18 +232,18 @@ export const CROSSROAD_MODEL_TEMPLATE: Crossroad = {
 	creatorId: "1",
 	type: CrossroadType.PRIVATE,
 	roadIds: [],
-	collisionsIds: [],
+	collisionIds: [],
 	trafficLightIds: [],
 	connectionIds: [],
 };
 
 export const EXITS_ENTRANCES_TEMPLATE: ExitEntrancePoint = {
 	id: "",
-	index: "",
-	type: "entrance",
+	index: 0,
+	type: "ENTRANCE",
 	xCord: 0,
 	yCord: 0,
-	street: "",
+	name: "",
 	capacity: -1,
 };
 
@@ -252,10 +252,10 @@ export const EEIPointOffset = 7.5;
 export const FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE: FirstStageTrafficLight = {
 	light: {
 		id: "",
-		index: "",
+		index: 0,
 		direction: TrafficLightDirection.FORWARD,
 	},
-	eeiPointIndex: "",
+	eeiPointIndex: 0,
 };
 
 export const LIGHTS_TURNED_ON_COLLISION_DESCRIPTION =

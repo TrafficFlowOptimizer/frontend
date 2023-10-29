@@ -8,6 +8,7 @@ import {
 } from "../../custom/CrossroadInterface";
 import {
 	FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE,
+	TOOLTIP_ENTRANCE_DELAY,
 	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
 import {
@@ -53,7 +54,7 @@ export function TrafficLights() {
 	const [showLightCreator, setShowLightCreator] = useState(false);
 	const [showLightAssigner, setShowLightAssigner] = useState(false);
 
-	const [connectionToAssign, setConnectionToAssign] = useState("");
+	const [connectionToAssign, setConnectionToAssign] = useState(-1);
 	const [templateLight, setTemplateLight] = useState(
 		FIRST_STAGE_TRAFFIC_LIGHT_TEMPLATE,
 	);
@@ -80,15 +81,14 @@ export function TrafficLights() {
 				crossroad: crossroad,
 				entrancesAndExits: exitEntrancePoints,
 				connections: connections,
-				trafficLights: firstStageTrafficLights.map((light, index) => ({
+				trafficLights: firstStageTrafficLights.map((light) => ({
 					...light.light,
-					index: (index + 1).toString(),
 				})),
 			},
 		});
 	};
 
-	const createTrafficLight = (eeiPointIndex: string) => {
+	const createTrafficLight = (eeiPointIndex: number) => {
 		setShowLightCreator(true);
 		setTemplateLight({
 			light: {
@@ -114,12 +114,12 @@ export function TrafficLights() {
 		setShowLightCreator(false);
 	};
 
-	const saveAssignAndFinalTrafficLight = (lightsIndexes: string[]): void => {
+	const saveAssignAndFinalTrafficLight = (lightsIndexes: number[]): void => {
 		const assignedConnection = connections.filter(
 			(con) => con.index === connectionToAssign,
 		)[0];
 
-		assignedConnection.trafficLightIDs = lightsIndexes;
+		assignedConnection.trafficLightIds = lightsIndexes;
 		setConnections([
 			...connections.filter((con) => con.index !== assignedConnection.index),
 			assignedConnection,
@@ -128,9 +128,9 @@ export function TrafficLights() {
 		setShowLightAssigner(false);
 	};
 
-	const getAllLightAssignments = (lightIndex: string): string => {
+	const getAllLightAssignments = (lightIndex: number): string => {
 		const allAssignments = connections.filter((con) =>
-			con.trafficLightIDs.includes(lightIndex),
+			con.trafficLightIds.includes(lightIndex),
 		);
 		if (allAssignments.length > 0) {
 			return allAssignments.map((assignment) => assignment.index).join(", ");
@@ -139,14 +139,14 @@ export function TrafficLights() {
 		return "None";
 	};
 
-	const onRemove = (lightIndex: string) => {
+	const onRemove = (lightIndex: number) => {
 		setFirstStageTrafficLights(
 			firstStageTrafficLights.filter((light) => light.light.index !== lightIndex),
 		);
 		setConnections(
 			connections.map((con) => ({
 				...con,
-				trafficLightIDs: con.trafficLightIDs.filter(
+				trafficLightIds: con.trafficLightIds.filter(
 					(ind) => ind !== lightIndex,
 				),
 			})),
@@ -209,8 +209,8 @@ export function TrafficLights() {
 				2. Create the light in modal creator
 				<br />
 				3. You can repeat points 1-2 as many times as you need. After you create
-				{/* eslint-disable-next-line react/no-unescaped-entities */}
-				all the lights press 'LIGHTS READY' button
+				{/* eslint-disable-next-line react/no-unescaped-entities */} all the
+				lights press 'LIGHTS READY' button
 				<br />
 				4. Then click on a connection and assign all traffic lights that use it.
 				Repeat it until you mark all connections accordingly to your wish
@@ -290,7 +290,7 @@ export function TrafficLights() {
 											<BaseUl>
 												<BaseLi>id: {point.index}</BaseLi>
 												<BaseLi>type: {point.type}</BaseLi>
-												<BaseLi>street: {point.street}</BaseLi>
+												<BaseLi>street: {point.name}</BaseLi>
 												<BaseLi>
 													capacity:{" "}
 													{point.capacity === -1
@@ -299,14 +299,14 @@ export function TrafficLights() {
 												</BaseLi>
 											</BaseUl>
 											{!lightsReady &&
-												(point.type === "entrance" ||
-													point.type === "intermediate") &&
+												(point.type === "ENTRANCE" ||
+													point.type === "INTERMEDIATE") &&
 												element}
 										</React.Fragment>
 									}
 									TransitionComponent={Zoom}
-									enterDelay={75}
-									leaveDelay={450}
+									enterDelay={TOOLTIP_ENTRANCE_DELAY}
+									leaveDelay={TOOLTIP_ENTRANCE_DELAY}
 									arrow
 								>
 									{eeiPoint}
@@ -369,13 +369,24 @@ export function TrafficLights() {
 				<PositiveButton disabled={!lightsReady} onClick={onNext}>
 					Next
 				</PositiveButton>
-				<NeutralPositiveButton
-					onClick={() => {
-						setLightsReady(!lightsReady);
-					}}
-				>
-					{lightsReady ? "Back to lights creation" : "Lights created"}
-				</NeutralPositiveButton>
+				{!lightsReady && (
+					<NeutralPositiveButton
+						onClick={() => {
+							setFirstStageTrafficLights(
+								firstStageTrafficLights.map((light, index) => ({
+									...light,
+									light: {
+										...light.light,
+										index: index + 1,
+									},
+								})),
+							);
+							setLightsReady(!lightsReady);
+						}}
+					>
+						Lights created - proceed
+					</NeutralPositiveButton>
+				)}
 			</ButtonsDiv>
 		</ContainerDiv>
 	);

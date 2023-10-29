@@ -24,15 +24,15 @@ import {
 
 export type TrafficLightAssignerProps = {
 	closeFunction: () => void;
-	handleOnSave: (lightIds: string[]) => void;
+	handleOnSave: (lightIds: number[]) => void;
 	trafficLights: FirstStageTrafficLight[];
-	connectionId: string;
+	connectionId: number;
 };
 
 export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 	const { theme } = useThemeContext();
 	const muiTheme = useTheme();
-	const [chosenLights, setChosenLights] = useState<string[]>([]);
+	const [chosenLights, setChosenLights] = useState<number[]>([]);
 
 	const placeholder = "Select all lights for this connection";
 	const replacementInfo = "New choices fully replace old ones";
@@ -47,7 +47,7 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 		},
 	};
 
-	function getStyles(name: string, personName: readonly string[], inputTheme: Theme) {
+	function getStyles(name: number, personName: readonly number[], inputTheme: Theme) {
 		return {
 			fontWeight:
 				personName.indexOf(name) === -1
@@ -65,7 +65,9 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 		} = event;
 		setChosenLights(
 			// On autofill we get a stringified value.
-			typeof value === "string" ? value.split(",") : value,
+			typeof value === "string"
+				? value.split(",").map((v) => parseInt(v))
+				: value,
 		);
 	};
 

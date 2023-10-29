@@ -98,10 +98,12 @@ export function MapLeaflet() {
 			)}
 			<LeafletContainer>
 				<InstructionP>
-					{/* eslint-disable-next-line react/no-unescaped-entities */}
-					Please choose location, adjust zoom-out and press "Next" button
+					<strong>Map Leaflet:</strong>
 					<br />
-					When creating the crossroad, you can only go forward or abort
+					{/* eslint-disable-next-line react/no-unescaped-entities */}
+					1. Please choose location, adjust zoom-out and press "Next" button
+					<br />
+					PS. When creating the crossroad, you can only go forward or abort
 					creation entirely!
 					<br />
 					Take your time and customize it to your liking!

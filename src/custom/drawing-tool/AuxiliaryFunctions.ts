@@ -16,9 +16,9 @@ export const fakeCrossroadIdGetter = (): string => {
 export const matchEEIPointTypeWithColor = (
 	type: EEIPointType,
 ): ButtonColors | Colors => {
-	if (type === "entrance") {
+	if (type === "ENTRANCE") {
 		return ButtonColors.BLUE;
-	} else if (type === "exit") {
+	} else if (type === "EXIT") {
 		return ButtonColors.ORANGE;
 	} else {
 		return ButtonColors.GREEN;
@@ -27,7 +27,7 @@ export const matchEEIPointTypeWithColor = (
 
 export const getConnectionName = (
 	connections: Connection[],
-	connectionIndex: string,
+	connectionIndex: number,
 ): string => {
 	for (const con of connections) {
 		if (connectionIndex === con.index) {
@@ -40,8 +40,16 @@ export const getConnectionName = (
 export const getNewId = (
 	firstFreeId: number,
 	setNewFreeId: (arg: number) => void,
-): string => {
-	const newId = firstFreeId.toString();
+): number => {
+	const newId = firstFreeId;
 	setNewFreeId(firstFreeId + 1);
 	return newId;
+};
+
+export const getUserJWTToken = (): string => {
+	const sessionData = sessionStorage.getItem("loggedUser");
+	if (sessionData !== null) {
+		return JSON.parse(sessionData).jwtToken;
+	}
+	return "";
 };

@@ -14,18 +14,20 @@ import {
 	ConnectionLine,
 	TooltipButton,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
+import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
 
 export type ConnectionCoordinates = {
 	entranceX: number;
 	entranceY: number;
 	exitX: number;
 	exitY: number;
-	connection: Connection;
+	connection: Connection | ResponseConnection;
 	thickness: number;
 	color: Colors | ButtonColors;
 	withLightIds: boolean;
 	withTooltip: boolean;
 	buttonSettings?: ButtonSettings;
+	eeiPointsIndexes?: number[];
 };
 
 export type ButtonSettings = {
@@ -76,13 +78,25 @@ export function ConnectionMarker(props: ConnectionCoordinates) {
 						<BaseUl>
 							<BaseLi>id: {props.connection.index}</BaseLi>
 							<BaseLi>name: {props.connection.name}</BaseLi>
-							<BaseLi>sourceId: {props.connection.sourceId}</BaseLi>
-							<BaseLi>targetId: {props.connection.targetId}</BaseLi>
+							<BaseLi>
+								sourceId:{" "}
+								{props.eeiPointsIndexes !== undefined &&
+								props.eeiPointsIndexes.length == 2
+									? props.eeiPointsIndexes[0]
+									: props.connection.sourceId}
+							</BaseLi>
+							<BaseLi>
+								targetId:{" "}
+								{props.eeiPointsIndexes !== undefined &&
+								props.eeiPointsIndexes.length == 2
+									? props.eeiPointsIndexes[1]
+									: props.connection.sourceId}
+							</BaseLi>
 							{props.withLightIds && (
 								<BaseLi>
 									lightsIDs:{" "}
-									{props.connection.trafficLightIDs.length > 0
-										? props.connection.trafficLightIDs.join(", ")
+									{props.connection.trafficLightIds.length > 0
+										? props.connection.trafficLightIds.join(", ")
 										: "None"}
 								</BaseLi>
 							)}

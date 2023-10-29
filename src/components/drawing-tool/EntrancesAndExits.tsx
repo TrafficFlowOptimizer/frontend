@@ -102,7 +102,7 @@ export function EntrancesAndExits() {
 		localStorage.removeItem("crossroadMap");
 	};
 
-	const onDeletePoint = (event: any, pointIndex: string, pointIdx: number) => {
+	const onDeletePoint = (event: any, pointIndex: number, pointIdx: number) => {
 		event.stopPropagation();
 		setExitEntrancePoints(
 			exitEntrancePoints.filter(
@@ -111,7 +111,7 @@ export function EntrancesAndExits() {
 		);
 	};
 
-	const onEditPoint = (event: any, pointIndex: string, pointIdx: number) => {
+	const onEditPoint = (event: any, pointIndex: number, pointIdx: number) => {
 		event.stopPropagation();
 		setTemplatePoint(exitEntrancePoints.at(pointIdx)!);
 		setExitEntrancePoints(
@@ -122,7 +122,7 @@ export function EntrancesAndExits() {
 		setShowCreator(true);
 	};
 
-	const checkIndex = (index: string) => {
+	const checkIndex = (index: number) => {
 		for (const tempPoint of exitEntrancePoints) {
 			if (tempPoint.index === index) {
 				return true;
@@ -167,7 +167,7 @@ export function EntrancesAndExits() {
 										<BaseUl>
 											<BaseLi>id: {point.index}</BaseLi>
 											<BaseLi>type: {point.type}</BaseLi>
-											<BaseLi>street: {point.street}</BaseLi>
+											<BaseLi>street: {point.name}</BaseLi>
 											<BaseLi>
 												capacity:{" "}
 												{point.capacity === -1
