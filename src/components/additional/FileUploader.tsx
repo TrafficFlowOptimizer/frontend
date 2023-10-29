@@ -14,6 +14,7 @@ import {
 	UploadButton,
 	DragFileElement,
 	MainUploaderDiv,
+	VideoReadyMessage,
 } from "../../styles/FileUploaderStyles";
 import {
 	ChosenEm,
@@ -131,7 +132,6 @@ export function FileUploader(props: FileUploaderProps) {
 	};
 
 	const handleFiles = (files: FileList) => {
-		console.log(files);
 		setVideoToUpload(files[0]);
 	};
 
@@ -148,6 +148,8 @@ export function FileUploader(props: FileUploaderProps) {
 			const uploadVideoData = new FormData();
 			uploadVideoData.append("file", videoToUpload);
 			uploadVideoData.append("crossroadId", props.crossroadId);
+			uploadVideoData.append("timeIntervalId", chosenHour);
+
 			axios
 				.post("/videos/upload", uploadVideoData, {
 					headers: { "Content-Type": "multipart/form-data" },
@@ -156,6 +158,18 @@ export function FileUploader(props: FileUploaderProps) {
 					const result: VideoResponseMessage = response.data;
 					setUploadMessage(result.message);
 					setVideoToUpload(null);
+					if (result.message.includes("uploaded successfully with id:")) {
+						const videoId = result.message.split(": ")[1];
+						axios
+							.get<any>(`/videos/${videoId}/sample`)
+							.then((response) => {
+								console.log(response);
+								setShowCordsSelector(true);
+							})
+							.catch((error) => {
+								console.error(error);
+							});
+					}
 				})
 				.catch((error) => {
 					console.error(error);
@@ -198,7 +212,11 @@ export function FileUploader(props: FileUploaderProps) {
 							}}
 						/>
 						<p>Drag and drop your file here or</p>
-						{videoToUpload !== null && <p>Ready: {videoToUpload.name}</p>}
+						{videoToUpload !== null && (
+							<VideoReadyMessage>
+								Ready: {videoToUpload.name}
+							</VideoReadyMessage>
+						)}
 						<UploadButton onClick={onUploadButtonClick}>
 							Upload a file
 						</UploadButton>

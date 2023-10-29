@@ -110,7 +110,7 @@ export function Collisions() {
 
 	const onSave = () => {
 		setCollisions(collisions.map((col, index) => ({ ...col, index: index + 1 })));
-		//TODO: save screenshot (BE endpoint)
+
 		crossroad.roadIds = exitEntrancePoints.map((eeiPoint) => eeiPoint.index);
 		crossroad.connectionIds = connections.map((con) => con.index);
 		crossroad.trafficLightIds = trafficLights.map((tl) => tl.index);

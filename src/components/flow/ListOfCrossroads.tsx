@@ -29,7 +29,7 @@ export function ListOfCrossroads() {
 		if (loggedUser !== null) {
 			axios
 				.get<Crossroad[]>("/crossroad", {
-					params: { userId: loggedUser.id },
+					params: { getPrivate: true },
 					headers: { Authorization: `Bearer ${loggedUser.jwtToken}` },
 				})
 				.then((response) => {

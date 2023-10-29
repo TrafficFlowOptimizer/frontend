@@ -23,6 +23,11 @@ export const FormGroupFiles = styled(MainUploaderDiv)`
 	margin: 0;
 `;
 
+export const VideoReadyMessage = styled.p`
+	text-align: center;
+	padding: 10px 0px;
+`;
+
 export const DragFileElement = styled.div`
 	position: absolute;
   width: 100%;
