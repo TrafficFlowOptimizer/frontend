@@ -102,3 +102,7 @@ export const InstructionP = styled.p`
 	width: 70%;
 	height: fit-content;
 `;
+
+export const CenteredInstructionP = styled(InstructionP)`
+	text-align: center;
+`;

@@ -8,7 +8,7 @@ import {
 import { Navbar } from "../additional/Navbar";
 import { VideosList } from "./VideosList";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PopUp } from "../additional/Modal/PopUp";
+import { OptimizationDeployer } from "../additional/Modal/OptimizationDeployer";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import Tooltip from "@mui/material/Tooltip";
@@ -57,7 +57,8 @@ export function CrossroadView() {
 	const location = useLocation();
 	const crossroadID: string = location.state.crossroadID ?? true; //idea: just get crossroadID here and fetch it again (newest data and easier in routing)
 	const [crossroad, setCrossroad] = useState<ResponseCrossroad | null>(null);
-	const [showLoadingModal, setShowLoadingModal] = useState(false);
+	const [showOptimizationDeploymentModal, setShowOptimizationDeploymentModal] =
+		useState(false);
 
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
 	const [exitEntrancePoints, setExitEntrancePoints] = useState<ExitEntrancePoint[]>(
@@ -134,7 +135,7 @@ export function CrossroadView() {
 	};
 
 	const handleOptimizationOrder = () => {
-		setShowLoadingModal(true);
+		setShowOptimizationDeploymentModal(true);
 	};
 
 	const getElementsIndexBasedOnId = (
@@ -152,12 +153,15 @@ export function CrossroadView() {
 	return (
 		<ContainerDiv>
 			<Navbar />
-			{showLoadingModal && crossroad !== null && (
+			{showOptimizationDeploymentModal && crossroad !== null && (
 				<>
-					<PopUp
+					<OptimizationDeployer
 						textToDisplay={`Optimizing ${crossroad.name} crossroad.\nSit back and relax`}
 						crossroadName={crossroad.name}
 						crossroadId={crossroad.id}
+						onClose={() => {
+							setShowOptimizationDeploymentModal(false);
+						}}
 					/>
 					<Backdrop />
 				</>

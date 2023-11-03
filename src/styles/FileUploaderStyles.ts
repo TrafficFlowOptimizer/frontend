@@ -1,7 +1,10 @@
 import styled from "styled-components";
 import { ButtonColors } from "./MainStyles";
+import { BorderedWorkaroundDiv, WorkaroundInnerDiv } from "./drawing-tool-styles/GeneralStyles";
 
 export const MainUploaderDiv = styled.div`
+	height: fit-content;
+	width: 50%;
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
@@ -9,6 +12,7 @@ export const MainUploaderDiv = styled.div`
 	align-items: center;
 	gap: 3vh;
 	margin: 10px;
+	padding: 5px;
 `;
 
 export const UploaderForm = styled.form`
@@ -69,4 +73,28 @@ export const UploaderLabel = styled.label<LabelProps>`
   border-style: dashed;
   border-color: ${(props) => props.theme.text};
   background-color: ${(props) => props.dragActive ? ButtonColors.BLUE :props.theme.secondary};
+`;
+
+
+export const AddVideosDiv = styled.div`
+	width: 100%;
+	height: 70%;
+	padding: 0px 30px;
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	align-items: center;
+`;
+
+export const VideoScreenshot = styled.img`
+	width: fit-content;
+	height: fit-content;
+	object-fit: none;
+	flex: 0;
+	z-index: 2;
+`;
+
+export const BorderedWorkaroundSelectorDiv = styled(BorderedWorkaroundDiv)`
+	width: fit-content;
+	height: fit-content;
 `;

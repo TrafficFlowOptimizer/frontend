@@ -3,9 +3,14 @@ import axios from "axios";
 import { useThemeContext } from "../../custom/ThemeContext";
 import { useUserContext } from "../../custom/UserContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { VideoCordsSelector } from "./Modal/VideoCordsSelector";
+import { Backdrop } from "./Modal/Backdrop";
+import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
+import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
 import { Colors, DarkTheme, LightTheme } from "../../styles/MainStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
+import { CenteredInstructionP } from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
 	FormGroupFiles,
 	FormFileInput,
@@ -27,17 +32,12 @@ import Select, { SelectChangeEvent } from "@mui/material/Select";
 import FormControl from "@mui/material/FormControl";
 import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
-import { VideoCordsSelector } from "./Modal/VideoCordsSelector";
-import { Backdrop } from "./Modal/Backdrop";
-import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
+import { ButtonsDiv } from "../../styles/MainStyles";
+import { NeutralPositiveButton } from "../../styles/NeutralButton";
 
 export type FileUploaderProps = {
 	crossroadId: string;
 	connections: ResponseConnection[];
-};
-
-export type VideoResponseMessage = {
-	message: string;
 };
 
 export function FileUploader(props: FileUploaderProps) {
@@ -49,7 +49,8 @@ export function FileUploader(props: FileUploaderProps) {
 	const inputRef = React.useRef<HTMLInputElement>(null);
 
 	const [showCordsSelector, setShowCordsSelector] = useState(false);
-	const [chosenConnectionIds, setChosenConnectionIds] = useState<string[]>([]);
+	const [canReopenSelector, setCanReopenSelector] = useState(false);
+	const [videoScreenshot, setVideoScreenshot] = useState("");
 
 	const [dragActive, setDragActive] = React.useState(false);
 	const handleDrag = (e: any) => {
@@ -152,23 +153,38 @@ export function FileUploader(props: FileUploaderProps) {
 
 			axios
 				.post("/videos/upload", uploadVideoData, {
-					headers: { "Content-Type": "multipart/form-data" },
+					headers: {
+						"Content-Type": "multipart/form-data",
+						Authorization: `Bearer ${
+							loggedUser !== null
+								? loggedUser.jwtToken
+								: getUserJWTToken()
+						}`,
+					},
 				})
-				.then((response) => {
-					const result: VideoResponseMessage = response.data;
-					setUploadMessage(result.message);
+				.then(async (response) => {
+					const result: string = response.data;
+					setUploadMessage(result);
 					setVideoToUpload(null);
-					if (result.message.includes("uploaded successfully with id:")) {
-						const videoId = result.message.split(": ")[1];
-						axios
-							.get<any>(`/videos/${videoId}/sample`)
-							.then((response) => {
-								console.log(response);
-								setShowCordsSelector(true);
-							})
-							.catch((error) => {
-								console.error(error);
-							});
+					if (result.includes("uploaded successfully with id:")) {
+						const videoId = result.split(": ")[2];
+
+						const res = await fetch(`/videos/${videoId}/sample`, {
+							method: "get",
+							headers: new Headers({
+								Authorization: `Bearer ${
+									loggedUser !== null
+										? loggedUser.jwtToken
+										: getUserJWTToken()
+								}`,
+								"Content-Type": "image/jpeg",
+							}),
+						});
+						const imageBlob = await res.blob();
+						const imageObjectURL = URL.createObjectURL(imageBlob);
+
+						setVideoScreenshot(imageObjectURL);
+						setShowCordsSelector(true);
 					}
 				})
 				.catch((error) => {
@@ -185,7 +201,11 @@ export function FileUploader(props: FileUploaderProps) {
 				<>
 					<VideoCordsSelector
 						connections={props.connections}
-						setChosenConnectionIds={setChosenConnectionIds}
+						imageBase={videoScreenshot}
+						onClose={() => {
+							setShowCordsSelector(false);
+							setCanReopenSelector(true);
+						}}
 					/>
 					<Backdrop />
 				</>
@@ -231,13 +251,25 @@ export function FileUploader(props: FileUploaderProps) {
 					></DragFileElement>
 				)}
 			</UploaderForm>
-			<PositiveButton
-				disabled={chosenHour === "" || videoToUpload === null}
-				onClick={sendVideos}
-			>
-				Send video to server
-			</PositiveButton>
-			{uploadMessage != "" && <p>{uploadMessage}</p>}
+			<ButtonsDiv>
+				<PositiveButton
+					disabled={chosenHour === "" || videoToUpload === null}
+					onClick={sendVideos}
+				>
+					Send video to server
+				</PositiveButton>
+				<NeutralPositiveButton
+					disabled={!canReopenSelector}
+					onClick={() => {
+						setShowCordsSelector(true);
+					}}
+				>
+					Open Detection Rectangles Creator
+				</NeutralPositiveButton>
+			</ButtonsDiv>
+			{uploadMessage != "" && (
+				<CenteredInstructionP>{uploadMessage}</CenteredInstructionP>
+			)}
 			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
 				<Select
 					displayEmpty

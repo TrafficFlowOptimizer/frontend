@@ -6,19 +6,20 @@ import { Dropdown } from "../Dropdown";
 import { Memes } from "../Memes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext } from "../../../custom/ThemeContext";
-import { DarkTheme, LightTheme } from "../../../styles/MainStyles";
+import { DarkTheme, LightTheme, ButtonsDiv } from "../../../styles/MainStyles";
 import { PositiveButton } from "../../../styles/PositiveButton";
 import { StyledModal, StyledMessageField } from "../../../styles/modal/ModalStyles";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
+import { NegativeButton } from "../../../styles/NegativeButton";
 
-export type PopUpProps = {
+export type OptimizationDeployerProps = {
 	textToDisplay: string;
 	crossroadName: string;
 	crossroadId: string;
-	// onClose(): void;
+	onClose: () => void;
 };
 
-export function PopUp(props: PopUpProps) {
+export function OptimizationDeployer(props: OptimizationDeployerProps) {
 	const { theme } = useContext(ThemeContext);
 	const navigate = useNavigate();
 	const [optimizationDeployed, setOptimizationDeployed] = useState(false);
@@ -81,12 +82,20 @@ export function PopUp(props: PopUpProps) {
 						isSearchable={false}
 						onChange={onChange}
 					/>
-					<PositiveButton
-						onClick={startOptimization}
-						disabled={chosenTime === null}
-					>
-						Start optimization
-					</PositiveButton>
+					<ButtonsDiv>
+						<NegativeButton
+							disabled={optimizationDeployed}
+							onClick={props.onClose}
+						>
+							Close
+						</NegativeButton>
+						<PositiveButton
+							onClick={startOptimization}
+							disabled={chosenTime === null}
+						>
+							Start optimization
+						</PositiveButton>
+					</ButtonsDiv>
 				</div>
 			)}
 		</StyledModal>
