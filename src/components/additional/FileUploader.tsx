@@ -51,6 +51,7 @@ export function FileUploader(props: FileUploaderProps) {
 	const [showCordsSelector, setShowCordsSelector] = useState(false);
 	const [canReopenSelector, setCanReopenSelector] = useState(false);
 	const [videoScreenshot, setVideoScreenshot] = useState("");
+	const [videoId, setVideoId] = useState("");
 
 	const [dragActive, setDragActive] = React.useState(false);
 	const handleDrag = (e: any) => {
@@ -169,6 +170,8 @@ export function FileUploader(props: FileUploaderProps) {
 					if (result.includes("uploaded successfully with id:")) {
 						const videoId = result.split(": ")[2];
 
+						setVideoId(videoId);
+
 						const res = await fetch(`/videos/${videoId}/sample`, {
 							method: "get",
 							headers: new Headers({
@@ -200,6 +203,7 @@ export function FileUploader(props: FileUploaderProps) {
 			{showCordsSelector && (
 				<>
 					<VideoCordsSelector
+						videoId={videoId}
 						connections={props.connections}
 						imageBase={videoScreenshot}
 						onClose={() => {

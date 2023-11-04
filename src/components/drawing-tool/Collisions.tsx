@@ -157,8 +157,6 @@ export function Collisions() {
 			})),
 		};
 
-		// console.log(JSON.stringify(postData));
-
 		setShowWaitingModal(true);
 
 		const crossroadData = new FormData();
@@ -176,7 +174,6 @@ export function Collisions() {
 					Authorization: `Bearer ${
 						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
 					}`,
-					"Content-Type": "multipart/form-data",
 				},
 			})
 			.then((response) => {

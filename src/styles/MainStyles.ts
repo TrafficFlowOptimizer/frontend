@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 
 export enum ButtonColors {
 	RED = "#db2b39",
+	HOVER_RED = "#b0232e",
 	BLUE = "#6d72c3",
+	HOVER_BLUE = "#484b82",
 	ORANGE = "#f78b00",
-	GREEN = "#20bf55"
+	HOVER_ORANGE = "#d17702",
+	GREEN = "#20bf55",
+	HOVER_GREEN = "#15853a",
 }
 
 export enum Colors {
@@ -59,11 +63,10 @@ export const BaseButton = styled.button`
 	margin: 1vh 0.5vw 1vh 0.5vw;
 	border: none;
 	border-radius: 5px;
-	transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+	transition: all 0.2s ease-in-out;
 	&:hover:enabled {
 		cursor: pointer;
 		z-index: 10;
-		transform: scale(1.1);
 	}
 	
 	&:disabled {

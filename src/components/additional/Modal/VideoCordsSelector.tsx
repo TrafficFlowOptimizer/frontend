@@ -7,7 +7,10 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import styled from "styled-components";
 import { ResponseConnection } from "../../../custom/CrossRoadRestTypes";
-import { getNewId } from "../../../custom/drawing-tool/AuxiliaryFunctions";
+import {
+	getNewId,
+	getUserJWTToken,
+} from "../../../custom/drawing-tool/AuxiliaryFunctions";
 import {
 	ChosenEm,
 	SELECT_ITEM_HEIGHT,
@@ -34,8 +37,14 @@ import {
 import { EEIPointOffset } from "../../../custom/drawing-tool/AuxiliaryData";
 import { InputInformationSpan } from "../InputInformationSpan";
 import { ConnectionMarker } from "../../drawing-tool/ConnectionMarker";
+import axios from "axios";
+import { useUserContext } from "../../../custom/UserContext";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 
 export type VideoCordsSelectorProps = {
+	videoId: string;
 	connections: ResponseConnection[];
 	imageBase: string;
 	onClose: () => void;
@@ -57,7 +66,10 @@ export const TEMPLATE_DETECTION_RECTANGLE: DetectionRectangle = {
 
 export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	const { theme } = useThemeContext();
+	const { loggedUser } = useUserContext();
 	const muiTheme = useTheme();
+
+	const [showSuccessAlert, setShowSuccessAlert] = useState(false);
 
 	const [localMousePos, setLocalMousePos] = useState({ x: 0, y: 0 });
 
@@ -78,7 +90,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 		if (currentDetectionRectangle.lowerLeft[0] === -1) {
 			setCurrentDetectionRectangle((prev) => ({
 				...prev,
-				lowerLeft: [localMousePos.x, localMousePos.y],
+				lowerLeft: [Math.round(localMousePos.x), Math.round(localMousePos.y)],
 			}));
 
 			setLowerLeftChoiceMessage(
@@ -89,7 +101,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 		} else if (currentDetectionRectangle.upperRight[0] === -1) {
 			setCurrentDetectionRectangle((prev) => ({
 				...prev,
-				upperRight: [localMousePos.x, localMousePos.y],
+				upperRight: [Math.round(localMousePos.x), Math.round(localMousePos.y)],
 			}));
 
 			setUpperRightChoiceMessage(
@@ -115,7 +127,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 		props.connections,
 	);
 
-	const [detectionRectangles, setDetectionRectangles] = useState<
+	const [createdDetectionRectangles, setCreatedDetectionRectangles] = useState<
 		DetectionRectangle[]
 	>([]);
 
@@ -156,14 +168,14 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	}
 
 	const handleChange = (
-		event: SelectChangeEvent<typeof currentDetectionRectangle>,
+		event: SelectChangeEvent<typeof currentDetectionRectangle.connectionId>,
 	) => {
 		const {
 			target: { value },
 		} = event;
 		setCurrentDetectionRectangle((prev) => ({
 			...prev,
-			connectionId: value as string,
+			connectionId: value,
 		}));
 	};
 
@@ -178,7 +190,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 
 	const getAllUnusedConnections = () => {
 		return props.connections.filter((con) => {
-			for (const dr of detectionRectangles) {
+			for (const dr of createdDetectionRectangles) {
 				if (con.id === dr.connectionId) {
 					return false;
 				}
@@ -188,12 +200,13 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	};
 
 	const onNextDetectionRectangle = () => {
-		setCurrentDetectionRectangle((prev) => ({
+		setCreatedDetectionRectangles((prev) => [
 			...prev,
-			id: getNewId(firstFreeId, setFirstFreeId).toString(),
-		}));
-
-		setDetectionRectangles((prev) => [...prev, currentDetectionRectangle]);
+			{
+				...currentDetectionRectangle,
+				id: getNewId(firstFreeId, setFirstFreeId).toString(),
+			},
+		]);
 
 		setCurrentDetectionRectangle(TEMPLATE_DETECTION_RECTANGLE);
 		setUpperRightChoiceMessage(upperRightBase);
@@ -202,7 +215,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 
 	useEffect(() => {
 		setUnusedConnections(getAllUnusedConnections());
-	}, [detectionRectangles]);
+	}, [createdDetectionRectangles]);
 
 	const resetCurrentRectangle = () => {
 		setCurrentDetectionRectangle(TEMPLATE_DETECTION_RECTANGLE);
@@ -212,8 +225,37 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	};
 
 	const onFinish = () => {
-		console.log(detectionRectangles);
-		alert("REST operation not implemented");
+		console.log(JSON.stringify(createdDetectionRectangles));
+		const analyseVideoData = new FormData();
+		analyseVideoData.append("skipFrames", "1");
+		analyseVideoData.append(
+			"detectionRectangles",
+			JSON.stringify(createdDetectionRectangles),
+		);
+
+		axios
+			.post<string>(`/videos/${props.videoId}/analysis`, analyseVideoData, {
+				// params: {
+				// 	skipFrames: 1,
+				// 	detectionRectangles: createdDetectionRectangles,
+				// },
+				headers: {
+					Authorization: `Bearer ${
+						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
+					}`,
+					"Content-Type": "multipart/form-data",
+				},
+			})
+			.then((response) => {
+				console.log(response.data);
+				setShowSuccessAlert(true);
+				setTimeout(() => {
+					props.onClose();
+				}, 1000);
+			})
+			.catch((error) => {
+				console.error(error);
+			});
 	};
 
 	const instruction = (
@@ -235,10 +277,23 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 
 	return (
 		<SelectorModal>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showSuccessAlert}
+				autoHideDuration={1000}
+			>
+				<Alert
+					variant="filled"
+					icon={<CheckIcon fontSize="inherit" />}
+					severity="success"
+				>
+					<strong>Video sent for analysis!</strong>
+				</Alert>
+			</Snackbar>
 			{instruction}
 			<BorderedWorkaroundSelectorDiv onClick={onScreenshotClick}>
-				{detectionRectangles.length > 0 &&
-					detectionRectangles.map((dr, idx) => {
+				{createdDetectionRectangles.length > 0 &&
+					createdDetectionRectangles.map((dr, idx) => {
 						return (
 							<div key={dr.id}>
 								<EEIPointMarker
@@ -321,19 +376,15 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
 				<Select
 					displayEmpty
-					value={currentDetectionRectangle}
+					value={currentDetectionRectangle.connectionId}
 					onChange={handleChange}
 					input={<OutlinedInput />}
 					renderValue={(selected) => {
-						if (selected.connectionId.length === 0) {
+						if (selected.length === 0) {
 							return <StyledEm>{placeholder}</StyledEm>;
 						}
 
-						return (
-							<ChosenEm>
-								{getConnectionNameFromId(selected.connectionId)}
-							</ChosenEm>
-						);
+						return <ChosenEm>{getConnectionNameFromId(selected)}</ChosenEm>;
 					}}
 					MenuProps={MenuProps}
 					inputProps={{
@@ -400,7 +451,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 					Next Detection Rectangle
 				</NeutralPositiveButton>
 				<PositiveButton
-					disabled={detectionRectangles.length === 0}
+					disabled={createdDetectionRectangles.length === 0}
 					onClick={onFinish}
 				>
 					Finish
