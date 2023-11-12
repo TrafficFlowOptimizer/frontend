@@ -1,25 +1,37 @@
 import React, { useContext, useState } from "react";
-import { PositiveButton } from "../../styles/PositiveButton";
-import { RedirectionLink, BaseForm, BaseInput } from "../../styles/MainTheme";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
 import axios from "axios";
-import logo from "../../assets/TFO_4_but_better.png";
-import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
-import {
-	SigningContainer,
-	SigningLi,
-	SigningLogo,
-	SigningUl,
-	InvalidInputMessage,
-	PlaceholderSpan,
-} from "../../styles/SigningStyles";
 import { ThemeContext } from "../../custom/ThemeContext";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../custom/UserContext";
+import { ToggleThemeSwitch } from "../additional/ToggleThemeSwitch";
+import { FormsValidityInformation } from "../additional/FormsValidityInformation";
+import logo from "../../assets/tfo_logos/TFO_4_but_better.png";
+import dm_logo from "../../assets/tfo_logos/TFO_4_dark_mode_but_better.png";
+import { SigningContainer, SigningLogo } from "../../styles/SigningStyles";
+import { PositiveButton } from "../../styles/PositiveButton";
+import {
+	BaseForm,
+	BaseInput,
+	BaseLi,
+	BaseUl,
+	RedirectionLink,
+} from "../../styles/MainStyles";
+import {
+	maximalPasswordLength,
+	maximalUsernameLength,
+	minimalPasswordLength,
+	minimalUsernameLength,
+	specialCharactersReg,
+} from "../../custom/loginFormsConstants";
 
 export type loginData = {
-	nickname: string;
+	username: string;
 	password: string;
+};
+
+export type LoginResponse = {
+	id: string;
+	token: string;
 };
 
 export function LogIn() {
@@ -37,18 +49,21 @@ export function LogIn() {
 	const [badLoginMessage, setBadLoginMessage] = useState("");
 
 	const onUsernameChange = (e: React.FormEvent<HTMLInputElement>) => {
-		const specialCharactersReg = /[-’/`~!#*$_%+=.,^&(){}[\]|;:”<>?\\]/g;
-		const maximalUsernameLength = 64;
-
 		const text = e.currentTarget.value;
 
 		if (!specialCharactersReg.test(text)) {
-			if (text.length <= maximalUsernameLength && text.length > 0) {
+			if (
+				text.length <= maximalUsernameLength &&
+				text.length >= minimalUsernameLength
+			) {
 				setIsUsernameValid(true);
 				setUsernameMessage("");
 			} else if (text.length === 0) {
 				setIsUsernameValid(false);
 				setUsernameMessage("This field cannot be empty");
+			} else if (text.length < minimalUsernameLength) {
+				setIsUsernameValid(false);
+				setUsernameMessage("This input is too short");
 			} else {
 				setIsUsernameValid(false);
 				setUsernameMessage("The input is too long");
@@ -61,8 +76,6 @@ export function LogIn() {
 
 	const onPasswordChange = (e: React.FormEvent<HTMLInputElement>) => {
 		const text = e.currentTarget.value;
-		const minimalPasswordLength = 8;
-		const maximalPasswordLength = 64;
 
 		if (text.length < minimalPasswordLength) {
 			setIsPasswordLongEnough(false);
@@ -77,36 +90,38 @@ export function LogIn() {
 	};
 
 	const logIn = (event: React.SyntheticEvent) => {
-		console.log("Logging in!");
 		event.preventDefault();
 
 		const target = event.target as typeof event.target & {
-			nickname: { value: string };
+			username: { value: string };
 			password: { value: string };
 		};
 		const loginData: loginData = {
-			nickname: target.nickname.value,
+			username: target.username.value,
 			password: target.password.value,
 		};
 
 		axios
-			.post<boolean>("/auth/login", loginData) // the type should be LoggedUser
+			.post<LoginResponse>("/auth/login", loginData) // the type should be LoggedUser
 			.then((response) => {
-				//temp comment cause backend is not yet ready
-				// const receivedData: LoggedUser = response.data;
-				// setBadLoginMessage("");
-				// setLoggedUser({
-				// 	id: receivedData.id,
-				// 	username: receivedData.username,
-				// 	email: receivedData.email,
-				// });
+				const responseData: LoginResponse = response.data;
 
 				setBadLoginMessage("");
 				setLoggedUser({
-					id: "1aaa",
-					username: loginData.nickname,
-					email: "jan.kowal@gmail.com",
+					id: responseData.id,
+					username: loginData.username,
+					email: "",
+					jwtToken: responseData.token,
 				});
+				sessionStorage.setItem(
+					"loggedUser",
+					JSON.stringify({
+						id: responseData.id,
+						username: loginData.username,
+						email: "",
+						jwtToken: responseData.token,
+					}),
+				);
 				navigate("/crossroad-list");
 			})
 			.catch((error) => {
@@ -122,61 +137,52 @@ export function LogIn() {
 			/>
 			<h3>Log in to process further</h3>
 			<BaseForm onSubmit={logIn}>
-				<SigningUl>
-					<SigningLi>
-						<label>username:</label>
+				<BaseUl>
+					<BaseLi>
+						<label htmlFor="username">username:</label>
 						<BaseInput
-							name="nickname"
+							id="username"
+							name="username"
 							type="text"
 							placeholder="username"
 							onChange={onUsernameChange}
 						/>
-					</SigningLi>
-					{!isUsernameValid ? (
-						<SigningLi>
-							<InvalidInputMessage>{usernameMessage}</InvalidInputMessage>
-						</SigningLi>
-					) : (
-						<SigningLi>
-							<PlaceholderSpan></PlaceholderSpan>
-						</SigningLi>
-					)}
-					<SigningLi>
-						<label>password:</label>
+					</BaseLi>
+					<FormsValidityInformation
+						isInputValid={isUsernameValid}
+						badInputMessage={usernameMessage}
+					/>
+					<BaseLi>
+						<label htmlFor="password">password:</label>
 						<BaseInput
+							id="password"
 							name="password"
 							type="password"
 							onChange={onPasswordChange}
 						/>
-					</SigningLi>
-					{!isPasswordLongEnough ? (
-						<SigningLi>
-							<InvalidInputMessage>{passwordMessage}</InvalidInputMessage>
-						</SigningLi>
-					) : (
-						<SigningLi>
-							<PlaceholderSpan></PlaceholderSpan>
-						</SigningLi>
-					)}
-					<SigningLi>
+					</BaseLi>
+					<FormsValidityInformation
+						isInputValid={isPasswordLongEnough}
+						badInputMessage={passwordMessage}
+					/>
+					<BaseLi>
 						<RedirectionLink to="/register" relative="path">
 							Don`t have an account? Register now.
 						</RedirectionLink>
-					</SigningLi>
-				</SigningUl>
+					</BaseLi>
+				</BaseUl>
 				<PositiveButton
 					type="submit"
 					disabled={!isUsernameValid || !isPasswordLongEnough}
 				>
 					Log In!
 				</PositiveButton>
-				{badLoginMessage.length > 0 ? (
-					<InvalidInputMessage>{badLoginMessage}</InvalidInputMessage>
-				) : (
-					<PlaceholderSpan></PlaceholderSpan>
-				)}
+				<FormsValidityInformation
+					isInputValid={badLoginMessage.length === 0}
+					badInputMessage={badLoginMessage}
+				/>
 			</BaseForm>
-			<ToggleSwitch />
+			<ToggleThemeSwitch />
 		</SigningContainer>
 	);
 }

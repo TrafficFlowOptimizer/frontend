@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ButtonColors, DarkTheme } from "./MainTheme";
+import { ButtonColors, DarkTheme } from "./MainStyles";
 
 export const NumericResultsUl = styled.ul`
 	list-style-type: none;

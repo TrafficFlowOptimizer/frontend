@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { Crossroad } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink } from "../../styles/MainTheme";
+import { BaseButtonLink, ButtonsDiv, ContainerDiv } from "../../styles/MainStyles";
 import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
@@ -15,26 +15,32 @@ import {
 	StyledItemTr,
 	StyledItemTd,
 } from "../../styles/CrossroadListStyles";
+import { useUserContext } from "../../custom/UserContext";
 
 export type tableCrossroadState = "chosen" | "not chosen";
 
 export function ListOfCrossroads() {
+	const { loggedUser } = useUserContext();
 	const navigate = useNavigate();
 	const [listOfCrossroads, setListOfCrossroads] = useState<Crossroad[]>([]);
 	const [chosenCrossroadId, setChosenCrossroadId] = useState<string | null>(null);
 
 	useEffect(() => {
-		// console.log("get crossings useEffect");
-		axios
-			.get<Crossroad[]>("/crossroad")
-			.then((response) => {
-				const crossingsData: Crossroad[] = response.data;
-				setListOfCrossroads(crossingsData);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
-	}, []);
+		if (loggedUser !== null) {
+			axios
+				.get<Crossroad[]>("/crossroad", {
+					params: { userId: loggedUser.id },
+					headers: { Authorization: `Bearer ${loggedUser.jwtToken}` },
+				})
+				.then((response) => {
+					const crossingsData: Crossroad[] = response.data;
+					setListOfCrossroads(crossingsData);
+				})
+				.catch((error) => {
+					console.error(error);
+				});
+		}
+	}, []); //using useEffect here is deprecated
 
 	const handleChooseButton = (
 		crossroad_id: string,
@@ -55,7 +61,7 @@ export function ListOfCrossroads() {
 	};
 
 	return (
-		<>
+		<ContainerDiv>
 			<Navbar />
 			{listOfCrossroads.length == 0 ? (
 				<p>No crossings available</p>
@@ -111,17 +117,22 @@ export function ListOfCrossroads() {
 					</tbody>
 				</StyledTable>
 			)}
-			<PositiveButton>
-				<BaseButtonLink to="../new-crossroad" relative="path">
-					Create new crossing
-				</BaseButtonLink>
-			</PositiveButton>
-			<NeutralPositiveButton
-				disabled={chosenCrossroadId === null}
-				onClick={handleToCrossroadView}
-			>
-				Go to crossroad view
-			</NeutralPositiveButton>
-		</>
+			<ButtonsDiv>
+				<PositiveButton>
+					<BaseButtonLink
+						to="../new-crossroad/location-selection"
+						relative="path"
+					>
+						Create new crossing
+					</BaseButtonLink>
+				</PositiveButton>
+				<NeutralPositiveButton
+					disabled={chosenCrossroadId === null}
+					onClick={handleToCrossroadView}
+				>
+					Go to crossroad view
+				</NeutralPositiveButton>
+			</ButtonsDiv>
+		</ContainerDiv>
 	);
 }

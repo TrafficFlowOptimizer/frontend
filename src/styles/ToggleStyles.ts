@@ -1,9 +1,13 @@
 import styled from "styled-components";
-import moon from "../assets/moon.svg";
-import sun from "../assets/sun.svg";
+import moon from "../assets/svgs/moon.svg";
+import sun from "../assets/svgs/sun.svg";
+import { ButtonColors, Colors, LightTheme } from "./MainStyles";
 
 export type ToggleProps = {
 	checked: boolean;
+	disabled?: boolean;
+	checkedColor?: ButtonColors | Colors;
+	uncheckedColor?: ButtonColors | Colors;
 };
 
 export const ToggleContainer = styled.div`
@@ -30,7 +34,7 @@ export const StyledToggleLabel = styled.label<ToggleProps>`
 		content: "";
 		position: absolute;
 		left: ${(props: ToggleProps) => (props.checked ? "3px" : "calc(55% - 1.5px)")};
-		top: 2.6px;
+		top: 2px;
 		width: 20px;
 		height: 20px;
 		background-color: ${(props: ToggleProps) => props.checked ? "#c8c9cc" : "#ffdb0d"};
@@ -38,5 +42,16 @@ export const StyledToggleLabel = styled.label<ToggleProps>`
 		background-size: 19.5px;
 		border-radius: 90px;
 		transition: 0.3s ease-out;
+	}
+`;
+
+
+export const AdaptedToggleLabel = styled(StyledToggleLabel)`
+	background: ${(props: ToggleProps) => (props.disabled ? LightTheme.secondary : (props.checked ? props.checkedColor : props.uncheckedColor))};
+	// border: 1px solid ${(props) => props.theme.text};
+
+	&:after {
+		background-color: ${LightTheme.primary};
+		background-image: none;
 	}
 `;

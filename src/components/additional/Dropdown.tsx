@@ -9,7 +9,7 @@ import {
 	StyledSearchBoxInput,
 	StyledDropdownSelectedValue,
 } from "../../styles/DropdownStyles";
-import { DarkTheme, LightTheme } from "../../styles/MainTheme";
+import { DarkTheme, LightTheme } from "../../styles/MainStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 

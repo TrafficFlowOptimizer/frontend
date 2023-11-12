@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ButtonColors } from "./MainTheme";
+import { ButtonColors } from "./MainStyles";
 
 export const MainUploaderDiv = styled.div`
 	display: flex;

@@ -1,8 +1,8 @@
 import React from "react";
 import { useThemeContext } from "../../custom/ThemeContext";
-import { ToggleContainer, StyledToggleLabel } from "../../styles/ToggleStyles";
+import { StyledToggleLabel, ToggleContainer } from "../../styles/ToggleStyles";
 
-export function ToggleSwitch() {
+export function ToggleThemeSwitch() {
 	const { theme, setTheme } = useThemeContext();
 	const handleOnChange = () => {
 		if (theme === "light") {

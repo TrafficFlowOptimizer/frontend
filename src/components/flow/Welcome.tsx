@@ -1,15 +1,15 @@
 import React, { useContext } from "react";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
-import { BaseButtonLink, BaseH1 } from "../../styles/MainTheme";
-import logo from "../../assets/TFO_4_but_better.png";
-import dm_logo from "../../assets/TFO_4_dark_mode_but_better.png";
+import { BaseButtonLink, BaseH1 } from "../../styles/MainStyles";
+import logo from "../../assets/tfo_logos/TFO_4_but_better.png";
+import dm_logo from "../../assets/tfo_logos/TFO_4_dark_mode_but_better.png";
 import {
 	WelcomePageContainer,
 	WelcomePageLogo,
 	WelcomePageOptions,
 	OptionsPositionedLi,
 } from "../../styles/WelcomePageStyles";
-import { ToggleSwitch } from "../additional/ToggleSwitch";
+import { ToggleThemeSwitch } from "../additional/ToggleThemeSwitch";
 import { ThemeContext } from "../../custom/ThemeContext";
 
 export function Welcome() {
@@ -39,7 +39,7 @@ export function Welcome() {
 					</NeutralPositiveButton>
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={3} column={2}>
-					<ToggleSwitch />
+					<ToggleThemeSwitch />
 				</OptionsPositionedLi>
 			</WelcomePageOptions>
 		</WelcomePageContainer>

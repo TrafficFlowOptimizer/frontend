@@ -8,18 +8,24 @@ export const NavbarContainer = styled.div`
 	display: flex;
 	flex-direction: row;
 	flex-wrap: no-wrap;
-	justify-content: flex-start;
+	justify-content: space-between;
 	align-items: center;
 	gap: 2vw;
 	padding: 1vh 0.5vw;
 	margin: 1vh 1vw;
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
-  max-height: 80px;
+  max-height: 80px;  
+  width: 60%;
 `;
 
 export const NavbarLogo = styled.img`
   height: 10dvh;
   max-height: 100px;
   min-height: 50px;
+`;
+
+export const InsideDiv = styled(NavbarContainer)`
+	border: none;
+	justify-content: center;
 `;

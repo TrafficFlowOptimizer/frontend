@@ -11,10 +11,16 @@ import { ResultsChoicePanel } from "./components/flow/ResultsChoicePanel";
 import { ResultsAsSimulation } from "./components/flow/ResultsAsSimulation";
 import { ResultsAsNumeric } from "./components/flow/ResultsAsNumeric";
 import { CrossroadView } from "./components/flow/CrossroadView";
+import { MapLeaflet } from "./components/drawing-tool/MapLeaflet";
+import { BasicInformation } from "./components/drawing-tool/BasicInformation";
 import { ThemeProvider } from "styled-components";
-import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainTheme";
+import { BaseDiv, DarkTheme, LightTheme } from "./styles/MainStyles";
 import { ThemeType, ThemeContext } from "./custom/ThemeContext";
 import { LoggedUser, UserContext } from "./custom/UserContext";
+import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
+import { TrafficLights } from "./components/drawing-tool/TrafficLights";
+import { Connections } from "./components/drawing-tool/Connections";
+import { Collisions } from "./components/drawing-tool/Collisions";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -37,7 +43,30 @@ function App() {
 								<Route
 									path="new-crossroad"
 									element={<CreateNewCrossroad />}
-								/>
+								>
+									<Route
+										path="location-selection"
+										element={<MapLeaflet />}
+									/>
+									<Route
+										path="basic-information"
+										element={<BasicInformation />}
+									/>
+									<Route
+										path="entrances-and-exits"
+										element={<EntrancesAndExits />}
+									/>
+									<Route
+										path="connections"
+										element={<Connections />}
+									/>
+									<Route
+										path="traffic-lights"
+										element={<TrafficLights />}
+									/>
+									<Route path="collisions" element={<Collisions />} />
+									<Route path="*" element={<PageNotFoundLanding />} />
+								</Route>
 								<Route path="add-videos" element={<AddVideos />} />
 								<Route
 									path="crossroad-view/:crossroadId"

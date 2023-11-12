@@ -1,5 +1,5 @@
 import React from "react";
-import { BaseButtonLink, PageHeader } from "../../styles/MainTheme";
+import { BaseButtonLink, PageHeader } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { Navbar } from "../additional/Navbar";
