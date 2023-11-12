@@ -9,7 +9,7 @@ import { CreateNewCrossroad } from "./components/flow/CreateNewCrossroad";
 import { AddVideos } from "./components/flow/AddVideos";
 import { ResultsChoicePanel } from "./components/flow/ResultsChoicePanel";
 import { ResultsAsSimulation } from "./components/flow/ResultsAsSimulation";
-import { ResultsAsNumeric } from "./components/flow/ResultsAsNumeric";
+import { ResultsAsDescription } from "./components/flow/ResultsAsDescription";
 import { CrossroadView } from "./components/flow/CrossroadView";
 import { MapLeaflet } from "./components/drawing-tool/MapLeaflet";
 import { BasicInformation } from "./components/drawing-tool/BasicInformation";
@@ -81,8 +81,8 @@ function App() {
 									element={<ResultsAsSimulation />}
 								/>
 								<Route
-									path="results-numeric"
-									element={<ResultsAsNumeric />}
+									path="results-descriptive"
+									element={<ResultsAsDescription />}
 								/>
 								<Route path="*" element={<PageNotFoundLanding />} />
 							</Routes>

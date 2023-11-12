@@ -98,3 +98,12 @@ export const BorderedWorkaroundSelectorDiv = styled(BorderedWorkaroundDiv)`
 	width: fit-content;
 	height: fit-content;
 `;
+
+export const HorizontalWrapper = styled.div`
+	display: flex;
+	flex-direction: row;
+	flex-wrap: no-wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 12px;
+`;

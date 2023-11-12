@@ -17,7 +17,7 @@ import {
 	SingleInfoPanel,
 } from "../../styles/NumericResultsStyles";
 
-export function ResultsAsNumeric() {
+export function ResultsAsDescription() {
 	const location = useLocation();
 	const results: OptimizationResults = location.state.results ?? true;
 	const parsedResults = results.connections;
@@ -26,7 +26,9 @@ export function ResultsAsNumeric() {
 		<>
 			<Navbar />
 			<div>
-				<PageHeader>Results as numeric for: {crossroadName}</PageHeader>
+				<PageHeader>
+					Results as descriptive data for: {crossroadName}
+				</PageHeader>
 				<NumericResultsUl>
 					{parsedResults.length > 0 ? (
 						parsedResults.map((result, index) => (

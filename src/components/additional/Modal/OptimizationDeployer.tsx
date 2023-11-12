@@ -11,6 +11,8 @@ import { PositiveButton } from "../../../styles/PositiveButton";
 import { StyledModal, StyledMessageField } from "../../../styles/modal/ModalStyles";
 import { faCloud } from "@fortawesome/free-solid-svg-icons";
 import { NegativeButton } from "../../../styles/NegativeButton";
+import { Day, Hour } from "../../../custom/OptimizationInterface";
+import { TimeIntervalPicker } from "../TimeIntervalPicker";
 
 export type OptimizationDeployerProps = {
 	textToDisplay: string;
@@ -24,6 +26,9 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 	const navigate = useNavigate();
 	const [optimizationDeployed, setOptimizationDeployed] = useState(false);
 	const [chosenTime, setChosenTime] = useState<number | null | string>(null);
+
+	const [chosenHour, setChosenHour] = useState<Hour | undefined>(undefined);
+	const [chosenDay, setChosenDay] = useState<Day | undefined>(undefined);
 
 	const startOptimization = () => {
 		setOptimizationDeployed(true);
@@ -82,9 +87,14 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 						isSearchable={false}
 						onChange={onChange}
 					/>
+					<TimeIntervalPicker setHour={setChosenHour} setDay={setChosenDay} />
 					<ButtonsDiv>
 						<NegativeButton
-							disabled={optimizationDeployed}
+							disabled={
+								optimizationDeployed ||
+								chosenDay === undefined ||
+								chosenHour === undefined
+							}
 							onClick={props.onClose}
 						>
 							Close

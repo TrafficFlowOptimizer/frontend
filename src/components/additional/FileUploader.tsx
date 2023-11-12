@@ -8,7 +8,7 @@ import { Backdrop } from "./Modal/Backdrop";
 import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
 import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { faFileUpload } from "@fortawesome/free-solid-svg-icons";
-import { Colors, DarkTheme, LightTheme } from "../../styles/MainStyles";
+import { Colors, DarkTheme, LightTheme, BaseInput } from "../../styles/MainStyles";
 import { PositiveButton } from "../../styles/PositiveButton";
 import { CenteredInstructionP } from "../../styles/drawing-tool-styles/GeneralStyles";
 import {
@@ -20,6 +20,7 @@ import {
 	DragFileElement,
 	MainUploaderDiv,
 	VideoReadyMessage,
+	HorizontalWrapper,
 } from "../../styles/FileUploaderStyles";
 import {
 	ChosenEm,
@@ -34,6 +35,12 @@ import OutlinedInput from "@mui/material/OutlinedInput";
 import MenuItem from "@mui/material/MenuItem";
 import { ButtonsDiv } from "../../styles/MainStyles";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
+import { ThemeProvider } from "@mui/material";
+import { tooltipTheme } from "../../custom/drawing-tool/AuxiliaryData";
+import Tooltip from "@mui/material/Tooltip";
+import { FormsValidityInformation } from "./FormsValidityInformation";
+import { Day, Hour } from "../../custom/OptimizationInterface";
+import { TimeIntervalPicker } from "./TimeIntervalPicker";
 
 export type FileUploaderProps = {
 	crossroadId: string;
@@ -43,10 +50,16 @@ export type FileUploaderProps = {
 export function FileUploader(props: FileUploaderProps) {
 	const { theme } = useThemeContext();
 	const { loggedUser } = useUserContext();
-	const [chosenHour, setChosenHour] = useState<string>("");
 	const [videoToUpload, setVideoToUpload] = useState<File | null>(null);
 	const [uploadMessage, setUploadMessage] = useState("");
 	const inputRef = React.useRef<HTMLInputElement>(null);
+
+	const timeDescription =
+		"How much time is visualized on video in minutes\n" +
+		"ex: if video is 5 mins long, but it displays events in x2 speed, then the inserted value should be 10";
+
+	const [badRealTimeMessage, setBadRealTimeMessage] = useState("");
+	const [videoRealTime, setVideoRealTime] = useState("");
 
 	const [showCordsSelector, setShowCordsSelector] = useState(false);
 	const [canReopenSelector, setCanReopenSelector] = useState(false);
@@ -74,56 +87,8 @@ export function FileUploader(props: FileUploaderProps) {
 		}
 	};
 
-	const placeholder = "Select hour when the video was recorded";
-	const MenuProps = {
-		PaperProps: {
-			style: {
-				maxHeight: SELECT_ITEM_HEIGHT * 4.5 + SELECT_ITEM_PADDING_TOP,
-				width: "fit-content",
-				backgroundColor:
-					theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
-			},
-		},
-	};
-
-	function getStyles() {
-		return {
-			backgroundColor:
-				theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE,
-			color: theme === "dark" ? Colors.PRIMARY_WHITE : Colors.PRIMARY_BLACK,
-		};
-	}
-
-	const handleHourChange = (event: SelectChangeEvent) => {
-		setChosenHour(event.target.value);
-	};
-
-	const hourOptions = [
-		"0:00 - 1:00",
-		"1:00 - 2:00",
-		"2:00 - 3:00",
-		"3:00 - 4:00",
-		"4:00 - 5:00",
-		"5:00 - 6:00",
-		"6:00 - 7:00",
-		"7:00 - 8:00",
-		"8:00 - 9:00",
-		"9:00 - 10:00",
-		"10:00 - 11:00",
-		"11:00 - 12:00",
-		"12:00 - 13:00",
-		"13:00 - 14:00",
-		"14:00 - 15:00",
-		"15:00 - 16:00",
-		"16:00 - 17:00",
-		"17:00 - 18:00",
-		"18:00 - 19:00",
-		"19:00 - 20:00",
-		"20:00 - 21:00",
-		"21:00 - 22:00",
-		"22:00 - 23:00",
-		"23:00 - 0:00",
-	];
+	const [chosenHour, setChosenHour] = useState<Hour | undefined>(undefined);
+	const [chosenDay, setChosenDay] = useState<Day | undefined>(undefined);
 
 	const handleChange = function (e: React.ChangeEvent<HTMLInputElement>) {
 		e.preventDefault();
@@ -147,10 +112,14 @@ export function FileUploader(props: FileUploaderProps) {
 
 	const sendVideos = () => {
 		if (videoToUpload !== null) {
+			//TODO: adapt to endpoint changes
 			const uploadVideoData = new FormData();
 			uploadVideoData.append("file", videoToUpload);
 			uploadVideoData.append("crossroadId", props.crossroadId);
-			uploadVideoData.append("timeIntervalId", chosenHour);
+			uploadVideoData.append(
+				"timeIntervalId",
+				chosenHour === undefined ? " " : chosenHour.toString(),
+			);
 
 			axios
 				.post("/videos/upload", uploadVideoData, {
@@ -195,6 +164,21 @@ export function FileUploader(props: FileUploaderProps) {
 				});
 		} else {
 			alert("No videos to upload!");
+		}
+	};
+
+	const changeRealTime = (e: React.ChangeEvent<HTMLInputElement>) => {
+		const newValue = parseInt(e.target.value);
+
+		if (isNaN(newValue)) {
+			setBadRealTimeMessage("Input value has to be a positive integer");
+			setVideoRealTime("");
+		} else if (newValue <= 0) {
+			setBadRealTimeMessage("Input value has to be a positive integer");
+			setVideoRealTime("");
+		} else {
+			setBadRealTimeMessage("");
+			setVideoRealTime(newValue.toString());
 		}
 	};
 
@@ -257,7 +241,12 @@ export function FileUploader(props: FileUploaderProps) {
 			</UploaderForm>
 			<ButtonsDiv>
 				<PositiveButton
-					disabled={chosenHour === "" || videoToUpload === null}
+					disabled={
+						chosenHour === undefined ||
+						chosenDay === undefined ||
+						videoToUpload === null ||
+						videoRealTime.length === 0
+					}
 					onClick={sendVideos}
 				>
 					Send video to server
@@ -274,39 +263,25 @@ export function FileUploader(props: FileUploaderProps) {
 			{uploadMessage != "" && (
 				<CenteredInstructionP>{uploadMessage}</CenteredInstructionP>
 			)}
-			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
-				<Select
-					displayEmpty
-					value={chosenHour}
-					onChange={handleHourChange}
-					input={<OutlinedInput />}
-					renderValue={(selected) => {
-						if (selected.length === 0) {
-							return <StyledEm>{placeholder}</StyledEm>;
-						}
-
-						return <ChosenEm>{selected}</ChosenEm>;
-					}}
-					MenuProps={MenuProps}
-					inputProps={{
-						"aria-label": "Without label",
-						"background-color": `${
-							theme === "dark"
-								? Colors.PRIMARY_BLACK
-								: Colors.PRIMARY_WHITE
-						}`,
-					}}
-				>
-					<MenuItem disabled value="">
-						<StyledEm>{placeholder}</StyledEm>
-					</MenuItem>
-					{hourOptions.map((hour, index) => (
-						<MenuItem key={index} value={hour} style={getStyles()}>
-							<p>{hour}</p>
-						</MenuItem>
-					))}
-				</Select>
-			</FormControl>
+			<TimeIntervalPicker setHour={setChosenHour} setDay={setChosenDay} />
+			<HorizontalWrapper>
+				<ThemeProvider theme={tooltipTheme}>
+					<Tooltip title={timeDescription} placement={"bottom"} arrow>
+						<label htmlFor="videoRealTime">Video real time:*</label>
+					</Tooltip>
+					<BaseInput
+						id="videoRealTime"
+						name="videoRealTime"
+						type="text"
+						value={videoRealTime}
+						onChange={changeRealTime}
+					/>
+				</ThemeProvider>
+			</HorizontalWrapper>
+			<FormsValidityInformation
+				isInputValid={badRealTimeMessage.length === 0}
+				badInputMessage={badRealTimeMessage}
+			/>
 		</MainUploaderDiv>
 	);
 }

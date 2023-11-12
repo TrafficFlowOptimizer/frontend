@@ -17,11 +17,11 @@ export function ResultsChoicePanel() {
 				<PageHeader>Choose your course of action:</PageHeader>
 				<NeutralPositiveButton>
 					<BaseButtonLink
-						to="../results-numeric"
+						to="../results-descriptive"
 						relative="path"
 						state={results}
 					>
-						See results as numeric data
+						See results as descriptive data
 					</BaseButtonLink>
 				</NeutralPositiveButton>
 				<NeutralPositiveButton>

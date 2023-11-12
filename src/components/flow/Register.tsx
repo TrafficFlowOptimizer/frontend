@@ -28,9 +28,7 @@ import {
 
 export type RegisterData = {
 	id: string;
-	firstName: string; //TODO: delete after BE refactor - redundant
-	lastName: string; //TODO: delete after BE refactor - redundant
-	username: string; //TODO: rename after BE refactor
+	username: string;
 	email: string;
 	password: string;
 };
@@ -64,8 +62,6 @@ export function Register() {
 
 		const registerData: RegisterData = {
 			id: "",
-			firstName: "placeholder",
-			lastName: "placeholder",
 			username: target.username.value,
 			email: target.email.value,
 			password: target.password.value,
