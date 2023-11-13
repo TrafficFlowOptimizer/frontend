@@ -8,6 +8,7 @@ import {
 	ContainerDiv,
 	LightColors,
 	PageHeader,
+	SimulationNumbers,
 } from "../../styles/MainStyles";
 import {
 	NeutralNegativeButton,
@@ -41,6 +42,7 @@ import {
 	initLights,
 	initCollisions,
 } from "../../assets/InitData";
+import { initImage } from "../../assets/InitImage";
 // import { initImage } from "../../assets/crossroad.png";
 
 export type pauseButtonState = "paused" | "running";
@@ -49,14 +51,14 @@ function getRandomInt(max: number) {
 	return Math.floor(Math.random() * max);
 }
 
-const timeDelta = 100;
+const timeDelta = 300;
 const lights = [
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0,
 		0, 0, 0,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1,
 		1, 1, 1,
 	],
 	[
@@ -64,11 +66,11 @@ const lights = [
 		0, 0, 0,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
+		0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0,
+		0, 0, 0,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0,
 	],
 	[
@@ -76,7 +78,7 @@ const lights = [
 		1, 1, 1,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0,
 	],
 	[
@@ -84,21 +86,22 @@ const lights = [
 		1, 1, 1,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0,
 		0, 0, 0,
 	],
 	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
+		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 0, 0,
+		0, 0, 0,
 	],
 ];
-const carSpawningChances = [25, 75, 25, 75, 25, 75, 25, 75, 25, 75];
+const carSpawningChances = [25, 25, 25, 50, 50, 50, 50, 50, 50, 25];
 
 localStorage.setItem("crossroad", JSON.stringify(initCrossroad));
-localStorage.setItem("lights", JSON.stringify(initLights));
+localStorage.setItem("trafficLights", JSON.stringify(initLights));
 localStorage.setItem("eeiPoints", JSON.stringify(initExitEntrancePoints));
 localStorage.setItem("connections", JSON.stringify(initConnections));
 localStorage.setItem("collisions", JSON.stringify(initCollisions));
+localStorage.setItem("crossroadMap", initImage);
 // localStorage.setItem("crossroadImage", initImage);
 // localStorage.setItem('eeiPoints',JSON.stringify(initExitEntrancePoints));
 
@@ -165,7 +168,7 @@ export function ResultsAsSimulation() {
 			}, timeDelta);
 			return () => clearInterval(interval);
 		}, [spawnChance, spawnAmount, goAmount, canGo, running]);
-		return <h3>{count}</h3>;
+		return count;
 	};
 
 	const handleChooseButton = (current_state: pauseButtonState) => {
@@ -204,6 +207,7 @@ export function ResultsAsSimulation() {
 								connection={con}
 								color={Colors.BRIGHT_RED}
 								withLightIds={true}
+								withTooltip={false}
 							/>
 						);
 					})}
@@ -211,33 +215,98 @@ export function ResultsAsSimulation() {
 				{exitEntrancePoints.length > 0 && (
 					<ThemeProvider theme={tooltipTheme}>
 						{exitEntrancePoints.map((point, idx) => {
-							let lightColor;
-							let carNumber;
-							if (point.type != "exit") {
-								lightColor = LightColor(lights[idx]);
-								carNumber = CarNumber(
-									carSpawningChances[idx],
-									1,
-									2,
-									lightColor != LightColors.RED,
+							if (point.type == "EXIT") {
+								return (
+									<div key={idx}>
+										<EEIPointMarker
+											key={idx}
+											color={LightColors.BLACK}
+											yCord={point.yCord}
+											xCord={point.xCord}
+										>
+											<SimulationNumbers>{""}</SimulationNumbers>
+										</EEIPointMarker>
+									</div>
 								);
 							} else {
-								lightColor = LightColors.BLACK;
-								carNumber = <h1>{}</h1>;
-							}
+								const usedLightsIDs = new Set();
+								console.log(point.index);
+								for (const connection of connections) {
+									console.log("connection: ", connection.index);
+									if (connection.sourceId == point.index) {
+										for (const trafficLightID of connection.trafficLightIds) {
+											console.log(trafficLightID);
+											usedLightsIDs.add(Number(trafficLightID));
+										}
+									}
+								}
+								console.log(usedLightsIDs);
+								if (usedLightsIDs.size == 1) {
+									const lightColor = LightColor(lights[idx]);
+									const carNumber = CarNumber(
+										carSpawningChances[idx],
+										1,
+										2,
+										lightColor != LightColors.RED,
+									);
+									return (
+										<div key={idx}>
+											<EEIPointMarker
+												key={idx}
+												color={lightColor}
+												yCord={point.yCord}
+												xCord={point.xCord}
+											>
+												<SimulationNumbers>
+													{carNumber}
+												</SimulationNumbers>
+											</EEIPointMarker>
+										</div>
+									);
+								} else if (usedLightsIDs.size == 2) {
+									const values = usedLightsIDs.values();
+									let obj = values.next();
+									const first = obj.value;
+									obj = values.next();
+									const second = obj.value;
 
-							return (
-								<div key={idx}>
-									<EEIPointMarker
-										key={idx}
-										color={lightColor}
-										yCord={point.yCord}
-										xCord={point.xCord}
-									>
-										{carNumber}
-									</EEIPointMarker>
-								</div>
-							);
+									const lightColor1 = LightColor(lights[first]);
+									const carNumber1 = CarNumber(
+										carSpawningChances[first],
+										1,
+										2,
+										lightColor1 != LightColors.RED,
+									);
+									const lightColor2 = LightColor(lights[second]);
+									const carNumber2 = CarNumber(
+										carSpawningChances[second],
+										1,
+										2,
+										lightColor2 != LightColors.RED,
+									);
+									console.log(first, second);
+									return (
+										<div key={idx}>
+											<EEIPointMarker
+												key={idx}
+												color={lightColor1}
+												yCord={point.yCord}
+												xCord={point.xCord}
+											>
+												<SimulationNumbers>
+													{carNumber1 + carNumber2}
+												</SimulationNumbers>
+											</EEIPointMarker>
+											<EEIPointMarker
+												key={idx}
+												color={lightColor2}
+												yCord={point.yCord}
+												xCord={point.xCord + 15}
+											></EEIPointMarker>
+										</div>
+									);
+								}
+							}
 						})}
 					</ThemeProvider>
 				)}

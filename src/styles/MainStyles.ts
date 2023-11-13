@@ -139,6 +139,11 @@ export const ContainerDiv = styled.div`
 	padding: 15px;
 `;
 
+export const SimulationNumbers = styled.h4`
+	-webkit-text-stroke: 1px black; /* width and color */
+	line-height: 0.5;
+	color: white;
+`;
 
 export const BaseInput = styled.input`
 	padding: 5px;
