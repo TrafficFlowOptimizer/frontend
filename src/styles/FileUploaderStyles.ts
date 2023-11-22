@@ -101,9 +101,9 @@ export const BorderedWorkaroundSelectorDiv = styled(BorderedWorkaroundDiv)`
 
 export const HorizontalWrapper = styled.div`
 	display: flex;
-	flex-direction: row;
+	flex-direction: column;
 	flex-wrap: no-wrap;
 	align-items: center;
 	justify-content: center;
-	gap: 12px;
+	gap: 5px;
 `;

@@ -112,14 +112,18 @@ export function FileUploader(props: FileUploaderProps) {
 
 	const sendVideos = () => {
 		if (videoToUpload !== null) {
-			//TODO: adapt to endpoint changes
 			const uploadVideoData = new FormData();
 			uploadVideoData.append("file", videoToUpload);
 			uploadVideoData.append("crossroadId", props.crossroadId);
 			uploadVideoData.append(
-				"timeIntervalId",
-				chosenHour === undefined ? " " : chosenHour.toString(),
+				"hour",
+				chosenHour === undefined ? " " : Hour[chosenHour],
 			);
+			uploadVideoData.append(
+				"day",
+				chosenDay === undefined ? " " : Day[chosenDay],
+			);
+			uploadVideoData.append("duration", videoRealTime);
 
 			axios
 				.post("/videos/upload", uploadVideoData, {

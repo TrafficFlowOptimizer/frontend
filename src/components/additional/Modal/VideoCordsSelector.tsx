@@ -42,6 +42,7 @@ import { useUserContext } from "../../../custom/UserContext";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
+import { Detection } from "../../../custom/OptimizationInterface";
 
 export type VideoCordsSelectorProps = {
 	videoId: string;
@@ -50,18 +51,23 @@ export type VideoCordsSelectorProps = {
 	onClose: () => void;
 };
 
+export type RectanglePair = {
+	first: number;
+	second: number;
+};
+
 export type DetectionRectangle = {
 	id: string;
 	connectionId: string;
-	lowerLeft: number[];
-	upperRight: number[];
+	lowerLeft: RectanglePair;
+	upperRight: RectanglePair;
 };
 
 export const TEMPLATE_DETECTION_RECTANGLE: DetectionRectangle = {
 	id: "0",
 	connectionId: "",
-	lowerLeft: [-1, -1],
-	upperRight: [-1, -1],
+	lowerLeft: { first: -1, second: -1 },
+	upperRight: { first: -1, second: -1 },
 };
 
 export function VideoCordsSelector(props: VideoCordsSelectorProps) {
@@ -87,10 +93,13 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	const onScreenshotClick = (event: React.SyntheticEvent) => {
 		event.preventDefault();
 
-		if (currentDetectionRectangle.lowerLeft[0] === -1) {
+		if (currentDetectionRectangle.lowerLeft.first === -1) {
 			setCurrentDetectionRectangle((prev) => ({
 				...prev,
-				lowerLeft: [Math.round(localMousePos.x), Math.round(localMousePos.y)],
+				lowerLeft: {
+					first: Math.round(localMousePos.x),
+					second: Math.round(localMousePos.y),
+				},
 			}));
 
 			setLowerLeftChoiceMessage(
@@ -98,10 +107,13 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 					localMousePos.y,
 				)}]`,
 			);
-		} else if (currentDetectionRectangle.upperRight[0] === -1) {
+		} else if (currentDetectionRectangle.upperRight.first === -1) {
 			setCurrentDetectionRectangle((prev) => ({
 				...prev,
-				upperRight: [Math.round(localMousePos.x), Math.round(localMousePos.y)],
+				upperRight: {
+					first: Math.round(localMousePos.x),
+					second: Math.round(localMousePos.y),
+				},
 			}));
 
 			setUpperRightChoiceMessage(
@@ -225,27 +237,23 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 	};
 
 	const onFinish = () => {
-		console.log(JSON.stringify(createdDetectionRectangles));
-		const analyseVideoData = new FormData();
-		analyseVideoData.append("skipFrames", "1");
-		analyseVideoData.append(
-			"detectionRectangles",
-			JSON.stringify(createdDetectionRectangles),
-		);
-
 		axios
-			.post<string>(`/videos/${props.videoId}/analysis`, analyseVideoData, {
-				// params: {
-				// 	skipFrames: 1,
-				// 	detectionRectangles: createdDetectionRectangles,
-				// },
-				headers: {
-					Authorization: `Bearer ${
-						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
-					}`,
-					"Content-Type": "multipart/form-data",
+			.post<Detection[]>(
+				`/videos/${props.videoId}/analysis`,
+				createdDetectionRectangles,
+				{
+					params: {
+						skipFrames: 10,
+					},
+					headers: {
+						Authorization: `Bearer ${
+							loggedUser !== null
+								? loggedUser.jwtToken
+								: getUserJWTToken()
+						}`,
+					},
 				},
-			})
+			)
 			.then((response) => {
 				console.log(response.data);
 				setShowSuccessAlert(true);
@@ -297,20 +305,20 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 						return (
 							<div key={dr.id}>
 								<EEIPointMarker
-									xCord={dr.lowerLeft[0]}
-									yCord={dr.lowerLeft[1]}
+									xCord={dr.lowerLeft.first}
+									yCord={dr.lowerLeft.second}
 									color={colors[idx % colors.length]}
 								></EEIPointMarker>
 								<EEIPointMarker
-									xCord={dr.upperRight[0]}
-									yCord={dr.upperRight[1]}
+									xCord={dr.upperRight.first}
+									yCord={dr.upperRight.second}
 									color={colors[idx % colors.length]}
 								></EEIPointMarker>
 								<ConnectionMarker
-									entranceX={dr.lowerLeft[0]}
-									entranceY={dr.lowerLeft[1]}
-									exitX={dr.lowerLeft[0]}
-									exitY={dr.upperRight[1]}
+									entranceX={dr.lowerLeft.first}
+									entranceY={dr.lowerLeft.second}
+									exitX={dr.lowerLeft.first}
+									exitY={dr.upperRight.second}
 									connection={props.connections[0]}
 									thickness={3}
 									color={colors[idx % colors.length]}
@@ -318,10 +326,10 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 									withTooltip={false}
 								/>
 								<ConnectionMarker
-									entranceX={dr.lowerLeft[0]}
-									entranceY={dr.lowerLeft[1]}
-									exitX={dr.upperRight[0]}
-									exitY={dr.lowerLeft[1]}
+									entranceX={dr.lowerLeft.first}
+									entranceY={dr.lowerLeft.second}
+									exitX={dr.upperRight.first}
+									exitY={dr.lowerLeft.second}
 									connection={props.connections[0]}
 									thickness={3}
 									color={colors[idx % colors.length]}
@@ -329,10 +337,10 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 									withTooltip={false}
 								/>
 								<ConnectionMarker
-									entranceX={dr.upperRight[0]}
-									entranceY={dr.upperRight[1]}
-									exitX={dr.lowerLeft[0]}
-									exitY={dr.upperRight[1]}
+									entranceX={dr.upperRight.first}
+									entranceY={dr.upperRight.second}
+									exitX={dr.lowerLeft.first}
+									exitY={dr.upperRight.second}
 									connection={props.connections[0]}
 									thickness={3}
 									color={colors[idx % colors.length]}
@@ -340,10 +348,10 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 									withTooltip={false}
 								/>
 								<ConnectionMarker
-									entranceX={dr.upperRight[0]}
-									entranceY={dr.upperRight[1]}
-									exitX={dr.upperRight[0]}
-									exitY={dr.lowerLeft[1]}
+									entranceX={dr.upperRight.first}
+									entranceY={dr.upperRight.second}
+									exitX={dr.upperRight.first}
+									exitY={dr.lowerLeft.second}
 									connection={props.connections[0]}
 									thickness={3}
 									color={colors[idx % colors.length]}
@@ -353,17 +361,17 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 							</div>
 						);
 					})}
-				{currentDetectionRectangle.lowerLeft[0] !== -1 && (
+				{currentDetectionRectangle.lowerLeft.first !== -1 && (
 					<EEIPointMarker
-						xCord={currentDetectionRectangle.lowerLeft[0]}
-						yCord={currentDetectionRectangle.lowerLeft[1]}
+						xCord={currentDetectionRectangle.lowerLeft.first}
+						yCord={currentDetectionRectangle.lowerLeft.second}
 						color={Colors.PRIMARY_WHITE}
 					></EEIPointMarker>
 				)}
-				{currentDetectionRectangle.upperRight[0] !== -1 && (
+				{currentDetectionRectangle.upperRight.first !== -1 && (
 					<EEIPointMarker
-						xCord={currentDetectionRectangle.upperRight[0]}
-						yCord={currentDetectionRectangle.upperRight[1]}
+						xCord={currentDetectionRectangle.upperRight.first}
+						yCord={currentDetectionRectangle.upperRight.second}
 						color={Colors.PRIMARY_WHITE}
 					></EEIPointMarker>
 				)}

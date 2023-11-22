@@ -37,7 +37,7 @@ export function Register() {
 	const { theme } = useContext(ThemeContext);
 	const navigate = useNavigate();
 
-	const [isUsernameValid, setIsUsernameValid] = useState(true);
+	const [isUsernameValid, setIsUsernameValid] = useState(false);
 	const [usernameMessage, setUsernameMessage] = useState(
 		"This field cannot be empty",
 	);
@@ -46,6 +46,9 @@ export function Register() {
 	const [passwordMessage, setPasswordMessage] = useState(
 		"This field cannot be empty",
 	);
+
+	const [isEmailLongEnough, setIsEmailLongEnough] = useState(false);
+	const [emailMessage, setEmailMessage] = useState("This field cannot be empty");
 	const [badRegisterMessage, setBadRegisterMessage] = useState("");
 
 	const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -127,13 +130,25 @@ export function Register() {
 
 		if (text.length < minimalPasswordLength) {
 			setIsPasswordLongEnough(false);
-			setPasswordMessage("The password is at least 8 characters long!");
+			setPasswordMessage("The password must be least 8 characters long!");
 		} else if (text.length > maximalPasswordLength) {
 			setIsPasswordLongEnough(false);
-			setPasswordMessage("The password is at most 64 characters long!");
+			setPasswordMessage("The password must be most 64 characters long!");
 		} else {
 			setIsPasswordLongEnough(true);
 			setPasswordMessage("");
+		}
+	};
+
+	const onEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
+		const text = e.currentTarget.value;
+
+		if (text.length < minimalPasswordLength) {
+			setIsEmailLongEnough(false);
+			setEmailMessage("The email must be least 8 characters long!");
+		} else {
+			setIsEmailLongEnough(true);
+			setEmailMessage("");
 		}
 	};
 
@@ -165,9 +180,14 @@ export function Register() {
 							id="email"
 							name="email"
 							type="email"
-							placeholder="email is optional"
+							placeholder="email"
+							onChange={onEmailChange}
 						/>
 					</BaseLi>
+					<FormsValidityInformation
+						isInputValid={isEmailLongEnough}
+						badInputMessage={emailMessage}
+					/>
 					<BaseLi>
 						<label htmlFor="username">username:</label>
 						<BaseInput

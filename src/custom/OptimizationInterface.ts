@@ -1,11 +1,11 @@
 export enum Day {
-	MONDAY = "monday",
-	TUESDAY = "tuesday",
-	WEDNESDAY = "wednesday",
-	THURSDAY = "thursday",
-	FRIDAY = "friday",
-	SATURDAY = "saturday",
-	SUNDAY = "sunday",
+	MONDAY = "MONDAY",
+	TUESDAY = "TUESDAY",
+	WEDNESDAY = "WEDNESDAY",
+	THURSDAY = "THURSDAY",
+	FRIDAY = "FRIDAY",
+	SATURDAY = "SATURDAY",
+	SUNDAY = "SUNDAY",
 }
 
 export enum Hour {
@@ -38,4 +38,11 @@ export enum Hour {
 export type TimeInterval = {
 	hour: Hour;
 	day: Day;
+};
+
+export type Detection = {
+	id: number;
+	detectedCars: number;
+	detectedBusses: number;
+	connectionId: string;
 };

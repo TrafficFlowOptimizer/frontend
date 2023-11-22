@@ -6,10 +6,10 @@ export const StyledModal = styled.div`
 	padding: 1rem;
 	text-align: center;
 	width: 60vw;
-	height: calc(100% - 20vh);
+	height: calc(100% - 10vh);
 	z-index: 10;
 	position: fixed;
-	top: 10vh;
+	top: 5vh;
 	left: calc(50% - 30vw);
 
 	display: flex;
