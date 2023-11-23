@@ -1,8 +1,6 @@
 import React, { useContext, useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import { OptimizationResults } from "../../../custom/CrossroadInterface";
-import { Dropdown } from "../Dropdown";
 import { Memes } from "../Memes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ThemeContext } from "../../../custom/ThemeContext";
@@ -27,6 +25,9 @@ import MenuItem from "@mui/material/MenuItem";
 import styled from "styled-components";
 import { getUserJWTToken } from "../../../custom/drawing-tool/AuxiliaryFunctions";
 import { useUserContext } from "../../../custom/UserContext";
+import Snackbar from "@mui/material/Snackbar";
+import Alert from "@mui/material/Alert";
+import CheckIcon from "@mui/icons-material/Check";
 
 export type OptimizationDeployerProps = {
 	textToDisplay: string;
@@ -44,10 +45,14 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 	const [chosenHour, setChosenHour] = useState<Hour | undefined>(undefined);
 	const [chosenDay, setChosenDay] = useState<Day | undefined>(undefined);
 
+	const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+	const [showFailureAlert, setShowFailureAlert] = useState(false);
+	const [failureMessage, setFailureMessage] = useState("");
+
 	const startOptimization = () => {
 		setOptimizationDeployed(true);
 		axios
-			.post<any>(
+			.post<string>(
 				`/optimization/${props.crossroadId}`,
 				{},
 				{
@@ -65,26 +70,24 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 					},
 				},
 			)
-			.then((response) => {
-				// const optimizationData: OptimizationResults = response.data;
-				// navigate("../../results-choice", {
-				// 	state: {
-				// 		results: optimizationData,
-				// 		crossroadName: props.crossroadName,
-				// 		crossroadId: props.crossroadId,
-				// 	},
-				// });
-				alert("Success!"); //tmp
-				console.log(response.data);
+			.then(() => {
+				setShowSuccessAlert(true);
+				navigate("../../results-choice", {
+					state: {
+						crossroadId: props.crossroadId,
+						crossroadName: props.crossroadName,
+						day: chosenDay,
+						hour: chosenHour,
+					},
+				});
 			})
 			.catch((error) => {
 				console.error(error);
-				//TODO: snackbar with alert here if enough time
+				setFailureMessage(`Error ${error.code}`);
+				setShowFailureAlert(true);
+				props.onClose();
 			});
 	};
-	// const onChange = (newValue: number | string | null) => {
-	// 	setChosenTime(newValue);
-	// };
 
 	const placeholder = "Select time of optimization";
 	const replacementInfo = "Time is presented in seconds";
@@ -120,6 +123,28 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 
 	return (
 		<StyledModal>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showSuccessAlert}
+				autoHideDuration={1000}
+			>
+				<Alert
+					variant="filled"
+					icon={<CheckIcon fontSize="inherit" />}
+					severity="success"
+				>
+					<strong>Optimization Deployed!</strong>
+				</Alert>
+			</Snackbar>
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showFailureAlert}
+				autoHideDuration={1000}
+			>
+				<Alert variant="filled" severity="error">
+					<strong>{failureMessage}</strong>
+				</Alert>
+			</Snackbar>
 			{optimizationDeployed ? (
 				<div>
 					<FontAwesomeIcon
@@ -205,6 +230,6 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 	);
 }
 
-const InfoP = styled.p`
+export const InfoP = styled.p`
 	margin-bottom: 0px;
 `;

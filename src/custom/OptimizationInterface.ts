@@ -1,3 +1,5 @@
+import { TrafficLight, TrafficLightDirection } from "./CrossroadInterface";
+
 export enum Day {
 	MONDAY = "MONDAY",
 	TUESDAY = "TUESDAY",
@@ -45,4 +47,14 @@ export type Detection = {
 	detectedCars: number;
 	detectedBusses: number;
 	connectionId: string;
+};
+
+export type OptimizationResults = {
+	lightsSequenceMapCurrent: Map<number, number[]>;
+	connectionsFlowRatioMapCurrent: Map<number, number>;
+	lightsSequenceMapPrevious: Map<number, number[]>;
+	connectionsFlowRatioMapPrevious: Map<number, number>;
+	connectionsLightsMap: Map<number, TrafficLight[]>;
+	roadsLightsMap: Map<number, TrafficLight[]>;
+	lightsDirectionMap: Map<number, TrafficLightDirection>;
 };

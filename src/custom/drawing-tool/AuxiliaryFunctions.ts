@@ -1,5 +1,6 @@
 import { Connection, EEIPointType } from "../CrossroadInterface";
 import { ButtonColors, Colors } from "../../styles/MainStyles";
+import { ResponseConnection } from "../CrossRoadRestTypes";
 
 export const capitalizeFirstLetter = (str: string): string => {
 	const splits = str
@@ -52,4 +53,16 @@ export const getUserJWTToken = (): string => {
 		return JSON.parse(sessionData).jwtToken;
 	}
 	return "";
+};
+
+export const getConnectionNameFromIndex = (
+	connections: ResponseConnection[],
+	index: string,
+): string => {
+	for (const con of connections) {
+		if (parseInt(index) === con.index) {
+			return con.name;
+		}
+	}
+	return "Placeholder";
 };

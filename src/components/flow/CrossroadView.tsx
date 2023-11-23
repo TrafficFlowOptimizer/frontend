@@ -1,10 +1,6 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-	ExitEntrancePoint,
-	OptimizationResults,
-	TrafficLight,
-} from "../../custom/CrossroadInterface";
+import { ExitEntrancePoint, TrafficLight } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
 import { VideosList } from "./VideosList";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -89,6 +85,11 @@ export function CrossroadView() {
 				setTrafficLights(crossingsData.trafficLights);
 				setCollisions(crossingsData.collisions);
 				setCrossroadImage(crossingsData.image);
+
+				localStorage.setItem(
+					"currConnections",
+					JSON.stringify(crossingsData.connections),
+				);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -112,23 +113,14 @@ export function CrossroadView() {
 
 	const handleGoToResultsPanel = () => {
 		if (crossroad !== null) {
-			axios
-				.get<OptimizationResults>(
-					"/crossroad/" + crossroad.id + "/optimization/" + 1,
-				)
-				.then((response) => {
-					const optimizationData: OptimizationResults = response.data;
-					navigate("../../results-choice", {
-						state: {
-							results: optimizationData,
-							crossroadName: crossroad.name,
-							crossroadId: crossroad.id,
-						},
-					});
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+			navigate("../../results-choice", {
+				state: {
+					crossroadId: crossroad.id,
+					crossroadName: crossroad.name,
+					day: undefined,
+					hour: undefined,
+				},
+			});
 		} else {
 			alert("Error when loading the crossroad!");
 		}
