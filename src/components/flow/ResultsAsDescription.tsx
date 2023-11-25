@@ -27,12 +27,10 @@ export function ResultsAsDescription() {
 	const results: OptimizationResults = location.state.results ?? null;
 	const crossroadId = location.state.crossroadId ?? null;
 
-	const conFlowRatioPrev =
-		results.connectionsFlowRatioMapPrevious !== null
-			? Object.values(results.connectionsFlowRatioMapPrevious)
-			: null;
+	const conFlowRatioPrev = Object.values(results.connectionsFlowRatioMapPrevious);
 	const conFlowRatioCurr = Object.values(results.connectionsFlowRatioMapCurrent);
-	const lightsSeq: number[][] = Object.values(results.lightsSequenceMapCurrent);
+	const lightsSeqPrev = Object.values(results.lightsSequenceMapPrevious);
+	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
 	const conLights: TrafficLight[][] = Object.values(results.connectionsLightsMap);
 
 	const connectionsIndexes = Array.from(
@@ -52,7 +50,7 @@ export function ResultsAsDescription() {
 		}
 	};
 
-	const getLightSequence = (lightIdx: number) => {
+	const getLightSequence = (lightIdx: number, lightsSeq: number[][]) => {
 		const newIdx = lightIdx - 1;
 		if (newIdx >= 0 && newIdx < lightsSeq.length) {
 			return lightsSeq[newIdx];
@@ -97,8 +95,8 @@ export function ResultsAsDescription() {
 									</CustomHeader>
 									{/* prettier-ignore */}
 									<CustomParagraph topMargin={15}>
-										{conFlowRatioPrev ===
-										null
+										{conFlowRatioPrev.length ===
+										0
 											? "No previous results"
 											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
 									</CustomParagraph>
@@ -136,18 +134,45 @@ export function ResultsAsDescription() {
 											</SingleInfoPanel>
 											<SingleInfoPanel>
 												<SequenceContainer>
-													{getLightSequence(light.index).map(
-														(elem, index) => (
-															<StyledSequence
-																key={index}
-																isGreen={elem === 1}
-															>
-																<SequenceIndex>
-																	{index + 1}
-																</SequenceIndex>
-															</StyledSequence>
-														),
-													)}
+													{getLightSequence(
+														light.index,
+														lightsSeqCurr,
+													).map((elem, index) => (
+														<StyledSequence
+															key={index}
+															isGreen={elem === 1}
+														>
+															<SequenceIndex>
+																{index + 1}
+															</SequenceIndex>
+														</StyledSequence>
+													))}
+												</SequenceContainer>
+											</SingleInfoPanel>
+											<CustomHeader topMargin={5} leftMargin={5}>
+												Previous light sequence:
+											</CustomHeader>
+											<SingleInfoPanel>
+												<SequenceContainer>
+													{
+														/* prettier-ignore */
+														lightsSeqPrev.length ===
+														0
+															? "No previous results"
+															: getLightSequence(
+																light.index,
+																lightsSeqPrev,
+														  ).map((elem, index) => (
+																<StyledSequence
+																	key={index}
+																	isGreen={elem === 1}
+																>
+																	<SequenceIndex>
+																		{index + 1}
+																	</SequenceIndex>
+																</StyledSequence>
+														  ))
+													}
 												</SequenceContainer>
 											</SingleInfoPanel>
 										</LightResultsPanel>
