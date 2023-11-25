@@ -29,7 +29,7 @@ export function ResultsAsDescription() {
 
 	const conFlowRatioPrev = Object.values(results.connectionsFlowRatioMapPrevious);
 	const conFlowRatioCurr = Object.values(results.connectionsFlowRatioMapCurrent);
-	const lightsSeqPrev = Object.values(results.lightsSequenceMapPrevious);
+	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
 	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
 	const conLights: TrafficLight[][] = Object.values(results.connectionsLightsMap);
 
