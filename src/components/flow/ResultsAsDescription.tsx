@@ -32,6 +32,7 @@ export function ResultsAsDescription() {
 	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
 	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
 	const conLights: TrafficLight[][] = Object.values(results.connectionsLightsMap);
+	const conFlow = Object.values(results.connectionsFlowMap);
 
 	const connectionsIndexes = Array.from(
 		Object.keys(results.connectionsFlowRatioMapCurrent),
@@ -99,6 +100,12 @@ export function ResultsAsDescription() {
 										0
 											? "No previous results"
 											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
+									</CustomParagraph>
+									<CustomHeader topMargin={15} leftMargin={0}>
+										Expected car flow:
+									</CustomHeader>
+									<CustomParagraph topMargin={15}>
+										{conFlow[parseInt(connectionIndex) - 1]}
 									</CustomParagraph>
 								</NumericResultsPanel>
 								{getConnectionLight(connectionIndex).length > 0 ? (
