@@ -12,6 +12,13 @@ export enum ButtonColors {
 	HOVER_GREEN = "#15853a",
 }
 
+export enum LightColors {
+	RED = "#ff0000",
+	YELLOW = "#ffff00",
+	GREEN = "#00ff00",
+	BLACK = "#000000",
+}
+
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
 	PRIMARY_BLACK = "#191516",
@@ -68,7 +75,7 @@ export const BaseButton = styled.button`
 		cursor: pointer;
 		z-index: 10;
 	}
-	
+
 	&:disabled {
 		background-color: ${LightTheme.secondary};
 		cursor: not-allowed;
@@ -124,17 +131,22 @@ export const ContainerDiv = styled.div`
 	background-color: ${(props) => props.theme.primary};
 	width: 100%;
 	height: fit-content;
-	
+
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
-	
+
 	justify-content: space-evenly;
 	align-items: center;
-	
+
 	padding: 15px;
 `;
 
+export const SimulationNumbers = styled.h4`
+	-webkit-text-stroke: 1px black; /* width and color */
+	line-height: 0.5;
+	color: white;
+`;
 
 export const BaseInput = styled.input`
 	padding: 5px;
@@ -142,10 +154,10 @@ export const BaseInput = styled.input`
 	border: 1px solid ${(props) => props.theme.text};
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
-	
+
 	&:disabled {
-	background-color: ${(props) => props.theme.secondary};
-	cursor: not-allowed;
+		background-color: ${(props) => props.theme.secondary};
+		cursor: not-allowed;
 	}
 `;
 

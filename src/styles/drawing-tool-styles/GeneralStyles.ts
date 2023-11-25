@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { BaseButton, ButtonColors, Colors, InputInformationMessage } from "../MainStyles";
+import { BaseButton, ButtonColors, Colors, InputInformationMessage, LightColors } from "../MainStyles";
 import Tooltip from "@mui/material/Tooltip";
 import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
@@ -33,7 +33,7 @@ export const AdaptedInputInformationMessage = styled(InputInformationMessage)`
 `;
 
 export type EEIPointProps = {
-	color: ButtonColors | Colors;
+	color: ButtonColors | Colors | LightColors;
 	xCord: number;
 	yCord: number;
 }
@@ -43,12 +43,12 @@ export const EEIPointMarker = styled.div<EEIPointProps>`
 	height: 15px;
 	border: 1px solid black;
 	border-radius: 50%;
-	
+
 	z-index: 4;
 	position: absolute;
 	top: ${(props: EEIPointProps) => props.yCord}px;
 	left: ${(props: EEIPointProps) => props.xCord}px;
-	
+
 	background-color: ${(props: EEIPointProps) => props.color};
 `;
 
@@ -78,27 +78,27 @@ export type ConnectionLineProps = {
 
 export const ConnectionLine = styled.div<ConnectionLineProps>`
 	x-index: 3;
-	padding: 0px; 
-	margin: 0px; 
-	height: ${(props:ConnectionLineProps) => props.thickness}px; 
+	padding: 0px;
+	margin: 0px;
+	height: ${(props:ConnectionLineProps) => props.thickness}px;
 	background-color: ${(props) => props.color};
 	border: 1px solid ${Colors.PRIMARY_BLACK};
-	line-height: 1px; 
-	position: absolute; 
-	left: ${(props:ConnectionLineProps) => props.centerX + EEIPointOffset}px; 
+	line-height: 1px;
+	position: absolute;
+	left: ${(props:ConnectionLineProps) => props.centerX + EEIPointOffset}px;
 	top: ${(props:ConnectionLineProps) => props.centerY + EEIPointOffset}px;
 	width: ${(props:ConnectionLineProps) => props.length}px;
 	-moz-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 	-webkit-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 	-o-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
-	-ms-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg); 
+	-ms-transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 	transform:rotate(${(props:ConnectionLineProps) => props.angle}deg);
 `;
 
 export const InstructionP = styled.p`
 	margin: 20px;
 	text-align: left;
-	
+
 	width: 70%;
 	height: fit-content;
 `;

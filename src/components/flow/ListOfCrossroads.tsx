@@ -10,10 +10,10 @@ import {
 } from "../../styles/NeutralButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
-	StyledTableHeader,
-	StyledTable,
-	StyledItemTr,
 	StyledItemTd,
+	StyledItemTr,
+	StyledTable,
+	StyledTableHeader,
 } from "../../styles/CrossroadListStyles";
 import { useUserContext } from "../../custom/UserContext";
 
@@ -41,6 +41,15 @@ export function ListOfCrossroads() {
 				});
 		}
 	}, []); //using useEffect here is deprecated
+
+	// useEffect(() => {
+	// 	const tmpCrossroad: Crossroad = JSON.parse(localStorage.getItem("crossroad")!);
+	// 	if (tmpCrossroad != null) {
+	// 		setListOfCrossroads([tmpCrossroad]);
+	// 	} else {
+	// 		setListOfCrossroads([CROSSROAD_MODEL_TEMPLATE]);
+	// 	}
+	// }, []);
 
 	const handleChooseButton = (
 		crossroad_id: string,
