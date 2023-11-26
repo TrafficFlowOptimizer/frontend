@@ -216,7 +216,7 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 						<PositiveButton
 							onClick={startOptimization}
 							disabled={
-								chosenTime === undefined ||
+								chosenTime === -2 ||
 								chosenDay === undefined ||
 								chosenHour === undefined
 							}

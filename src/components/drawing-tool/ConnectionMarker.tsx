@@ -28,6 +28,7 @@ export type ConnectionCoordinates = {
 	withTooltip: boolean;
 	buttonSettings?: ButtonSettings;
 	eeiPointsIndexes?: number[];
+	lightsIndexes?: string[];
 };
 
 export type ButtonSettings = {
@@ -48,6 +49,11 @@ export function ConnectionMarker(props: ConnectionCoordinates) {
 	const angle =
 		Math.atan2(props.entranceY - props.exitY, props.entranceX - props.exitX) *
 		(180 / Math.PI);
+
+	let joinedTrafficLightsIds = "None";
+	if (props.connection.trafficLightIds.length > 0) {
+		joinedTrafficLightsIds = props.connection.trafficLightIds.join(", ");
+	}
 
 	const connectionLine = (
 		<ConnectionLine
@@ -95,9 +101,9 @@ export function ConnectionMarker(props: ConnectionCoordinates) {
 							{props.withLightIds && (
 								<BaseLi>
 									lightsIDs:{" "}
-									{props.connection.trafficLightIds.length > 0
-										? props.connection.trafficLightIds.join(", ")
-										: "None"}
+									{props.lightsIndexes !== undefined
+										? props.lightsIndexes.join(", ")
+										: joinedTrafficLightsIds}
 								</BaseLi>
 							)}
 						</BaseUl>

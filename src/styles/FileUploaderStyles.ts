@@ -77,9 +77,8 @@ export const UploaderLabel = styled.label<LabelProps>`
 
 
 export const AddVideosDiv = styled.div`
-	width: 100%;
+	width: calc(100% - 20px);
 	height: 70%;
-	padding: 0px 30px;
 	display: flex;
 	flex-direction: column;
 	justify-content: space-between;

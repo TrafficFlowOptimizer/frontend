@@ -24,26 +24,19 @@ export function ResultsChoicePanel() {
 	const { loggedUser } = useUserContext();
 	const location = useLocation();
 	const navigate = useNavigate();
-	const crossroadId = location.state.crossroadId ?? undefined;
-	const crossroadName = location.state.crossroadName ?? undefined;
-	const initialHour = location.state.hour ?? undefined;
-	const initialDay = location.state.day ?? undefined;
+	const crossroadId: string = location.state.crossroadId ?? undefined;
+	const crossroadName: string = location.state.crossroadName ?? undefined;
+	const initialHour: Hour = location.state.hour ?? undefined;
+	const initialDay: Day = location.state.day ?? undefined;
 	const [chosenHour, setChosenHour] = useState<Hour | undefined>(initialHour);
 	const [chosenDay, setChosenDay] = useState<Day | undefined>(initialDay);
 
 	const [showWaitingModal, setShowWaitingModal] = useState(false);
-	const [whereToNav, setWhereToNav] = useState("");
 
 	const [showFailureAlert, setShowFailureAlert] = useState(false);
 	const [failureMessage, setFailureMessage] = useState("");
 
 	const handleResultsChoice = (type: "descriptive" | "simulation") => {
-		if (type === "descriptive") {
-			setWhereToNav("../results-descriptive");
-		} else {
-			setWhereToNav("../results-simulation");
-		}
-
 		setShowWaitingModal(true);
 
 		axios
@@ -60,18 +53,31 @@ export function ResultsChoicePanel() {
 			})
 			.then((response) => {
 				const results: OptimizationResults = response.data;
-				navigate(whereToNav, {
-					state: {
-						crossroadId: crossroadId,
-						crossroadName: crossroadName,
-						results: { ...results },
-					},
-				});
+				if (type === "descriptive") {
+					navigate("../results-descriptive", {
+						state: {
+							crossroadId: crossroadId,
+							crossroadName: crossroadName,
+							results: { ...results },
+						},
+					});
+				} else {
+					navigate("../results-simulation", {
+						state: {
+							crossroadId: crossroadId,
+							crossroadName: crossroadName,
+							results: { ...results },
+						},
+					});
+				}
 			})
 			.catch((error) => {
-				console.error(error);
 				setShowWaitingModal(false);
-				setFailureMessage(`Error ${error.code}`);
+				if (error.response.status === 404) {
+					setFailureMessage("No optimization ready for chosen date!");
+				} else {
+					setFailureMessage(`Error ${error.code}`);
+				}
 				setShowFailureAlert(true);
 			});
 	};
@@ -82,7 +88,10 @@ export function ResultsChoicePanel() {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showFailureAlert}
-				autoHideDuration={1000}
+				autoHideDuration={5000}
+				onClose={() => {
+					setShowFailureAlert(false);
+				}}
 			>
 				<Alert variant="filled" severity="error">
 					<strong>{failureMessage}</strong>
@@ -92,7 +101,7 @@ export function ResultsChoicePanel() {
 				<>
 					<WaitingPopUp
 						textToDisplay={"Obtaining optimization results..."}
-						waitingTime={2}
+						waitingTime={1.5}
 						onClose={() => {
 							setShowWaitingModal(false);
 						}}

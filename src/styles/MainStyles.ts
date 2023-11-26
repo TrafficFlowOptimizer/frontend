@@ -15,6 +15,7 @@ export enum ButtonColors {
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
 	PRIMARY_BLACK = "#191516",
+	PRIMARY_GRAY = "#8b8b8c",
 	PURPLE = "#8342FB",
 	BRIGHT_RED = "#FF1700",
 	ORANGY_RED = "#eb5834",
@@ -122,17 +123,19 @@ export const BaseDiv = styled.div`
 
 export const ContainerDiv = styled.div`
 	background-color: ${(props) => props.theme.primary};
-	width: 100%;
+	width: calc(100vw - 20px);
 	height: fit-content;
+	
+	position: relative;
+	left: 10px;
 	
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
 	
-	justify-content: space-evenly;
+	justify-content: flex-start;
+	gap: 3vh;
 	align-items: center;
-	
-	padding: 15px;
 `;
 
 
@@ -146,6 +149,8 @@ export const BaseInput = styled.input`
 	&:disabled {
 	background-color: ${(props) => props.theme.secondary};
 	cursor: not-allowed;
+	border: 1px solid ${Colors.PRIMARY_GRAY};
+	color: ${Colors.PRIMARY_GRAY};
 	}
 `;
 
