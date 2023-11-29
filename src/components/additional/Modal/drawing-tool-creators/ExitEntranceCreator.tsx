@@ -29,6 +29,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 	const [point, setPoint] = useState(props.point);
 	const [isInputValid, setInputValidity] = useState(false);
 	const [dataMessage, setDataMessage] = useState("");
+	const [currentPointType, setCurrentPointType] = useState<EEIPointType>("ENTRANCE");
 
 	const onConfirm = (event: React.SyntheticEvent) => {
 		event.preventDefault();
@@ -50,10 +51,15 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 			setInputValidity(false);
 			setDataMessage(BASIC_INFORMATION_ERROR_MESSAGES.invalid_capacity);
 		} else {
+			let finalCapacity = -1;
+			if (currentPointType === "INTERMEDIATE") {
+				finalCapacity =
+					target.capacity.value === "infinity" ? -1 : parsedCapacity;
+			}
 			setPoint({
 				...point,
 				name: target.name.value,
-				capacity: target.capacity.value === "infinity" ? -1 : parsedCapacity,
+				capacity: finalCapacity,
 			});
 			setInputValidity(true);
 			setDataMessage("Inputs confirmed!");
@@ -71,6 +77,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 			...point,
 			type: event.target.value as EEIPointType,
 		});
+		setCurrentPointType(event.target.value as EEIPointType);
 	};
 
 	const getPointType = () => {
@@ -118,6 +125,7 @@ export function ExitEntranceCreator(props: ExitEntranceCreatorProps) {
 						<BaseInput
 							id="capacity"
 							type="text"
+							disabled={currentPointType != "INTERMEDIATE"}
 							defaultValue={
 								point.capacity === -1
 									? "infinity"

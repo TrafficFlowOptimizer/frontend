@@ -89,12 +89,13 @@ export function Register() {
 					}
 				})
 				.catch((error) => {
-					if (error.code === "ERR_BAD_REQUEST") {
-						setBadRegisterMessage("Invalid register data!");
+					if (error.response.status === 409) {
+						setBadRegisterMessage("Email or username already in use!");
 					} else {
-						setBadRegisterMessage("Request failed!");
+						setBadRegisterMessage(
+							`Request failed with code ${error.response.status}`,
+						);
 					}
-					console.error(error);
 				});
 		}
 	};

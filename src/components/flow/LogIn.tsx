@@ -125,8 +125,11 @@ export function LogIn() {
 				navigate("/crossroad-list");
 			})
 			.catch((error) => {
-				setBadLoginMessage("Invalid email/username or password!");
-				console.error(error);
+				if (error.response.status === 404) {
+					setBadLoginMessage("User doesn't exist! Sign up!");
+				} else {
+					setBadLoginMessage("Invalid email/username or password!");
+				}
 			});
 	};
 	return (

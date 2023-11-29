@@ -23,9 +23,9 @@ import { TrafficLight } from "../../custom/CrossroadInterface";
 export function ResultsAsDescription() {
 	const location = useLocation();
 
-	const crossroadName = location.state.crossroadName ?? null;
+	const crossroadName: string = location.state.crossroadName ?? null;
 	const results: OptimizationResults = location.state.results ?? null;
-	const crossroadId = location.state.crossroadId ?? null;
+	const crossroadId: string = location.state.crossroadId ?? null;
 
 	const conFlowRatioPrev = Object.values(results.connectionsFlowRatioMapPrevious);
 	const conFlowRatioCurr = Object.values(results.connectionsFlowRatioMapCurrent);
@@ -197,7 +197,10 @@ export function ResultsAsDescription() {
 					<BaseButtonLink
 						to="../results-choice"
 						relative="path"
-						state={{ state: { crossroadId: crossroadId } }}
+						state={{
+							crossroadId: crossroadId,
+							crossroadName: crossroadName,
+						}}
 					>
 						Go back to results choice panel
 					</BaseButtonLink>

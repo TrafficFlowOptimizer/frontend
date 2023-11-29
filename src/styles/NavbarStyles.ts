@@ -2,7 +2,7 @@ import styled from "styled-components";
 
 export const NavbarContainer = styled.div`
 	position: sticky;
-	top: 1vh;
+	top: 0vh;
 	z-index: 5;
 	background-color: ${(props) => props.theme.secondary};
 	display: flex;
@@ -11,12 +11,14 @@ export const NavbarContainer = styled.div`
 	justify-content: space-between;
 	align-items: center;
 	gap: 2vw;
-	padding: 1vh 0.5vw;
-	margin: 1vh 1vw;
-	border-radius: 15px;
-	border: solid ${(props) => props.theme.text} 1px;
+	padding: 0vh 20px;
+	padding-bottom: 1vh;
+	padding-top: 1.5vh;
+	margin-bottom: 1vh;
+	border-bottom: solid ${(props) => props.theme.text} 1px;
   max-height: 80px;  
-  width: 60%;
+  width: 100vw;
+  box-sizing: border-box;
 `;
 
 export const NavbarLogo = styled.img`
@@ -26,6 +28,8 @@ export const NavbarLogo = styled.img`
 `;
 
 export const InsideDiv = styled(NavbarContainer)`
+	width: fit-content;
+	height: auto;
 	border: none;
 	justify-content: center;
 `;

@@ -142,6 +142,16 @@ export function CrossroadView() {
 		return -1;
 	};
 
+	const mapLightIdsToIndexes = (connection: ResponseConnection) => {
+		const indexes: string[] = [];
+		for (const tl of trafficLights) {
+			if (connection.trafficLightIds.includes(tl.id)) {
+				indexes.push(tl.index.toString());
+			}
+		}
+		return indexes;
+	};
+
 	return (
 		<ContainerDiv>
 			<Navbar />
@@ -161,95 +171,98 @@ export function CrossroadView() {
 			{crossroad !== null ? (
 				<>
 					<PageHeader>{crossroad.name}</PageHeader>
-					<BorderedWorkaroundDiv>
-						{connections.length > 0 &&
-							connections.map((con) => {
-								const entrancePoint = exitEntrancePoints.filter(
-									(point) => point.id === con.sourceId,
-								)[0];
-								const exitPoint = exitEntrancePoints.filter(
-									(point) => point.id === con.targetId,
-								)[0];
+					{crossroadImage !== undefined && crossroadImage.length > 1024 ? (
+						<BorderedWorkaroundDiv>
+							{connections.length > 0 &&
+								connections.map((con) => {
+									const entrancePoint = exitEntrancePoints.filter(
+										(point) => point.id === con.sourceId,
+									)[0];
+									const exitPoint = exitEntrancePoints.filter(
+										(point) => point.id === con.targetId,
+									)[0];
 
-								return (
-									<ConnectionMarker
-										key={con.index}
-										thickness={3}
-										entranceX={entrancePoint.xCord}
-										entranceY={entrancePoint.yCord}
-										exitX={exitPoint.xCord}
-										exitY={exitPoint.yCord}
-										connection={con}
-										color={Colors.BRIGHT_RED}
-										withLightIds={true}
-										withTooltip={true}
-										eeiPointsIndexes={[
-											getElementsIndexBasedOnId(
-												entrancePoint.id,
-												exitEntrancePoints,
-											),
-											getElementsIndexBasedOnId(
-												exitPoint.id,
-												exitEntrancePoints,
-											),
-										]}
-									/>
-								);
-							})}
-						{exitEntrancePoints.length > 0 && (
-							<ThemeProvider theme={tooltipTheme}>
-								{exitEntrancePoints.map((point, idx) => {
 									return (
-										<Tooltip
-											key={point.index}
-											title={
-												<React.Fragment>
-													<BaseUl>
-														<BaseLi>
-															id: {point.index}
-														</BaseLi>
-														<BaseLi>
-															type: {point.type}
-														</BaseLi>
-														<BaseLi>
-															street: {point.name}
-														</BaseLi>
-														<BaseLi>
-															capacity:{" "}
-															{point.capacity === -1
-																? "infinity"
-																: point.capacity}
-														</BaseLi>
-													</BaseUl>
-												</React.Fragment>
-											}
-											TransitionComponent={Zoom}
-											enterDelay={TOOLTIP_ENTRANCE_DELAY}
-											leaveDelay={TOOLTIP_LEAVE_DELAY}
-											arrow
-										>
-											<EEIPointMarker
-												key={idx}
-												color={matchEEIPointTypeWithColor(
-													point.type,
-												)}
-												yCord={point.yCord}
-												xCord={point.xCord}
-											></EEIPointMarker>
-										</Tooltip>
+										<ConnectionMarker
+											key={con.index}
+											thickness={3}
+											entranceX={entrancePoint.xCord}
+											entranceY={entrancePoint.yCord}
+											exitX={exitPoint.xCord}
+											exitY={exitPoint.yCord}
+											connection={con}
+											color={Colors.BRIGHT_RED}
+											withLightIds={true}
+											withTooltip={true}
+											eeiPointsIndexes={[
+												getElementsIndexBasedOnId(
+													entrancePoint.id,
+													exitEntrancePoints,
+												),
+												getElementsIndexBasedOnId(
+													exitPoint.id,
+													exitEntrancePoints,
+												),
+											]}
+											lightsIndexes={mapLightIdsToIndexes(con)}
+										/>
 									);
 								})}
-							</ThemeProvider>
-						)}
-						<CrossroadScreenshot
-							src={
-								crossroadImage === undefined
-									? localStorage.getItem("crossroadMap")!
-									: crossroadImage
-							}
-							alt="Map screenshot"
-						></CrossroadScreenshot>
-					</BorderedWorkaroundDiv>
+							{exitEntrancePoints.length > 0 && (
+								<ThemeProvider theme={tooltipTheme}>
+									{exitEntrancePoints.map((point, idx) => {
+										return (
+											<Tooltip
+												key={point.index}
+												title={
+													<React.Fragment>
+														<BaseUl>
+															<BaseLi>
+																id: {point.index}
+															</BaseLi>
+															<BaseLi>
+																type: {point.type}
+															</BaseLi>
+															<BaseLi>
+																street: {point.name}
+															</BaseLi>
+															<BaseLi>
+																capacity:{" "}
+																{point.capacity === -1
+																	? "infinity"
+																	: point.capacity}
+															</BaseLi>
+														</BaseUl>
+													</React.Fragment>
+												}
+												TransitionComponent={Zoom}
+												enterDelay={TOOLTIP_ENTRANCE_DELAY}
+												leaveDelay={TOOLTIP_LEAVE_DELAY}
+												arrow
+											>
+												<EEIPointMarker
+													key={idx}
+													color={matchEEIPointTypeWithColor(
+														point.type,
+													)}
+													yCord={point.yCord}
+													xCord={point.xCord}
+												></EEIPointMarker>
+											</Tooltip>
+										);
+									})}
+								</ThemeProvider>
+							)}
+							<CrossroadScreenshot
+								src={crossroadImage}
+								alt="Map screenshot"
+							></CrossroadScreenshot>
+						</BorderedWorkaroundDiv>
+					) : (
+						<HorizontalDiv>
+							<p>Failed to load crossroad image</p>
+						</HorizontalDiv>
+					)}
 					<HorizontalDiv>
 						{trafficLights.length > 0 ? (
 							<ScrollableUl height={40}>
