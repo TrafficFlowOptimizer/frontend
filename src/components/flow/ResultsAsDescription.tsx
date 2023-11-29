@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, PageHeader } from "../../styles/MainStyles";
+import { BaseButtonLink, ContainerDiv, PageHeader } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	NumericResultsUl,
@@ -102,7 +102,7 @@ export function ResultsAsDescription() {
 											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
 									</CustomParagraph>
 									<CustomHeader topMargin={15} leftMargin={0}>
-										Expected car flow:
+										Cars per minute:
 									</CustomHeader>
 									<CustomParagraph topMargin={15}>
 										{conFlow[parseInt(connectionIndex) - 1]}
