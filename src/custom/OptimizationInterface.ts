@@ -58,4 +58,7 @@ export type OptimizationResults = {
 	roadsLightsMap: Map<number, TrafficLight[]>;
 	lightsDirectionMap: Map<number, TrafficLightDirection>;
 	connectionsFlowMap: Map<number, number>;
+	connectionsRoadMap: Map<number, number>;
+	roadsFlowMap: Map<number, number>;
+	connectionChanceToPickMap: Map<number, number>;
 };
