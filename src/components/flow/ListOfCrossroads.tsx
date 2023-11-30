@@ -42,15 +42,6 @@ export function ListOfCrossroads() {
 		}
 	}, []); //using useEffect here is deprecated
 
-	// useEffect(() => {
-	// 	const tmpCrossroad: Crossroad = JSON.parse(localStorage.getItem("crossroad")!);
-	// 	if (tmpCrossroad != null) {
-	// 		setListOfCrossroads([tmpCrossroad]);
-	// 	} else {
-	// 		setListOfCrossroads([CROSSROAD_MODEL_TEMPLATE]);
-	// 	}
-	// }, []);
-
 	const handleChooseButton = (
 		crossroad_id: string,
 		current_state: tableCrossroadState,

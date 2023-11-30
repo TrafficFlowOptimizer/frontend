@@ -5,17 +5,17 @@ import { Navbar } from "../additional/Navbar";
 import { BaseButtonLink, ContainerDiv, PageHeader } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
-	NumericResultsUl,
+	ResultsUl,
 	CustomHeader,
 	CustomParagraph,
-	NumericResultsLi,
-	NumericResultsPanel,
+	ResultsLi,
+	ResultsPanel,
 	StyledSequence,
 	SequenceContainer,
 	SequenceIndex,
 	LightResultsPanel,
 	SingleInfoPanel,
-} from "../../styles/NumericResultsStyles";
+} from "../../styles/ResultsStyles";
 import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
 import { getConnectionNameFromIndex } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { TrafficLight } from "../../custom/CrossroadInterface";
@@ -67,11 +67,11 @@ export function ResultsAsDescription() {
 				<PageHeader>
 					Results as descriptive data for: {crossroadName}
 				</PageHeader>
-				<NumericResultsUl>
+				<ResultsUl>
 					{connectionsIndexes.length > 0 ? (
 						connectionsIndexes.map((connectionIndex, index) => (
-							<NumericResultsLi key={`Visualization#${index}`}>
-								<NumericResultsPanel>
+							<ResultsLi key={`Visualization#${index}`}>
+								<ResultsPanel>
 									<CustomHeader topMargin={15} leftMargin={0}>
 										Connection:
 									</CustomHeader>
@@ -107,7 +107,7 @@ export function ResultsAsDescription() {
 									<CustomParagraph topMargin={15}>
 										{conFlow[parseInt(connectionIndex) - 1]}
 									</CustomParagraph>
-								</NumericResultsPanel>
+								</ResultsPanel>
 								{getConnectionLight(connectionIndex).length > 0 ? (
 									getConnectionLight(connectionIndex).map((light) => (
 										<LightResultsPanel
@@ -187,12 +187,12 @@ export function ResultsAsDescription() {
 								) : (
 									<li>Lights are empty</li>
 								)}
-							</NumericResultsLi>
+							</ResultsLi>
 						))
 					) : (
 						<li>Results are empty</li>
 					)}
-				</NumericResultsUl>
+				</ResultsUl>
 				<NeutralNegativeButton>
 					<BaseButtonLink
 						to="../results-choice"

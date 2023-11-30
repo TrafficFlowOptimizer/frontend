@@ -37,14 +37,14 @@ import {
 	CustomHeader,
 	CustomParagraph,
 	LightResultsPanel,
-	SimulationResultsLi,
-	SimulationResultsPanel,
-	SimulationResultsUl,
+	ResultsLi,
+	ResultsPanel,
+	ResultsUl,
 	SequenceContainer,
 	SequenceIndex,
 	SingleInfoPanel,
 	StyledSequence,
-} from "../../styles/SimulationResultsStyles";
+} from "../../styles/ResultsStyles";
 import {
 	getConnectionNameFromIndex,
 	getUserJWTToken,
@@ -68,8 +68,6 @@ import { useUserContext } from "../../custom/UserContext";
 import userEvent from "@testing-library/user-event";
 import { randomInt } from "crypto";
 
-export type pauseButtonState = "paused" | "running";
-
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
 	const location = useLocation();
@@ -78,16 +76,6 @@ export function ResultsAsSimulation() {
 	const results: OptimizationResults = location.state.results ?? null;
 	const crossroadId = location.state.crossroadId;
 	const carFlows: number[] = location.state.car;
-
-	function convertObjectToMap(obj: any): Map<number, any> {
-		const resultMap = new Map<number, any>();
-		for (const key in obj) {
-			if (Object.prototype.hasOwnProperty.call(obj, key)) {
-				resultMap.set(Number(key), obj[key]);
-			}
-		}
-		return resultMap;
-	}
 
 	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
 	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
@@ -116,6 +104,16 @@ export function ResultsAsSimulation() {
 	const [showFailureAlert, setShowFailureAlert] = useState(false);
 	const [failureMessage, setFailureMessage] = useState("");
 
+	const [running, setRunning] = useState(false);
+
+	const [timer, setTimer] = useState(0);
+	const timeInterval = 60;
+	const timeDelta = 50;
+	const lightColors = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
+
+	const [lights, setLights] = useState(new Map());
+	const [cars, setCars] = useState(new Map());
+
 	useEffect(() => {
 		axios
 			.get<CrossroadDescriptionResponse>(`/crossroad/${crossroadId}`, {
@@ -133,6 +131,15 @@ export function ResultsAsSimulation() {
 				setTrafficLights(crossingsData.trafficLights);
 				setCollisions(crossingsData.collisions);
 				setCrossroadImage(crossingsData.image);
+				setLights(
+					new Map(
+						crossingsData.trafficLights.map((trafficLight) => [
+							trafficLight.index,
+							LightColors.YELLOW,
+						]),
+					),
+				);
+				setCars(new Map(crossingsData.roads.map((road) => [road.index, 0])));
 			})
 			.catch((error) => {
 				console.error(error);
@@ -142,92 +149,6 @@ export function ResultsAsSimulation() {
 				setShowFailureAlert(true);
 			});
 	}, []);
-
-	const getLightSequence = (lightIdx: number, lightsSeq: number[][]) => {
-		const newIdx = lightIdx - 1;
-		if (newIdx >= 0 && newIdx < lightsSeq.length) {
-			return lightsSeq[newIdx];
-		} else {
-			return [];
-		}
-	};
-
-	const [running, setRunning] = useState(false);
-
-	const [timer, setTimer] = useState(0);
-	const timeInterval = 60;
-	const timeDelta = 200;
-	const lightColors = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
-	const [lights, setLights] = useState<Map<number, LightColors>>(
-		new Map([
-			[1, LightColors.YELLOW],
-			[2, LightColors.YELLOW],
-			[3, LightColors.YELLOW],
-			[4, LightColors.YELLOW],
-		]),
-	);
-
-	const [cars, setCars] = useState<Map<number, number>>(
-		new Map([
-			[1, 0],
-			[2, 0],
-		]),
-	);
-
-	function howManyCarsArrived(flow: number) {
-		let n = 0;
-		while (flow > 0 && Math.random() < flow) {
-			n += 1;
-		}
-		return n;
-	}
-
-	function getConnectionsIdsForRoadIdx(index: number) {
-		// console.log("conRoad", conRoad);
-		const connections: number[] = [];
-		conRoad.forEach(function (value, key) {
-			if (value == index) {
-				connections.push(key);
-			}
-		});
-		return connections;
-	}
-
-	function getWhichConnectionToGo(connectionsIds: number[]) {
-		let chanceFloor = 0;
-		let chanceCeil = 0;
-		const randomNumber = Math.random();
-		let chosenConnection = 0;
-		// console.log("connectionsIds", connectionsIds);
-		// console.log("randomNumber", randomNumber);
-		// console.log("conChances", conChances);
-
-		for (const c of connectionsIds) {
-			chanceCeil += conChances.get(c)!;
-			if (chanceFloor < randomNumber && randomNumber <= chanceCeil) {
-				chosenConnection = c;
-				break;
-			}
-			chanceFloor += conChances.get(c)!;
-		}
-		return chosenConnection;
-	}
-
-	function isConnectionOpen(connection: number) {
-		const connectionLights = conLights.get(connection)!;
-		// console.log("conLights", conLights);
-		// console.log("connectionLights", connectionLights);
-		// console.log("connection", connection);
-		// console.log("lights", lights);
-		let open = false;
-		for (let i = 0; i < connectionLights.length; i++) {
-			if (lights.get(connectionLights[i].index)! == LightColors.GREEN) {
-				open = true;
-			}
-		}
-		// console.log("open", open);
-		return open;
-	}
 
 	useEffect(() => {
 		if (running) {
@@ -272,10 +193,6 @@ export function ResultsAsSimulation() {
 					}
 				}
 
-				// console.log(lights);
-				// console.log(cars);
-				// console.log(joinedCars);
-				// console.log(leftCars);
 				const newCars: Map<number, number> = new Map<number, number>();
 				for (const exitEntrancePoint of exitEntrancePoints) {
 					newCars.set(
@@ -293,6 +210,62 @@ export function ResultsAsSimulation() {
 			return () => clearInterval(lightsTimer);
 		}
 	}, [running, timer]);
+
+	function convertObjectToMap(obj: any): Map<number, any> {
+		const resultMap = new Map<number, any>();
+		for (const key in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, key)) {
+				resultMap.set(Number(key), obj[key]);
+			}
+		}
+		return resultMap;
+	}
+
+	function howManyCarsArrived(flow: number) {
+		let n = 0;
+		while (flow > 0 && Math.random() < flow) {
+			n += 1;
+		}
+		return n;
+	}
+
+	function getConnectionsIdsForRoadIdx(index: number) {
+		const connections: number[] = [];
+		conRoad.forEach(function (value, key) {
+			if (value == index) {
+				connections.push(key);
+			}
+		});
+		return connections;
+	}
+
+	function getWhichConnectionToGo(connectionsIds: number[]) {
+		let chanceFloor = 0;
+		let chanceCeil = 0;
+		const randomNumber = Math.random();
+		let chosenConnection = 0;
+
+		for (const c of connectionsIds) {
+			chanceCeil += conChances.get(c)!;
+			if (chanceFloor < randomNumber && randomNumber <= chanceCeil) {
+				chosenConnection = c;
+				break;
+			}
+			chanceFloor += conChances.get(c)!;
+		}
+		return chosenConnection;
+	}
+
+	function isConnectionOpen(connection: number) {
+		const connectionLights = conLights.get(connection)!;
+		let open = false;
+		for (let i = 0; i < connectionLights.length; i++) {
+			if (lights.get(connectionLights[i].index)! == LightColors.GREEN) {
+				open = true;
+			}
+		}
+		return open;
+	}
 
 	const ShowLight = (
 		usedLights: TrafficLight[],
@@ -355,15 +328,6 @@ export function ResultsAsSimulation() {
 		return result;
 	};
 
-	const handleChooseButton = (current_state: pauseButtonState) => {
-		console.log(current_state, running);
-		if (current_state === "paused") {
-			setRunning(false);
-		} else {
-			setRunning(true);
-		}
-	};
-
 	return (
 		<ContainerDiv>
 			<Navbar />
@@ -387,7 +351,7 @@ export function ResultsAsSimulation() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
-								color={Colors.BRIGHT_RED}
+								color={Colors.PRIMARY_GRAY}
 								withLightIds={true}
 								withTooltip={false}
 							/>
@@ -397,9 +361,6 @@ export function ResultsAsSimulation() {
 					<ThemeProvider theme={tooltipTheme}>
 						{exitEntrancePoints.map((point, idx) => {
 							const usedLights = roadsLights.get(point.index)!;
-							// console.log(usedLights);
-							// const usedLights = [null, null];
-							// console.log("for point\n", point, "\nlights\n", usedLights);
 							return ShowLight(
 								usedLights,
 								lightsSeqCurr,
@@ -418,13 +379,13 @@ export function ResultsAsSimulation() {
 				<StyledItemTd>
 					{!running ? (
 						<NeutralNegativeButton
-							onClick={() => handleChooseButton("running")}
+							onClick={() => setRunning((prev) => !prev)}
 						>
 							Resume
 						</NeutralNegativeButton>
 					) : (
 						<NeutralPositiveButton
-							onClick={() => handleChooseButton("paused")}
+							onClick={() => setRunning((prev) => !prev)}
 						>
 							Pause
 						</NeutralPositiveButton>
