@@ -259,12 +259,14 @@ export function Connections() {
 											<BaseLi>id: {point.index}</BaseLi>
 											<BaseLi>type: {point.type}</BaseLi>
 											<BaseLi>street: {point.name}</BaseLi>
-											<BaseLi>
-												capacity:{" "}
-												{point.capacity === -1
-													? "infinity"
-													: point.capacity}
-											</BaseLi>
+											{point.type === "INTERMEDIATE" && (
+												<BaseLi>
+													capacity:{" "}
+													{point.capacity === -1
+														? "infinity"
+														: point.capacity}
+												</BaseLi>
+											)}
 										</BaseUl>
 										<ButtonsDiv>
 											{chosenPoint1 === point.index && (

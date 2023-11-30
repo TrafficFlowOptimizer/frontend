@@ -125,10 +125,20 @@ export function LogIn() {
 				navigate("/crossroad-list");
 			})
 			.catch((error) => {
-				if (error.response.status === 404) {
+				// prettier-ignore
+				switch (error.response.status) {
+				case 404: {
 					setBadLoginMessage("User doesn't exist! Sign up!");
-				} else {
+					break;
+				}
+				case 500: {
+					setBadLoginMessage("Server inactive!");
+					break;
+				}
+				default: {
 					setBadLoginMessage("Invalid email/username or password!");
+					break;
+				}
 				}
 			});
 	};

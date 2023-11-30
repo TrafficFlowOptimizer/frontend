@@ -1,11 +1,13 @@
 import React from "react";
 import { NegativeButton } from "../../styles/NegativeButton";
-import { BaseButtonLink } from "../../styles/MainStyles";
+import { useNavigate } from "react-router-dom";
 
 export function LogOut() {
-	return (
-		<NegativeButton>
-			<BaseButtonLink to="/">Log out</BaseButtonLink>
-		</NegativeButton>
-	);
+	const navigate = useNavigate();
+
+	const onLogOut = () => {
+		sessionStorage.removeItem("loggedUser");
+		navigate("/");
+	};
+	return <NegativeButton onClick={onLogOut}>Log out</NegativeButton>;
 }

@@ -44,7 +44,7 @@ export const EEIPointMarker = styled.div<EEIPointProps>`
 	border: 1px solid black;
 	border-radius: 50%;
 	
-	z-index: 4;
+	z-index: 1;
 	position: absolute;
 	top: ${(props: EEIPointProps) => props.yCord}px;
 	left: ${(props: EEIPointProps) => props.xCord}px;

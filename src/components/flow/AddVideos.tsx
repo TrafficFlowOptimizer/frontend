@@ -23,7 +23,7 @@ export function AddVideos() {
 			It's on you to provide the recording with the correct angle and right
 			illumination.
 			<br />
-			The best angle is from the sight and slightly above the cars.
+			The best angle is from the side and slightly above the cars.
 			<br />
 			Thank you for your consideration!
 		</CenteredInstructionP>
@@ -37,15 +37,15 @@ export function AddVideos() {
 				{videoQualityMessage}
 				<FileUploader crossroadId={crossroad.id} connections={connections} />
 				<ButtonsDiv>
-					<NeutralPositiveButton>
-						<BaseButtonLink
-							to={`../crossroad-view/${crossroad.id}`}
-							relative="path"
-							state={{ crossroadID: crossroad.id }}
-						>
+					<BaseButtonLink
+						to={`../crossroad-view/${crossroad.id}`}
+						relative="path"
+						state={{ crossroadID: crossroad.id }}
+					>
+						<NeutralPositiveButton>
 							Back to crossing view
-						</BaseButtonLink>
-					</NeutralPositiveButton>
+						</NeutralPositiveButton>
+					</BaseButtonLink>
 				</ButtonsDiv>
 			</AddVideosDiv>
 		</ContainerDiv>

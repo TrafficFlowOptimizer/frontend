@@ -16,7 +16,6 @@ export function Welcome() {
 	const { theme } = useContext(ThemeContext);
 	return (
 		<WelcomePageContainer>
-			<BaseH1>Welcome to</BaseH1>
 			<WelcomePageLogo
 				src={theme === "light" ? logo : dm_logo}
 				alt="Traffic Flow Optimizer Logo"
@@ -26,17 +25,17 @@ export function Welcome() {
 					To start:
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={2} column={1}>
-					<NeutralPositiveButton>
-						<BaseButtonLink to="/login">Login</BaseButtonLink>
-					</NeutralPositiveButton>
+					<BaseButtonLink to="/login">
+						<NeutralPositiveButton>Login</NeutralPositiveButton>
+					</BaseButtonLink>
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={2} column={2}>
 					or
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={2} column={3}>
-					<NeutralPositiveButton>
-						<BaseButtonLink to="/register">Register</BaseButtonLink>
-					</NeutralPositiveButton>
+					<BaseButtonLink to="/register">
+						<NeutralPositiveButton>Register</NeutralPositiveButton>
+					</BaseButtonLink>
 				</OptionsPositionedLi>
 				<OptionsPositionedLi row={3} column={2}>
 					<ToggleThemeSwitch />

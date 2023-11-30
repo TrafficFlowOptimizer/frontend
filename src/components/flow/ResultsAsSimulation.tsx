@@ -13,11 +13,11 @@ export function ResultsAsSimulation() {
 			<Navbar />
 			<div>
 				<h3>Results as simulation</h3>
-				<NeutralNegativeButton>
-					<BaseButtonLink to="../results-choice" relative="path" state={all}>
+				<BaseButtonLink to="../results-choice" relative="path" state={all}>
+					<NeutralNegativeButton>
 						Go back to results choice panel
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</div>
 		</>
 	);

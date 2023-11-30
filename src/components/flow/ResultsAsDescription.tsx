@@ -98,7 +98,7 @@ export function ResultsAsDescription() {
 										{conFlowRatioPrev.length ===
 										0
 											? "No previous results"
-											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
+											: conFlowRatioPrev[parseInt(connectionIndex) - 1]}
 									</CustomParagraph>
 								</NumericResultsPanel>
 								{getConnectionLight(connectionIndex).length > 0 ? (
@@ -161,8 +161,8 @@ export function ResultsAsDescription() {
 															? "No previous results"
 															: getLightSequence(
 																light.index,
-																lightsSeqPrev,
-														  ).map((elem, index) => (
+																lightsSeqPrev
+															).map((elem, index) => (
 																<StyledSequence
 																	key={index}
 																	isGreen={elem === 1}
@@ -171,7 +171,7 @@ export function ResultsAsDescription() {
 																		{index + 1}
 																	</SequenceIndex>
 																</StyledSequence>
-														  ))
+															))
 													}
 												</SequenceContainer>
 											</SingleInfoPanel>
@@ -186,18 +186,18 @@ export function ResultsAsDescription() {
 						<li>Results are empty</li>
 					)}
 				</NumericResultsUl>
-				<NeutralNegativeButton>
-					<BaseButtonLink
-						to="../results-choice"
-						relative="path"
-						state={{
-							crossroadId: crossroadId,
-							crossroadName: crossroadName,
-						}}
-					>
+				<BaseButtonLink
+					to="../results-choice"
+					relative="path"
+					state={{
+						crossroadId: crossroadId,
+						crossroadName: crossroadName,
+					}}
+				>
+					<NeutralNegativeButton>
 						Go back to results choice panel
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</div>
 		</>
 	);

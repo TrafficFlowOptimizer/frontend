@@ -36,7 +36,6 @@ export const NumericResultsLi = styled.li`
 	justify-content: flex-start;
 	align-items: flex-start;
 	
-	//padding: 1vh 1dvw;
 	width: calc(100% - 0.5vw);
 	background-color: ${(props) => props.theme.secondary};
 	border-radius: 15px;

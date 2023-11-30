@@ -168,8 +168,6 @@ export function Collisions() {
 			crossroadData.append("image", "");
 		}
 
-		console.log(JSON.stringify(postData));
-
 		axios
 			.post<boolean>("/crossroad", crossroadData, {
 				headers: {

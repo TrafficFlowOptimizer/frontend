@@ -11,6 +11,11 @@ export const WelcomePageContainer = styled.div`
 	flex-wrap: no-wrap;
 	justify-content: center;
 	align-items: center;
+	
+	padding-top: 5vh;
+	
+	position: relative;
+	z-index: 10;
 `;
 
 export const WelcomePageOptions = styled.ul`

@@ -134,15 +134,15 @@ export function ResultsChoicePanel() {
 				>
 					See results as a simulation
 				</NeutralPositiveButton>
-				<NeutralNegativeButton>
-					<BaseButtonLink
-						to={`../crossroad-view/${crossroadId}`}
-						relative="path"
-						state={{ crossroadID: crossroadId }}
-					>
+				<BaseButtonLink
+					to={`../crossroad-view/${crossroadId}`}
+					relative="path"
+					state={{ crossroadID: crossroadId }}
+				>
+					<NeutralNegativeButton>
 						Go back to crossroad view
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</ButtonsDiv>
 		</ContainerDiv>
 	);

@@ -57,7 +57,6 @@ export function ListOfCrossroads() {
 		navigate(`../crossroad-view/${chosenCrossroadId}`, {
 			state: { crossroadID: chosenCrossroadId },
 		});
-		//crossroad-view/:crossroad-id
 	};
 
 	return (
@@ -118,14 +117,12 @@ export function ListOfCrossroads() {
 				</StyledTable>
 			)}
 			<ButtonsDiv>
-				<PositiveButton>
-					<BaseButtonLink
-						to="../new-crossroad/location-selection"
-						relative="path"
-					>
-						Create new crossing
-					</BaseButtonLink>
-				</PositiveButton>
+				<BaseButtonLink
+					to="../new-crossroad/location-selection"
+					relative="path"
+				>
+					<PositiveButton>Create new crossing</PositiveButton>
+				</BaseButtonLink>
 				<NeutralPositiveButton
 					disabled={chosenCrossroadId === null}
 					onClick={handleToCrossroadView}

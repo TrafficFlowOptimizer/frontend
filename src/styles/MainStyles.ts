@@ -114,7 +114,8 @@ export const BaseDiv = styled.div`
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	height: 100%;
+	height: fit-content;
+	min-height: 100%;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
@@ -122,12 +123,8 @@ export const BaseDiv = styled.div`
 `;
 
 export const ContainerDiv = styled.div`
-	background-color: ${(props) => props.theme.primary};
-	width: calc(100vw - 20px);
+	width: calc(100% - 10px);
 	height: fit-content;
-	
-	position: relative;
-	left: 10px;
 	
 	display: flex;
 	flex-direction: column;
@@ -136,6 +133,25 @@ export const ContainerDiv = styled.div`
 	justify-content: flex-start;
 	gap: 3vh;
 	align-items: center;
+	
+	position: relative;
+`;
+
+export const BackgroundDiv = styled.div`
+	position: fixed;
+	z-index: 0;
+	inset: 0;
+	
+	width: 100%;
+	height: 100%;
+	
+	--c: ${(props) => props.theme.secondary}; /* color */
+  --t: 1px; /* thickness */
+  --g: 40px; /* gap */
+  --d: 10px; /* control the dashes */
+ 
+  background:
+    conic-gradient(at var(--t) 50%,#0000 75%,var(--c) 0) 0/var(--g) var(--d);
 `;
 
 
@@ -217,3 +233,14 @@ export const ScrollableUl = styled(BaseUl)<ScrollableProps>`
 	margin: 10px;
 	overflow-y: auto;
 `;
+
+export const CenteredInfo = styled.div`
+	width: fit-content;
+	height: fit-content;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 10px;
+	margin-top: 25px;
+	`;
