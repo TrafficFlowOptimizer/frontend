@@ -2,7 +2,7 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, PageHeader } from "../../styles/MainStyles";
+import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	NumericResultsUl,
@@ -60,7 +60,7 @@ export function ResultsAsDescription() {
 	};
 
 	return (
-		<>
+		<ContainerDiv>
 			<Navbar />
 			<div>
 				<PageHeader>
@@ -199,6 +199,6 @@ export function ResultsAsDescription() {
 					</NeutralNegativeButton>
 				</BaseButtonLink>
 			</div>
-		</>
+		</ContainerDiv>
 	);
 }

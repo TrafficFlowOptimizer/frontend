@@ -13,7 +13,6 @@ export function ToggleThemeSwitch() {
 	};
 	return (
 		<ToggleContainer>
-			<p>Theme:</p>
 			<StyledToggleLabel htmlFor="checkbox" checked={theme !== "light"}>
 				toggle me
 				<input
