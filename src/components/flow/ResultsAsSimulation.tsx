@@ -8,12 +8,9 @@ import {
 	ResponseCrossroad,
 } from "../../custom/CrossRoadRestTypes";
 
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import {
 	BaseButtonLink,
-	BaseLi,
-	BaseUl,
-	ButtonsDiv,
 	Colors,
 	ContainerDiv,
 	LightColors,
@@ -25,39 +22,10 @@ import {
 	NeutralPositiveButton,
 } from "../../styles/NeutralButton";
 
-import {
-	Collision,
-	Connection,
-	Crossroad,
-	ExitEntrancePoint,
-	TrafficLight,
-} from "../../custom/CrossroadInterface";
+import { ExitEntrancePoint, TrafficLight } from "../../custom/CrossroadInterface";
 import { StyledItemTd } from "../../styles/CrossroadListStyles";
-import {
-	CustomHeader,
-	CustomParagraph,
-	LightResultsPanel,
-	ResultsLi,
-	ResultsPanel,
-	ResultsUl,
-	SequenceContainer,
-	SequenceIndex,
-	SingleInfoPanel,
-	StyledSequence,
-} from "../../styles/ResultsStyles";
-import {
-	getConnectionNameFromIndex,
-	getUserJWTToken,
-	matchEEIPointTypeWithColor,
-} from "../../custom/drawing-tool/AuxiliaryFunctions";
+import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
-import { ThemeProvider, Zoom } from "@mui/material";
-import {
-	TOOLTIP_ENTRANCE_DELAY,
-	TOOLTIP_LEAVE_DELAY,
-	tooltipTheme,
-} from "../../custom/drawing-tool/AuxiliaryData";
-import Tooltip from "@mui/material/Tooltip";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
@@ -65,8 +33,6 @@ import {
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
-import userEvent from "@testing-library/user-event";
-import { randomInt } from "crypto";
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -286,43 +252,39 @@ export function ResultsAsSimulation() {
 
 			if (i == 0) {
 				result.push(
-					<div key={idx}>
-						<EEIPointMarker
-							key={idx}
-							color={lightColor}
-							yCord={point.yCord}
-							xCord={point.xCord}
-						>
-							<SimulationNumbers>{carNumber}</SimulationNumbers>
-						</EEIPointMarker>
-					</div>,
-				);
-			} else {
-				result.push(
-					<div key={idx}>
-						<EEIPointMarker
-							key={idx}
-							color={lightColor}
-							yCord={point.yCord}
-							xCord={point.xCord + 15 * i}
-						></EEIPointMarker>
-					</div>,
-				);
-			}
-		}
-
-		if (result.length == 0) {
-			result.push(
-				<div key={idx}>
 					<EEIPointMarker
 						key={idx}
 						color={lightColor}
 						yCord={point.yCord}
 						xCord={point.xCord}
 					>
-						<SimulationNumbers>{}</SimulationNumbers>
-					</EEIPointMarker>
-				</div>,
+						<SimulationNumbers>{carNumber}</SimulationNumbers>
+					</EEIPointMarker>,
+				);
+			} else {
+				result.push(
+					<EEIPointMarker
+						key={idx}
+						color={lightColor}
+						yCord={point.yCord}
+						xCord={point.xCord + 15 * i}
+					></EEIPointMarker>,
+				);
+			}
+		}
+
+		if (result.length == 0) {
+			result.push(
+				// <div key={idx}>
+				<EEIPointMarker
+					key={idx}
+					color={lightColor}
+					yCord={point.yCord}
+					xCord={point.xCord}
+				>
+					<SimulationNumbers>{}</SimulationNumbers>
+				</EEIPointMarker>,
+				// </div>,
 			);
 		}
 		return result;
@@ -357,19 +319,16 @@ export function ResultsAsSimulation() {
 							/>
 						);
 					})}
-				{exitEntrancePoints.length > 0 && (
-					<ThemeProvider theme={tooltipTheme}>
-						{exitEntrancePoints.map((point, idx) => {
-							const usedLights = roadsLights.get(point.index)!;
-							return ShowLight(
-								usedLights,
-								lightsSeqCurr,
-								roadFlow.get(point.index)!,
-								point,
-							);
-						})}
-					</ThemeProvider>
-				)}
+				{exitEntrancePoints.length > 0 &&
+					exitEntrancePoints.map((point, idx) => {
+						const usedLights = roadsLights.get(point.index)!;
+						return ShowLight(
+							usedLights,
+							lightsSeqCurr,
+							roadFlow.get(point.index)!,
+							point,
+						);
+					})}
 				<CrossroadScreenshot
 					src={crossroadImage}
 					alt="Map screenshot"

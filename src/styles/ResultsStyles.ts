@@ -15,18 +15,15 @@ export const ResultsUl = styled.ul`
 `;
 
 
-export type CHProps = { topMargin: number; leftMargin: number;}
+export type CustomProps = {
+	topMargin: number;
+	leftMargin?: number;
+	fontWeight?: "bold";
+};
 
-export const CustomHeader = styled.p<CHProps>` 
-	font-weight: bold; 
-	margin: ${(props) => props.topMargin}px 5px 15px ${(props) => props.leftMargin}px;
-`;
-
-export type CPProps = { topMargin: number; }
-
-export const CustomParagraph = styled.p<CPProps>` 
-	font-weight: normal; 
-	margin: ${(props) => props.topMargin}px 15px 15px 0px;
+export const CustomStyledComponent = styled.p<CustomProps>`
+  font-weight: ${(props) => props.fontWeight ?? "normal"};
+  margin: ${(props) => `${props.topMargin}px ${props.leftMargin ?? 15}px 15px ${props.leftMargin ?? 0}px`};
 `;
 
 export const ResultsLi = styled.li`
