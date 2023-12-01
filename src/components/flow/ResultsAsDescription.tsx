@@ -5,11 +5,10 @@ import { Navbar } from "../additional/Navbar";
 import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
-	NumericResultsUl,
-	CustomHeader,
-	CustomParagraph,
-	NumericResultsLi,
-	NumericResultsPanel,
+	ResultsUl,
+	CustomStyledComponent,
+	ResultsLi,
+	ResultsPanel,
 	StyledSequence,
 	SequenceContainer,
 	SequenceIndex,
