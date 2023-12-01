@@ -136,7 +136,20 @@ export function TimeIntervalPicker(props: TimeIntervalPickerProps) {
 
 	return (
 		<HorizontalWrapper>
-			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
+			<FormControl
+				sx={{
+					m: 0,
+					width: SELECT_WIDTH,
+					mt: 2,
+					border: `1px solid ${
+						theme === "dark" ? Colors.PRIMARY_GRAY : "transparent"
+					}`,
+					borderRadius: "5px",
+					backgroundColor: `${
+						theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE
+					}`,
+				}}
+			>
 				<Select
 					displayEmpty
 					value={stringifyHour(chosenHour)}
@@ -169,7 +182,20 @@ export function TimeIntervalPicker(props: TimeIntervalPickerProps) {
 					))}
 				</Select>
 			</FormControl>
-			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
+			<FormControl
+				sx={{
+					m: 0,
+					width: SELECT_WIDTH,
+					mt: 2,
+					border: `1px solid ${
+						theme === "dark" ? Colors.PRIMARY_GRAY : "transparent"
+					}`,
+					borderRadius: "5px",
+					backgroundColor: `${
+						theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE
+					}`,
+				}}
+			>
 				<Select
 					displayEmpty
 					value={chosenDay === undefined ? "" : chosenDay}

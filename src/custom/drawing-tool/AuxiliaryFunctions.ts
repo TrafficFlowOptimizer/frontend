@@ -55,6 +55,14 @@ export const getUserJWTToken = (): string => {
 	return "";
 };
 
+export const getCurrentUserName = (): string => {
+	const sessionData = sessionStorage.getItem("loggedUser");
+	if (sessionData !== null) {
+		return JSON.parse(sessionData).username;
+	}
+	return "";
+};
+
 export const getConnectionNameFromIndex = (
 	connections: ResponseConnection[],
 	index: string,

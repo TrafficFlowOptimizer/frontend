@@ -22,7 +22,7 @@ export const Radio = styled.input`
     border-radius: 50%;
     width: 0.75em;
     height: 0.75em;
-    margin: 3px;
+    margin: 21%;
   }
   :checked {
     ::after {

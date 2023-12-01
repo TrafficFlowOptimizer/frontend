@@ -2,13 +2,14 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, ContainerDiv, PageHeader } from "../../styles/MainStyles";
+import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
-	ResultsUl,
-	CustomStyledComponent,
-	ResultsLi,
-	ResultsPanel,
+	NumericResultsUl,
+	CustomHeader,
+	CustomParagraph,
+	NumericResultsLi,
+	NumericResultsPanel,
 	StyledSequence,
 	SequenceContainer,
 	SequenceIndex,
@@ -60,7 +61,7 @@ export function ResultsAsDescription() {
 	};
 
 	return (
-		<>
+		<ContainerDiv>
 			<Navbar />
 			<div>
 				<PageHeader>
@@ -190,8 +191,8 @@ export function ResultsAsDescription() {
 															? "No previous results"
 															: getLightSequence(
 																light.index,
-																lightsSeqPrev,
-														  ).map((elem, index) => (
+																lightsSeqPrev
+															).map((elem, index) => (
 																<StyledSequence
 																	key={index}
 																	isGreen={elem === 1}
@@ -200,7 +201,7 @@ export function ResultsAsDescription() {
 																		{index + 1}
 																	</SequenceIndex>
 																</StyledSequence>
-														  ))
+															))
 													}
 												</SequenceContainer>
 											</SingleInfoPanel>
@@ -215,19 +216,19 @@ export function ResultsAsDescription() {
 						<li>Results are empty</li>
 					)}
 				</ResultsUl>
-				<NeutralNegativeButton>
-					<BaseButtonLink
-						to="../results-choice"
-						relative="path"
-						state={{
-							crossroadId: crossroadId,
-							crossroadName: crossroadName,
-						}}
-					>
+				<BaseButtonLink
+					to="../results-choice"
+					relative="path"
+					state={{
+						crossroadId: crossroadId,
+						crossroadName: crossroadName,
+					}}
+				>
+					<NeutralNegativeButton>
 						Go back to results choice panel
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</div>
-		</>
+		</ContainerDiv>
 	);
 }

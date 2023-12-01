@@ -210,7 +210,7 @@ export function TrafficLights() {
 				<br />
 				3. You can repeat points 1-2 as many times as you need. After you create
 				{/* eslint-disable-next-line react/no-unescaped-entities */} all the
-				lights press 'LIGHTS READY' button
+				lights press <strong>'Lights created - proceed'</strong> button
 				<br />
 				4. Then click on a connection and assign all traffic lights that use it.
 				Repeat it until you mark all connections accordingly to your wish
@@ -291,12 +291,14 @@ export function TrafficLights() {
 												<BaseLi>id: {point.index}</BaseLi>
 												<BaseLi>type: {point.type}</BaseLi>
 												<BaseLi>street: {point.name}</BaseLi>
-												<BaseLi>
-													capacity:{" "}
-													{point.capacity === -1
-														? "infinity"
-														: point.capacity}
-												</BaseLi>
+												{point.type === "INTERMEDIATE" && (
+													<BaseLi>
+														capacity:{" "}
+														{point.capacity === -1
+															? "infinity"
+															: point.capacity}
+													</BaseLi>
+												)}
 											</BaseUl>
 											{!lightsReady &&
 												(point.type === "ENTRANCE" ||

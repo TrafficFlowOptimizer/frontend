@@ -11,10 +11,9 @@ export function Backdrop() {
 
 export const StyledBackdrop = styled.div`
 	position: fixed;
-	z-index: 6;
+	z-index: 5;
 	background-color: rgba(0, 0, 0, 0.75);
 	width: 100%;
 	height: 100vh;
-	top: 0;
-	left: 0;
+	inset: 0;
 `;

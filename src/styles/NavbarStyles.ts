@@ -17,7 +17,7 @@ export const NavbarContainer = styled.div`
 	margin-bottom: 1vh;
 	border-bottom: solid ${(props) => props.theme.text} 1px;
   max-height: 80px;  
-  width: 100vw;
+  width: calc(100vw - 8px);
   box-sizing: border-box;
 `;
 

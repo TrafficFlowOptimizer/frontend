@@ -33,6 +33,7 @@ import {
 	ButtonsDiv,
 	HorizontalDiv,
 	ScrollableUl,
+	CenteredInfo,
 } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
@@ -226,12 +227,16 @@ export function CrossroadView() {
 															<BaseLi>
 																street: {point.name}
 															</BaseLi>
-															<BaseLi>
-																capacity:{" "}
-																{point.capacity === -1
-																	? "infinity"
-																	: point.capacity}
-															</BaseLi>
+															{point.type ===
+																"INTERMEDIATE" && (
+																<BaseLi>
+																	capacity:{" "}
+																	{point.capacity ===
+																	-1
+																		? "infinity"
+																		: point.capacity}
+																</BaseLi>
+															)}
 														</BaseUl>
 													</React.Fragment>
 												}
@@ -325,12 +330,12 @@ export function CrossroadView() {
 								</ScrollableUl>
 							</ThemeProvider>
 						) : (
-							<p>
+							<CenteredInfo>
 								<strong>No collisions</strong>
-							</p>
+							</CenteredInfo>
 						)}
 					</HorizontalDiv>
-					<VideosList />
+					{/*<VideosList /> TODO: Consider if it's doable and it's usefulness (if it's even worth the effort*/}
 				</>
 			) : (
 				<Snackbar
@@ -358,11 +363,11 @@ export function CrossroadView() {
 				>
 					Go to results choice panel
 				</NeutralPositiveButton>
-				<NeutralNegativeButton>
-					<BaseButtonLink to="../../crossroad-list" relative="path">
+				<BaseButtonLink to="../../crossroad-list" relative="path">
+					<NeutralNegativeButton>
 						Go back to crossroads list
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</ButtonsDiv>
 		</ContainerDiv>
 	);
