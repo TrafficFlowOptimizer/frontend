@@ -7,7 +7,10 @@ export const SigningContainer = styled.div`
 	justify-content: center;
 	align-items: center;
 	position: relative;
-	top: 20vh;
+	top: 5vh;
+	
+	height: calc(100% - 5vh);
+	width: auto;
 `;
 
 export const SigningLogo = styled.img`
