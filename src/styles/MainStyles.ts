@@ -12,6 +12,13 @@ export enum ButtonColors {
 	HOVER_GREEN = "#15853a",
 }
 
+export enum LightColors {
+	RED = "#ff0000",
+	YELLOW = "#ffff00",
+	GREEN = "#00ff00",
+	BLACK = "#000000",
+}
+
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
 	PRIMARY_BLACK = "#191516",
@@ -153,7 +160,6 @@ export const BackgroundDiv = styled.div`
   background:
     conic-gradient(at var(--t) 50%,#0000 75%,var(--c) 0) 0/var(--g) var(--d);
 `;
-
 
 export const BaseInput = styled.input`
 	padding: 5px;

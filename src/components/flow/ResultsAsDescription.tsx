@@ -5,17 +5,16 @@ import { Navbar } from "../additional/Navbar";
 import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
-	NumericResultsUl,
-	CustomHeader,
-	CustomParagraph,
-	NumericResultsLi,
-	NumericResultsPanel,
+	ResultsUl,
+	ResultsInfoParagraph,
+	ResultsLi,
+	ResultsPanel,
 	StyledSequence,
 	SequenceContainer,
 	SequenceIndex,
 	LightResultsPanel,
 	SingleInfoPanel,
-} from "../../styles/NumericResultsStyles";
+} from "../../styles/ResultsStyles";
 import { ResponseConnection } from "../../custom/CrossRoadRestTypes";
 import { getConnectionNameFromIndex } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { TrafficLight } from "../../custom/CrossroadInterface";
@@ -32,6 +31,7 @@ export function ResultsAsDescription() {
 	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
 	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
 	const conLights: TrafficLight[][] = Object.values(results.connectionsLightsMap);
+	const conFlow = Object.values(results.connectionsFlowMap);
 
 	const connectionsIndexes = Array.from(
 		Object.keys(results.connectionsFlowRatioMapCurrent),
@@ -66,71 +66,96 @@ export function ResultsAsDescription() {
 				<PageHeader>
 					Results as descriptive data for: {crossroadName}
 				</PageHeader>
-				<NumericResultsUl>
+				<ResultsUl>
 					{connectionsIndexes.length > 0 ? (
 						connectionsIndexes.map((connectionIndex, index) => (
-							<NumericResultsLi key={`Visualization#${index}`}>
-								<NumericResultsPanel>
-									<CustomHeader topMargin={15} leftMargin={0}>
+							<ResultsLi key={`Visualization#${index}`}>
+								<ResultsPanel>
+									<ResultsInfoParagraph
+										topMargin={15}
+										leftMargin={0}
+										fontWeight={"bold"}
+									>
 										Connection:
-									</CustomHeader>
-									<CustomParagraph topMargin={15}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
 										{getConnectionNameFromIndex(
 											crossroadConnections,
 											connectionIndex,
 										)}
-									</CustomParagraph>
-									<CustomHeader topMargin={15} leftMargin={0}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
+										topMargin={15}
+										leftMargin={0}
+										fontWeight={"bold"}
+									>
 										Cars passed to arrived ratio:
-									</CustomHeader>
-									<CustomParagraph topMargin={15}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
 										{
 											conFlowRatioCurr[
 												parseInt(connectionIndex) - 1
 											]
 										}
-									</CustomParagraph>
-									<CustomHeader topMargin={15} leftMargin={0}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
+										topMargin={15}
+										leftMargin={0}
+										fontWeight={"bold"}
+									>
 										Previous ratio:
-									</CustomHeader>
+									</ResultsInfoParagraph>
 									{/* prettier-ignore */}
-									<CustomParagraph topMargin={15}>
+									<ResultsInfoParagraph topMargin={15}>
 										{conFlowRatioPrev.length ===
 										0
 											? "No previous results"
-											: conFlowRatioPrev[parseInt(connectionIndex) - 1]}
-									</CustomParagraph>
-								</NumericResultsPanel>
+											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
+										topMargin={15}
+										leftMargin={0}
+										fontWeight={"bold"}
+									>
+										Cars per minute:
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
+										{conFlow[parseInt(connectionIndex) - 1]}
+									</ResultsInfoParagraph>
+								</ResultsPanel>
 								{getConnectionLight(connectionIndex).length > 0 ? (
 									getConnectionLight(connectionIndex).map((light) => (
 										<LightResultsPanel
 											key={`Light#${light.index}/inCon${connectionIndex}`}
 										>
 											<SingleInfoPanel>
-												<CustomHeader
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
+													fontWeight={"bold"}
 												>
 													Light:
-												</CustomHeader>
-												<CustomParagraph topMargin={5}>
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph topMargin={5}>
 													#{light.index}
-												</CustomParagraph>
-												<CustomHeader
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
+													fontWeight={"bold"}
 												>
 													Direction:
-												</CustomHeader>
-												<CustomParagraph topMargin={5}>
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph topMargin={5}>
 													{light.direction}
-												</CustomParagraph>
-												<CustomHeader
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
+													fontWeight={"bold"}
 												>
 													Current light sequence:
-												</CustomHeader>
+												</ResultsInfoParagraph>
 											</SingleInfoPanel>
 											<SingleInfoPanel>
 												<SequenceContainer>
@@ -149,9 +174,13 @@ export function ResultsAsDescription() {
 													))}
 												</SequenceContainer>
 											</SingleInfoPanel>
-											<CustomHeader topMargin={5} leftMargin={5}>
+											<ResultsInfoParagraph
+												topMargin={5}
+												leftMargin={5}
+												fontWeight={"bold"}
+											>
 												Previous light sequence:
-											</CustomHeader>
+											</ResultsInfoParagraph>
 											<SingleInfoPanel>
 												<SequenceContainer>
 													{
@@ -180,12 +209,12 @@ export function ResultsAsDescription() {
 								) : (
 									<li>Lights are empty</li>
 								)}
-							</NumericResultsLi>
+							</ResultsLi>
 						))
 					) : (
 						<li>Results are empty</li>
 					)}
-				</NumericResultsUl>
+				</ResultsUl>
 				<BaseButtonLink
 					to="../results-choice"
 					relative="path"

@@ -11,10 +11,10 @@ import {
 } from "../../styles/NeutralButton";
 import { PositiveButton } from "../../styles/PositiveButton";
 import {
-	StyledTableHeader,
-	StyledTable,
-	StyledItemTr,
 	StyledItemTd,
+	StyledItemTr,
+	StyledTable,
+	StyledTableHeader,
 } from "../../styles/CrossroadListStyles";
 import { NegativeButton } from "../../styles/NegativeButton";
 import {
