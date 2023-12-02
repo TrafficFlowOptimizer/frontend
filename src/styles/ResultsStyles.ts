@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { ButtonColors, DarkTheme } from "./MainStyles";
 
-export const NumericResultsUl = styled.ul`
+export const ResultsUl = styled.ul`
 	list-style-type: none;
 	display: flex;
 	flex-direction: column;
@@ -15,35 +15,31 @@ export const NumericResultsUl = styled.ul`
 `;
 
 
-export type CHProps = { topMargin: number; leftMargin: number;}
+export type CustomProps = {
+	topMargin: number;
+	leftMargin?: number;
+	fontWeight?: "bold";
+};
 
-export const CustomHeader = styled.p<CHProps>` 
-	font-weight: bold; 
-	margin: ${(props) => props.topMargin}px 5px 15px ${(props) => props.leftMargin}px;
+export const ResultsInfoParagraph = styled.p<CustomProps>`
+  font-weight: ${(props) => props.fontWeight ?? "normal"};
+  margin: ${(props) => `${props.topMargin}px ${props.leftMargin ?? 15}px 15px ${props.leftMargin ?? 0}px`};
 `;
 
-export type CPProps = { topMargin: number; }
-
-export const CustomParagraph = styled.p<CPProps>` 
-	font-weight: normal; 
-	margin: ${(props) => props.topMargin}px 15px 15px 0px;
-`;
-
-export const NumericResultsLi = styled.li`
+export const ResultsLi = styled.li`
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
 	justify-content: flex-start;
 	align-items: flex-start;
 	
-	//padding: 1vh 1dvw;
 	width: calc(100% - 0.5vw);
 	background-color: ${(props) => props.theme.secondary};
 	border-radius: 15px;
 	border: solid ${(props) => props.theme.text} 1px;
 `;
 
-export const NumericResultsPanel = styled.div`
+export const ResultsPanel = styled.div`
 	display: flex;
 	flex-direction: row;
 	flex-wrap: no-wrap;
@@ -66,7 +62,7 @@ export const LightResultsPanel = styled.div`
 	width: calc(100% - 55px);
 `;
 
-export const SingleInfoPanel = styled(NumericResultsPanel)`
+export const SingleInfoPanel = styled(ResultsPanel)`
 	margin: 0px;
 `;
 
@@ -94,11 +90,17 @@ export const SequenceIndex = styled.p`
 	font-size: 11px;
 `;
 
-export const SequenceContainer = styled(NumericResultsUl)`
+export const SequenceContainer = styled(ResultsUl)`
 	gap: 5px;
 	margin: 0px 0px 5px 5px;
 	width: calc(100dvw - 120px);
 	flex-direction: row;
 	overflow-x: auto;
 	padding: 0px 0px 5px 5px;
+`;
+
+export const SimulationNumbers = styled.h4`
+	-webkit-text-stroke: 1px black; /* width and color */
+	line-height: 0.5;
+	color: white;
 `;

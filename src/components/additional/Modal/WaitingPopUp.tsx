@@ -12,7 +12,9 @@ import { faGear } from "@fortawesome/free-solid-svg-icons";
 export type WaitingPopUpProps = {
 	textToDisplay: string;
 	waitingTime: number;
-	whereToNavigate: string;
+	whereToNavigate?: string;
+	navState?: any;
+	onClose?: () => void;
 };
 
 export function WaitingPopUp(props: WaitingPopUpProps) {
@@ -21,7 +23,12 @@ export function WaitingPopUp(props: WaitingPopUpProps) {
 
 	useEffect(() => {
 		const timer = setTimeout(() => {
-			navigate(props.whereToNavigate);
+			if (props.whereToNavigate !== undefined) {
+				navigate(props.whereToNavigate, props.navState);
+			}
+			if (props.onClose !== undefined) {
+				props.onClose();
+			}
 		}, props.waitingTime * 1000);
 		return () => clearTimeout(timer);
 	}, []);

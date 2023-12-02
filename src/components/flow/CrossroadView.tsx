@@ -1,14 +1,10 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import {
-	ExitEntrancePoint,
-	OptimizationResults,
-	TrafficLight,
-} from "../../custom/CrossroadInterface";
+import { ExitEntrancePoint, TrafficLight } from "../../custom/CrossroadInterface";
 import { Navbar } from "../additional/Navbar";
 import { VideosList } from "./VideosList";
 import { useLocation, useNavigate } from "react-router-dom";
-import { PopUp } from "../additional/Modal/PopUp";
+import { OptimizationDeployer } from "../additional/Modal/OptimizationDeployer";
 import { Backdrop } from "../additional/Modal/Backdrop";
 import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import Tooltip from "@mui/material/Tooltip";
@@ -37,6 +33,7 @@ import {
 	ButtonsDiv,
 	HorizontalDiv,
 	ScrollableUl,
+	CenteredInfo,
 } from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
@@ -57,7 +54,8 @@ export function CrossroadView() {
 	const location = useLocation();
 	const crossroadID: string = location.state.crossroadID ?? true; //idea: just get crossroadID here and fetch it again (newest data and easier in routing)
 	const [crossroad, setCrossroad] = useState<ResponseCrossroad | null>(null);
-	const [showLoadingModal, setShowLoadingModal] = useState(false);
+	const [showOptimizationDeploymentModal, setShowOptimizationDeploymentModal] =
+		useState(false);
 
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
 	const [exitEntrancePoints, setExitEntrancePoints] = useState<ExitEntrancePoint[]>(
@@ -87,6 +85,12 @@ export function CrossroadView() {
 				setConnections(crossingsData.connections);
 				setTrafficLights(crossingsData.trafficLights);
 				setCollisions(crossingsData.collisions);
+				setCrossroadImage(crossingsData.image);
+
+				localStorage.setItem(
+					"currConnections",
+					JSON.stringify(crossingsData.connections),
+				);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -101,8 +105,8 @@ export function CrossroadView() {
 		if (crossroad !== null) {
 			navigate("../../add-videos", {
 				state: {
-					crossroadId: crossroad.id,
-					crossroadName: crossroad.name,
+					crossroad: crossroad,
+					connections: connections,
 				},
 			});
 		}
@@ -110,30 +114,21 @@ export function CrossroadView() {
 
 	const handleGoToResultsPanel = () => {
 		if (crossroad !== null) {
-			axios
-				.get<OptimizationResults>(
-					"/crossroad/" + crossroad.id + "/optimization/" + 1,
-				)
-				.then((response) => {
-					const optimizationData: OptimizationResults = response.data;
-					navigate("../../results-choice", {
-						state: {
-							results: optimizationData,
-							crossroadName: crossroad.name,
-							crossroadId: crossroad.id,
-						},
-					});
-				})
-				.catch((error) => {
-					console.error(error);
-				});
+			navigate("../../results-choice", {
+				state: {
+					crossroadId: crossroad.id,
+					crossroadName: crossroad.name,
+					day: undefined,
+					hour: undefined,
+				},
+			});
 		} else {
 			alert("Error when loading the crossroad!");
 		}
 	};
 
 	const handleOptimizationOrder = () => {
-		setShowLoadingModal(true);
+		setShowOptimizationDeploymentModal(true);
 	};
 
 	const getElementsIndexBasedOnId = (
@@ -148,15 +143,28 @@ export function CrossroadView() {
 		return -1;
 	};
 
+	const mapLightIdsToIndexes = (connection: ResponseConnection) => {
+		const indexes: string[] = [];
+		for (const tl of trafficLights) {
+			if (connection.trafficLightIds.includes(tl.id)) {
+				indexes.push(tl.index.toString());
+			}
+		}
+		return indexes;
+	};
+
 	return (
 		<ContainerDiv>
 			<Navbar />
-			{showLoadingModal && crossroad !== null && (
+			{showOptimizationDeploymentModal && crossroad !== null && (
 				<>
-					<PopUp
+					<OptimizationDeployer
 						textToDisplay={`Optimizing ${crossroad.name} crossroad.\nSit back and relax`}
 						crossroadName={crossroad.name}
 						crossroadId={crossroad.id}
+						onClose={() => {
+							setShowOptimizationDeploymentModal(false);
+						}}
 					/>
 					<Backdrop />
 				</>
@@ -164,95 +172,102 @@ export function CrossroadView() {
 			{crossroad !== null ? (
 				<>
 					<PageHeader>{crossroad.name}</PageHeader>
-					<BorderedWorkaroundDiv>
-						{connections.length > 0 &&
-							connections.map((con) => {
-								const entrancePoint = exitEntrancePoints.filter(
-									(point) => point.id === con.sourceId,
-								)[0];
-								const exitPoint = exitEntrancePoints.filter(
-									(point) => point.id === con.targetId,
-								)[0];
+					{crossroadImage !== undefined && crossroadImage.length > 1024 ? (
+						<BorderedWorkaroundDiv>
+							{connections.length > 0 &&
+								connections.map((con) => {
+									const entrancePoint = exitEntrancePoints.filter(
+										(point) => point.id === con.sourceId,
+									)[0];
+									const exitPoint = exitEntrancePoints.filter(
+										(point) => point.id === con.targetId,
+									)[0];
 
-								return (
-									<ConnectionMarker
-										key={con.index}
-										thickness={3}
-										entranceX={entrancePoint.xCord}
-										entranceY={entrancePoint.yCord}
-										exitX={exitPoint.xCord}
-										exitY={exitPoint.yCord}
-										connection={con}
-										color={Colors.BRIGHT_RED}
-										withLightIds={true}
-										withTooltip={true}
-										eeiPointsIndexes={[
-											getElementsIndexBasedOnId(
-												entrancePoint.id,
-												exitEntrancePoints,
-											),
-											getElementsIndexBasedOnId(
-												exitPoint.id,
-												exitEntrancePoints,
-											),
-										]}
-									/>
-								);
-							})}
-						{exitEntrancePoints.length > 0 && (
-							<ThemeProvider theme={tooltipTheme}>
-								{exitEntrancePoints.map((point, idx) => {
 									return (
-										<Tooltip
-											key={point.index}
-											title={
-												<React.Fragment>
-													<BaseUl>
-														<BaseLi>
-															id: {point.index}
-														</BaseLi>
-														<BaseLi>
-															type: {point.type}
-														</BaseLi>
-														<BaseLi>
-															street: {point.name}
-														</BaseLi>
-														<BaseLi>
-															capacity:{" "}
-															{point.capacity === -1
-																? "infinity"
-																: point.capacity}
-														</BaseLi>
-													</BaseUl>
-												</React.Fragment>
-											}
-											TransitionComponent={Zoom}
-											enterDelay={TOOLTIP_ENTRANCE_DELAY}
-											leaveDelay={TOOLTIP_LEAVE_DELAY}
-											arrow
-										>
-											<EEIPointMarker
-												key={idx}
-												color={matchEEIPointTypeWithColor(
-													point.type,
-												)}
-												yCord={point.yCord}
-												xCord={point.xCord}
-											></EEIPointMarker>
-										</Tooltip>
+										<ConnectionMarker
+											key={con.index}
+											thickness={3}
+											entranceX={entrancePoint.xCord}
+											entranceY={entrancePoint.yCord}
+											exitX={exitPoint.xCord}
+											exitY={exitPoint.yCord}
+											connection={con}
+											color={Colors.BRIGHT_RED}
+											withLightIds={true}
+											withTooltip={true}
+											eeiPointsIndexes={[
+												getElementsIndexBasedOnId(
+													entrancePoint.id,
+													exitEntrancePoints,
+												),
+												getElementsIndexBasedOnId(
+													exitPoint.id,
+													exitEntrancePoints,
+												),
+											]}
+											lightsIndexes={mapLightIdsToIndexes(con)}
+										/>
 									);
 								})}
-							</ThemeProvider>
-						)}
-						<CrossroadScreenshot
-							src={
-								crossroadImage === undefined
-									? localStorage.getItem("crossroadMap")!
-									: crossroadImage
-							}
-							alt="Map screenshot"
-						></CrossroadScreenshot>
-					</BorderedWorkaroundDiv>
+							{exitEntrancePoints.length > 0 && (
+								<ThemeProvider theme={tooltipTheme}>
+									{exitEntrancePoints.map((point, idx) => {
+										return (
+											<Tooltip
+												key={point.index}
+												title={
+													<React.Fragment>
+														<BaseUl>
+															<BaseLi>
+																id: {point.index}
+															</BaseLi>
+															<BaseLi>
+																type: {point.type}
+															</BaseLi>
+															<BaseLi>
+																street: {point.name}
+															</BaseLi>
+															{point.type ===
+																"INTERMEDIATE" && (
+																<BaseLi>
+																	capacity:{" "}
+																	{point.capacity ===
+																	-1
+																		? "infinity"
+																		: point.capacity}
+																</BaseLi>
+															)}
+														</BaseUl>
+													</React.Fragment>
+												}
+												TransitionComponent={Zoom}
+												enterDelay={TOOLTIP_ENTRANCE_DELAY}
+												leaveDelay={TOOLTIP_LEAVE_DELAY}
+												arrow
+											>
+												<EEIPointMarker
+													key={idx}
+													color={matchEEIPointTypeWithColor(
+														point.type,
+													)}
+													yCord={point.yCord}
+													xCord={point.xCord}
+												></EEIPointMarker>
+											</Tooltip>
+										);
+									})}
+								</ThemeProvider>
+							)}
+							<CrossroadScreenshot
+								src={crossroadImage}
+								alt="Map screenshot"
+							></CrossroadScreenshot>
+						</BorderedWorkaroundDiv>
+					) : (
+						<HorizontalDiv>
+							<p>Failed to load crossroad image</p>
+						</HorizontalDiv>
+					)}
 					<HorizontalDiv>
 						{trafficLights.length > 0 ? (
 							<ScrollableUl height={40}>
@@ -315,12 +330,12 @@ export function CrossroadView() {
 								</ScrollableUl>
 							</ThemeProvider>
 						) : (
-							<p>
+							<CenteredInfo>
 								<strong>No collisions</strong>
-							</p>
+							</CenteredInfo>
 						)}
 					</HorizontalDiv>
-					<VideosList />
+					{/*<VideosList /> TODO: Consider if it's doable and it's usefulness (if it's even worth the effort*/}
 				</>
 			) : (
 				<Snackbar
@@ -348,11 +363,11 @@ export function CrossroadView() {
 				>
 					Go to results choice panel
 				</NeutralPositiveButton>
-				<NeutralNegativeButton>
-					<BaseButtonLink to="../../crossroad-list" relative="path">
+				<BaseButtonLink to="../../crossroad-list" relative="path">
+					<NeutralNegativeButton>
 						Go back to crossroads list
-					</BaseButtonLink>
-				</NeutralNegativeButton>
+					</NeutralNegativeButton>
+				</BaseButtonLink>
 			</ButtonsDiv>
 		</ContainerDiv>
 	);

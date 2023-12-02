@@ -1,9 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
 import {
+	CrossroadDescriptionResponse,
+	ResponseCollision,
+	ResponseConnection,
+	ResponseCrossroad,
+} from "../../custom/CrossRoadRestTypes";
+
+import { useLocation } from "react-router-dom";
+import {
 	BaseButtonLink,
-	ButtonsDiv,
 	Colors,
 	ContainerDiv,
 	LightColors,
@@ -13,184 +20,288 @@ import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
 } from "../../styles/NeutralButton";
+
+import { ExitEntrancePoint, TrafficLight } from "../../custom/CrossroadInterface";
+import { StyledItemTd } from "../../styles/CrossroadListStyles";
+import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
+import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
 	EEIPointMarker,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
-import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
-import { ThemeProvider } from "@mui/material";
-import {
-	CROSSROAD_MODEL_TEMPLATE,
-	tooltipTheme,
-} from "../../custom/drawing-tool/AuxiliaryData";
-import { VideosList } from "./VideosList";
-import {
-	Collision,
-	Connection,
-	Crossroad,
-	ExitEntrancePoint,
-	TrafficLight,
-} from "../../custom/CrossroadInterface";
-import { StyledItemTd } from "../../styles/CrossroadListStyles";
-import { tableCrossroadState } from "./ListOfCrossroads";
-import {
-	initConnections,
-	initExitEntrancePoints,
-	initCrossroad,
-	initLights,
-	initCollisions,
-} from "../../assets/InitData";
-// import { initImage } from "../../assets/crossroad.png";
-
-export type pauseButtonState = "paused" | "running";
-
-function getRandomInt(max: number) {
-	return Math.floor(Math.random() * max);
-}
-
-const timeDelta = 100;
-const lights = [
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0,
-		0, 0, 0,
-	],
-	[
-		0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-		1, 1, 1,
-	],
-];
-const carSpawningChances = [25, 75, 25, 75, 25, 75, 25, 75, 25, 75];
-
-localStorage.setItem("crossroad", JSON.stringify(initCrossroad));
-localStorage.setItem("lights", JSON.stringify(initLights));
-localStorage.setItem("eeiPoints", JSON.stringify(initExitEntrancePoints));
-localStorage.setItem("connections", JSON.stringify(initConnections));
-localStorage.setItem("collisions", JSON.stringify(initCollisions));
-// localStorage.setItem("crossroadImage", initImage);
-// localStorage.setItem('eeiPoints',JSON.stringify(initExitEntrancePoints));
+import axios from "axios";
+import { useUserContext } from "../../custom/UserContext";
+import { SimulationNumbers } from "../../styles/ResultsStyles";
 
 export function ResultsAsSimulation() {
+	const { loggedUser } = useUserContext();
 	const location = useLocation();
-	const all = location.state ?? true;
 
-	const navigate = useNavigate();
-	const crossroadID: string = location.state.crossroadID ?? true; //idea: just get crossroadID here and fetch it again (newest data and easier in routing)
-	const [crossroad, setCrossroad] = useState<Crossroad>(
-		JSON.parse(localStorage.getItem("crossroad")!),
+	const crossroadName = location.state.crossroadName ?? null;
+	const results: OptimizationResults = location.state.results ?? null;
+	const crossroadId = location.state.crossroadId;
+	const carFlows: number[] = location.state.car;
+
+	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
+	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
+	const conLights: Map<number, TrafficLight[]> = convertObjectToMap(
+		results.connectionsLightsMap,
 	);
-	const [showLoadingModal, setShowLoadingModal] = useState(false);
+	const roadsLights: Map<number, TrafficLight[]> = convertObjectToMap(
+		results.roadsLightsMap,
+	);
+	const conFlow: Map<number, number> = convertObjectToMap(results.connectionsFlowMap);
+	const conRoad: Map<number, number> = convertObjectToMap(results.connectionsRoadMap);
+	const roadFlow: Map<number, number> = convertObjectToMap(results.roadsFlowMap);
+	const conChances: Map<number, number> = convertObjectToMap(
+		results.connectionChanceToPickMap,
+	);
 
+	const [crossroad, setCrossroad] = useState<ResponseCrossroad | null>(null);
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
+	const [exitEntrancePoints, setExitEntrancePoints] = useState<ExitEntrancePoint[]>(
+		[],
+	);
+	const [connections, setConnections] = useState<ResponseConnection[]>([]);
+	const [trafficLights, setTrafficLights] = useState<TrafficLight[]>([]);
+	const [collisions, setCollisions] = useState<ResponseCollision[]>([]);
 
-	const exitEntrancePoints: ExitEntrancePoint[] = JSON.parse(
-		localStorage.getItem("eeiPoints")!,
-	);
-	const connections: Connection[] = JSON.parse(localStorage.getItem("connections")!);
-	const trafficLights: TrafficLight[] = JSON.parse(
-		localStorage.getItem("trafficLights")!,
-	);
-	const collisions: Collision[] = JSON.parse(localStorage.getItem("collisions")!);
+	const [showFailureAlert, setShowFailureAlert] = useState(false);
+	const [failureMessage, setFailureMessage] = useState("");
 
 	const [running, setRunning] = useState(false);
 
-	const LightColor = (lightSequence: number[]) => {
-		const lights = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
-		const [count, setColor] = useState(0);
-		useEffect(() => {
-			if (!running) {
-				return;
-			}
-			const interval = setInterval(() => {
-				setColor((count) => (count + 1) % lightSequence.length);
-			}, timeDelta);
-			return () => clearInterval(interval);
-		}, [running]);
-		return lights[lightSequence[count]];
-	};
+	const [timer, setTimer] = useState(0);
+	const timeInterval = 60;
+	const timeDelta = 50;
+	const lightColors = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
 
-	const CarNumber = (
-		spawnChance: number,
-		spawnAmount: number,
-		goAmount: number,
-		canGo: boolean,
-	) => {
-		const [count, setNumber] = useState(0);
+	const [lights, setLights] = useState(new Map());
+	const [cars, setCars] = useState(new Map());
 
-		useEffect(() => {
-			if (!running) {
-				return;
-			}
-			const interval = setInterval(() => {
-				const prob = getRandomInt(100) + 1;
-				if (prob < spawnChance && canGo) {
-					setNumber((count) => Math.max(0, count + spawnAmount - goAmount));
-				} else if (prob < spawnChance && !canGo) {
-					setNumber((count) => count + spawnAmount);
-				} else if (prob >= spawnChance && canGo) {
-					setNumber((count) => Math.max(0, count - goAmount));
+	useEffect(() => {
+		axios
+			.get<CrossroadDescriptionResponse>(`/crossroad/${crossroadId}`, {
+				headers: {
+					Authorization: `Bearer ${
+						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()
+					}`,
+				},
+			})
+			.then((response) => {
+				const crossingsData: CrossroadDescriptionResponse = response.data;
+				setCrossroad(crossingsData.crossroad);
+				setExitEntrancePoints(crossingsData.roads);
+				setConnections(crossingsData.connections);
+				setTrafficLights(crossingsData.trafficLights);
+				setCollisions(crossingsData.collisions);
+				setCrossroadImage(crossingsData.image);
+				setLights(
+					new Map(
+						crossingsData.trafficLights.map((trafficLight) => [
+							trafficLight.index,
+							LightColors.YELLOW,
+						]),
+					),
+				);
+				setCars(new Map(crossingsData.roads.map((road) => [road.index, 0])));
+			})
+			.catch((error) => {
+				console.error(error);
+				setFailureMessage(
+					`Request failed: ${error.code}!\nTry going back to crossroads-list and viewing the model again`,
+				);
+				setShowFailureAlert(true);
+			});
+	}, []);
+
+	useEffect(() => {
+		if (running) {
+			const lightsTimer = setInterval(function () {
+				console.log(timer);
+				setTimer((timer + 1) % timeInterval);
+
+				const newLights: Map<number, LightColors> = new Map<
+					number,
+					LightColors
+				>();
+				for (const trafficLight of trafficLights) {
+					newLights.set(
+						trafficLight.index,
+						lightColors[lightsSeqCurr[trafficLight.index - 1][timer]],
+					);
 				}
-			}, timeDelta);
-			return () => clearInterval(interval);
-		}, [spawnChance, spawnAmount, goAmount, canGo, running]);
-		return <h3>{count}</h3>;
-	};
+				setLights(newLights);
 
-	const handleChooseButton = (current_state: pauseButtonState) => {
-		console.log(current_state, running);
-		if (current_state === "paused") {
-			setRunning(false);
-		} else {
-			setRunning(true);
+				const joinedCars: Map<number, number> = new Map<number, number>();
+				for (const exitEntrancePoint of exitEntrancePoints) {
+					joinedCars.set(
+						exitEntrancePoint.index,
+						howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
+					); //TODO 60? how many ticks per minute?
+				}
+
+				const leftCars: Map<number, number> = new Map<number, number>();
+				for (const exitEntrancePoint of exitEntrancePoints) {
+					const connectionsId = getConnectionsIdsForRoadIdx(
+						exitEntrancePoint.index,
+					);
+					if (connectionsId.length == 0) {
+						leftCars.set(exitEntrancePoint.index, 0);
+					} else {
+						const whichConToGo = getWhichConnectionToGo(connectionsId);
+						if (isConnectionOpen(whichConToGo)) {
+							leftCars.set(exitEntrancePoint.index, 1);
+						} else {
+							leftCars.set(exitEntrancePoint.index, 0);
+						}
+					}
+				}
+
+				const newCars: Map<number, number> = new Map<number, number>();
+				for (const exitEntrancePoint of exitEntrancePoints) {
+					newCars.set(
+						exitEntrancePoint.index,
+						Math.max(
+							0,
+							cars.get(exitEntrancePoint.index)! +
+								joinedCars.get(exitEntrancePoint.index)! -
+								leftCars.get(exitEntrancePoint.index)!,
+						),
+					);
+				}
+				setCars(newCars);
+			}, timeDelta);
+			return () => clearInterval(lightsTimer);
 		}
+	}, [running, timer]);
+
+	function convertObjectToMap(obj: any): Map<number, any> {
+		const resultMap = new Map<number, any>();
+		for (const key in obj) {
+			if (Object.prototype.hasOwnProperty.call(obj, key)) {
+				resultMap.set(Number(key), obj[key]);
+			}
+		}
+		return resultMap;
+	}
+
+	function howManyCarsArrived(flow: number) {
+		let n = 0;
+		while (flow > 0 && Math.random() < flow) {
+			n += 1;
+		}
+		return n;
+	}
+
+	function getConnectionsIdsForRoadIdx(index: number) {
+		const connections: number[] = [];
+		conRoad.forEach(function (value, key) {
+			if (value == index) {
+				connections.push(key);
+			}
+		});
+		return connections;
+	}
+
+	function getWhichConnectionToGo(connectionsIds: number[]) {
+		let chanceFloor = 0;
+		let chanceCeil = 0;
+		const randomNumber = Math.random();
+		let chosenConnection = 0;
+
+		for (const c of connectionsIds) {
+			chanceCeil += conChances.get(c)!;
+			if (chanceFloor < randomNumber && randomNumber <= chanceCeil) {
+				chosenConnection = c;
+				break;
+			}
+			chanceFloor += conChances.get(c)!;
+		}
+		return chosenConnection;
+	}
+
+	function isConnectionOpen(connection: number) {
+		const connectionLights = conLights.get(connection)!;
+		let open = false;
+		for (let i = 0; i < connectionLights.length; i++) {
+			if (lights.get(connectionLights[i].index)! == LightColors.GREEN) {
+				open = true;
+			}
+		}
+		return open;
+	}
+
+	const ShowLight = (
+		usedLights: TrafficLight[],
+		lightsSeq: number[][],
+		roadFlow: number,
+		point: ExitEntrancePoint,
+	) => {
+		let idx = point.index * -1;
+		let lightColor = LightColors.BLACK;
+		const carNumber = cars.get(point.index)!;
+
+		const result = [];
+
+		for (let i = 0; i < usedLights.length; i++) {
+			const light = usedLights[i];
+			idx = light.index;
+			lightColor = lights.get(usedLights[i].index)!;
+
+			if (i == 0) {
+				result.push(
+					<EEIPointMarker
+						key={idx}
+						color={lightColor}
+						yCord={point.yCord}
+						xCord={point.xCord}
+					>
+						<SimulationNumbers>{carNumber}</SimulationNumbers>
+					</EEIPointMarker>,
+				);
+			} else {
+				result.push(
+					<EEIPointMarker
+						key={idx}
+						color={lightColor}
+						yCord={point.yCord}
+						xCord={point.xCord + 15 * i}
+					></EEIPointMarker>,
+				);
+			}
+		}
+
+		if (result.length == 0) {
+			result.push(
+				// <div key={idx}>
+				<EEIPointMarker
+					key={idx}
+					color={lightColor}
+					yCord={point.yCord}
+					xCord={point.xCord}
+				>
+					<SimulationNumbers>{}</SimulationNumbers>
+				</EEIPointMarker>,
+				// </div>,
+			);
+		}
+		return result;
 	};
 
 	return (
 		<ContainerDiv>
 			<Navbar />
-			<PageHeader>{crossroad.name}</PageHeader>
+			<PageHeader>{crossroadName}</PageHeader>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
 						const entrancePoint = exitEntrancePoints.filter(
-							// (point) => point.id === con.sourceId, <- final version, after BE changes
-							(point) => point.index === con.sourceId,
+							(point) => point.id === con.sourceId,
 						)[0];
 						const exitPoint = exitEntrancePoints.filter(
-							// (point) => point.id === con.targetId, <- final version, after BE changes
-							(point) => point.index === con.targetId,
+							(point) => point.id === con.targetId,
 						)[0];
 
 						return (
@@ -202,51 +313,24 @@ export function ResultsAsSimulation() {
 								exitX={exitPoint.xCord}
 								exitY={exitPoint.yCord}
 								connection={con}
-								color={Colors.BRIGHT_RED}
+								color={Colors.PRIMARY_GRAY}
 								withLightIds={true}
+								withTooltip={false}
 							/>
 						);
 					})}
-
-				{exitEntrancePoints.length > 0 && (
-					<ThemeProvider theme={tooltipTheme}>
-						{exitEntrancePoints.map((point, idx) => {
-							let lightColor;
-							let carNumber;
-							if (point.type != "exit") {
-								lightColor = LightColor(lights[idx]);
-								carNumber = CarNumber(
-									carSpawningChances[idx],
-									1,
-									2,
-									lightColor != LightColors.RED,
-								);
-							} else {
-								lightColor = LightColors.BLACK;
-								carNumber = <h1>{}</h1>;
-							}
-
-							return (
-								<div key={idx}>
-									<EEIPointMarker
-										key={idx}
-										color={lightColor}
-										yCord={point.yCord}
-										xCord={point.xCord}
-									>
-										{carNumber}
-									</EEIPointMarker>
-								</div>
-							);
-						})}
-					</ThemeProvider>
-				)}
+				{exitEntrancePoints.length > 0 &&
+					exitEntrancePoints.map((point, idx) => {
+						const usedLights = roadsLights.get(point.index)!;
+						return ShowLight(
+							usedLights,
+							lightsSeqCurr,
+							roadFlow.get(point.index)!,
+							point,
+						);
+					})}
 				<CrossroadScreenshot
-					src={
-						crossroadImage === undefined
-							? localStorage.getItem("crossroadMap")!
-							: crossroadImage
-					}
+					src={crossroadImage}
 					alt="Map screenshot"
 				></CrossroadScreenshot>
 			</BorderedWorkaroundDiv>
@@ -254,13 +338,13 @@ export function ResultsAsSimulation() {
 				<StyledItemTd>
 					{!running ? (
 						<NeutralNegativeButton
-							onClick={() => handleChooseButton("running")}
+							onClick={() => setRunning((prev) => !prev)}
 						>
 							Resume
 						</NeutralNegativeButton>
 					) : (
 						<NeutralPositiveButton
-							onClick={() => handleChooseButton("paused")}
+							onClick={() => setRunning((prev) => !prev)}
 						>
 							Pause
 						</NeutralPositiveButton>
@@ -268,15 +352,15 @@ export function ResultsAsSimulation() {
 				</StyledItemTd>
 			</tbody>
 
-			<NeutralNegativeButton>
-				<BaseButtonLink
-					to="../results-choice"
-					relative="path"
-					state={location.state}
-				>
+			<BaseButtonLink
+				to="../results-choice"
+				relative="path"
+				state={location.state}
+			>
+				<NeutralNegativeButton>
 					Go back to results choice panel
-				</BaseButtonLink>
-			</NeutralNegativeButton>
+				</NeutralNegativeButton>
+			</BaseButtonLink>
 		</ContainerDiv>
 	);
 }

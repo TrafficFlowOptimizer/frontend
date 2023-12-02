@@ -28,9 +28,7 @@ import {
 
 export type RegisterData = {
 	id: string;
-	firstName: string; //TODO: delete after BE refactor - redundant
-	lastName: string; //TODO: delete after BE refactor - redundant
-	nickname: string; //TODO: rename after BE refactor
+	username: string;
 	email: string;
 	password: string;
 };
@@ -39,7 +37,7 @@ export function Register() {
 	const { theme } = useContext(ThemeContext);
 	const navigate = useNavigate();
 
-	const [isUsernameValid, setIsUsernameValid] = useState(true);
+	const [isUsernameValid, setIsUsernameValid] = useState(false);
 	const [usernameMessage, setUsernameMessage] = useState(
 		"This field cannot be empty",
 	);
@@ -48,6 +46,9 @@ export function Register() {
 	const [passwordMessage, setPasswordMessage] = useState(
 		"This field cannot be empty",
 	);
+
+	const [isEmailLongEnough, setIsEmailLongEnough] = useState(false);
+	const [emailMessage, setEmailMessage] = useState("This field cannot be empty");
 	const [badRegisterMessage, setBadRegisterMessage] = useState("");
 
 	const [showSuccessAlert, setShowSuccessAlert] = useState(false);
@@ -64,9 +65,7 @@ export function Register() {
 
 		const registerData: RegisterData = {
 			id: "",
-			firstName: "placeholder",
-			lastName: "placeholder",
-			nickname: target.username.value,
+			username: target.username.value,
 			email: target.email.value,
 			password: target.password.value,
 		};
@@ -90,12 +89,13 @@ export function Register() {
 					}
 				})
 				.catch((error) => {
-					if (error.code === "ERR_BAD_REQUEST") {
-						setBadRegisterMessage("Invalid register data!");
+					if (error.response.status === 409) {
+						setBadRegisterMessage("Email or username already in use!");
 					} else {
-						setBadRegisterMessage("Request failed!");
+						setBadRegisterMessage(
+							`Request failed with code ${error.response.status}`,
+						);
 					}
-					console.error(error);
 				});
 		}
 	};
@@ -131,13 +131,25 @@ export function Register() {
 
 		if (text.length < minimalPasswordLength) {
 			setIsPasswordLongEnough(false);
-			setPasswordMessage("The password is at least 8 characters long!");
+			setPasswordMessage("The password must be least 8 characters long!");
 		} else if (text.length > maximalPasswordLength) {
 			setIsPasswordLongEnough(false);
-			setPasswordMessage("The password is at most 64 characters long!");
+			setPasswordMessage("The password must be most 64 characters long!");
 		} else {
 			setIsPasswordLongEnough(true);
 			setPasswordMessage("");
+		}
+	};
+
+	const onEmailChange = (e: React.FormEvent<HTMLInputElement>) => {
+		const text = e.currentTarget.value;
+
+		if (text.length < minimalPasswordLength) {
+			setIsEmailLongEnough(false);
+			setEmailMessage("The email must be least 8 characters long!");
+		} else {
+			setIsEmailLongEnough(true);
+			setEmailMessage("");
 		}
 	};
 
@@ -169,9 +181,14 @@ export function Register() {
 							id="email"
 							name="email"
 							type="email"
-							placeholder="email is optional"
+							placeholder="email"
+							onChange={onEmailChange}
 						/>
 					</BaseLi>
+					<FormsValidityInformation
+						isInputValid={isEmailLongEnough}
+						badInputMessage={emailMessage}
+					/>
 					<BaseLi>
 						<label htmlFor="username">username:</label>
 						<BaseInput

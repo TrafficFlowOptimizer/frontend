@@ -52,4 +52,5 @@ export type CrossroadDescriptionResponse = {
 	collisions: ResponseCollision[];
 	connections: ResponseConnection[];
 	trafficLights: TrafficLight[];
+	image: string;
 };

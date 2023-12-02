@@ -28,6 +28,8 @@ import { PositiveButton } from "../../styles/PositiveButton";
 import {
 	EEIPointOffset,
 	EXITS_ENTRANCES_TEMPLATE,
+	TOOLTIP_ENTRANCE_DELAY,
+	TOOLTIP_LEAVE_DELAY,
 	tooltipTheme,
 } from "../../custom/drawing-tool/AuxiliaryData";
 
@@ -168,12 +170,14 @@ export function EntrancesAndExits() {
 											<BaseLi>id: {point.index}</BaseLi>
 											<BaseLi>type: {point.type}</BaseLi>
 											<BaseLi>street: {point.name}</BaseLi>
-											<BaseLi>
-												capacity:{" "}
-												{point.capacity === -1
-													? "infinity"
-													: point.capacity}
-											</BaseLi>
+											{point.type === "INTERMEDIATE" && (
+												<BaseLi>
+													capacity:{" "}
+													{point.capacity === -1
+														? "infinity"
+														: point.capacity}
+												</BaseLi>
+											)}
 										</BaseUl>
 										<ButtonsDiv>
 											<TooltipButton
@@ -200,8 +204,8 @@ export function EntrancesAndExits() {
 									</React.Fragment>
 								}
 								TransitionComponent={Zoom}
-								enterDelay={75}
-								leaveDelay={450}
+								enterDelay={TOOLTIP_ENTRANCE_DELAY}
+								leaveDelay={TOOLTIP_LEAVE_DELAY}
 								arrow
 							>
 								<EEIPointMarker

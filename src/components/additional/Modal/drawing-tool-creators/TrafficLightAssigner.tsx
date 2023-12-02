@@ -76,7 +76,20 @@ export function TrafficLightAssigner(props: TrafficLightAssignerProps) {
 			<p>
 				<strong>Traffic Light Assigner</strong>
 			</p>
-			<FormControl sx={{ m: 1, width: SELECT_WIDTH, mt: 3 }}>
+			<FormControl
+				sx={{
+					m: 0,
+					width: SELECT_WIDTH,
+					mt: 2,
+					border: `1px solid ${
+						theme === "dark" ? Colors.PRIMARY_GRAY : "transparent"
+					}`,
+					borderRadius: "5px",
+					backgroundColor: `${
+						theme === "dark" ? Colors.PRIMARY_BLACK : Colors.PRIMARY_WHITE
+					}`,
+				}}
+			>
 				<Select
 					multiple
 					displayEmpty

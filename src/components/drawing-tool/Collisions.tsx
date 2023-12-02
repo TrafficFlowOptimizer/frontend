@@ -51,6 +51,7 @@ import { CrossroadDescriptionRequest } from "../../custom/CrossRoadRestTypes";
 import { useUserContext } from "../../custom/UserContext";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+
 export function Collisions() {
 	const { theme } = useThemeContext();
 	const { loggedUser } = useUserContext();
@@ -109,7 +110,7 @@ export function Collisions() {
 
 	const onSave = () => {
 		setCollisions(collisions.map((col, index) => ({ ...col, index: index + 1 })));
-		//TODO: save screenshot (BE endpoint)
+
 		crossroad.roadIds = exitEntrancePoints.map((eeiPoint) => eeiPoint.index);
 		crossroad.connectionIds = connections.map((con) => con.index);
 		crossroad.trafficLightIds = trafficLights.map((tl) => tl.index);
@@ -156,12 +157,19 @@ export function Collisions() {
 			})),
 		};
 
-		// console.log(JSON.stringify(postData));
-
 		setShowWaitingModal(true);
 
+		const crossroadData = new FormData();
+		crossroadData.append("description", JSON.stringify(postData));
+
+		if (crossroadImage !== undefined) {
+			crossroadData.append("image", crossroadImage);
+		} else {
+			crossroadData.append("image", "");
+		}
+
 		axios
-			.post<boolean>("/crossroad", postData, {
+			.post<boolean>("/crossroad", crossroadData, {
 				headers: {
 					Authorization: `Bearer ${
 						loggedUser !== null ? loggedUser.jwtToken : getUserJWTToken()

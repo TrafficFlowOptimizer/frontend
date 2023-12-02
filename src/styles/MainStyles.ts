@@ -3,9 +3,13 @@ import { Link } from "react-router-dom";
 
 export enum ButtonColors {
 	RED = "#db2b39",
+	HOVER_RED = "#b0232e",
 	BLUE = "#6d72c3",
+	HOVER_BLUE = "#484b82",
 	ORANGE = "#f78b00",
-	GREEN = "#20bf55"
+	HOVER_ORANGE = "#d17702",
+	GREEN = "#20bf55",
+	HOVER_GREEN = "#15853a",
 }
 
 export enum LightColors {
@@ -18,6 +22,7 @@ export enum LightColors {
 export enum Colors {
 	PRIMARY_WHITE = "#FCFAF9",
 	PRIMARY_BLACK = "#191516",
+	PRIMARY_GRAY = "#8b8b8c",
 	PURPLE = "#8342FB",
 	BRIGHT_RED = "#FF1700",
 	ORANGY_RED = "#eb5834",
@@ -66,11 +71,10 @@ export const BaseButton = styled.button`
 	margin: 1vh 0.5vw 1vh 0.5vw;
 	border: none;
 	border-radius: 5px;
-	transition: transform 0.4s ease-out, box-shadow 0.4s ease-out;
+	transition: all 0.2s ease-in-out;
 	&:hover:enabled {
 		cursor: pointer;
 		z-index: 10;
-		transform: scale(1.1);
 	}
 	
 	&:disabled {
@@ -117,7 +121,8 @@ export const BaseDiv = styled.div`
 	top: 0px;
 	left: 0px;
 	width: 100%;
-	height: 100%;
+	height: fit-content;
+	min-height: 100%;
 	background-color: ${(props) => props.theme.primary};
 	color: ${(props) => props.theme.text};
 	font-family: ${(props) => props.theme.font};
@@ -125,20 +130,36 @@ export const BaseDiv = styled.div`
 `;
 
 export const ContainerDiv = styled.div`
-	background-color: ${(props) => props.theme.primary};
-	width: 100%;
+	width: calc(100% - 10px);
 	height: fit-content;
 	
 	display: flex;
 	flex-direction: column;
 	flex-wrap: no-wrap;
 	
-	justify-content: space-evenly;
+	justify-content: flex-start;
+	gap: 3vh;
 	align-items: center;
 	
-	padding: 15px;
+	position: relative;
 `;
 
+export const BackgroundDiv = styled.div`
+	position: fixed;
+	z-index: 0;
+	inset: 0;
+	
+	width: 100%;
+	height: 100%;
+	
+	--c: ${(props) => props.theme.secondary}; /* color */
+  --t: 1px; /* thickness */
+  --g: 40px; /* gap */
+  --d: 10px; /* control the dashes */
+ 
+  background:
+    conic-gradient(at var(--t) 50%,#0000 75%,var(--c) 0) 0/var(--g) var(--d);
+`;
 
 export const BaseInput = styled.input`
 	padding: 5px;
@@ -150,6 +171,8 @@ export const BaseInput = styled.input`
 	&:disabled {
 	background-color: ${(props) => props.theme.secondary};
 	cursor: not-allowed;
+	border: 1px solid ${Colors.PRIMARY_GRAY};
+	color: ${Colors.PRIMARY_GRAY};
 	}
 `;
 
@@ -216,3 +239,14 @@ export const ScrollableUl = styled(BaseUl)<ScrollableProps>`
 	margin: 10px;
 	overflow-y: auto;
 `;
+
+export const CenteredInfo = styled.div`
+	width: fit-content;
+	height: fit-content;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: flex-start;
+	padding: 10px;
+	margin-top: 25px;
+	`;

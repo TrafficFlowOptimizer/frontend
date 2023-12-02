@@ -5,14 +5,16 @@ export const StyledTableHeader = styled.th`
 	position: sticky;
 	
 	width: auto;
-	height: 1vh;
+	height: 2vh;
 	
 	border: 3px solid ${(props) => props.theme.text};
+	background-color: ${(props) => props.theme.primary};
 `;
 
 export const StyledTable = styled.table`
 	width: 90vw;
-	height: 50vh;
+	height: fit-content;
+	max-height: 60vh;
 	overflow: scroll;
 	
 	border-collapse: collapse;
@@ -28,7 +30,7 @@ export const StyledItemTr = styled.tr<TrProps>`
 `;
 
 export const StyledItemTd = styled.td`
-	height: 3vh;
+	height: 8vh;
 	width: 15vw;
 	padding: 5px;
 	text-align: center;
