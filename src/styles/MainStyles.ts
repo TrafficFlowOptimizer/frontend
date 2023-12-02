@@ -161,12 +161,6 @@ export const BackgroundDiv = styled.div`
     conic-gradient(at var(--t) 50%,#0000 75%,var(--c) 0) 0/var(--g) var(--d);
 `;
 
-export const SimulationNumbers = styled.h4`
-	-webkit-text-stroke: 1px black; /* width and color */
-	line-height: 0.5;
-	color: white;
-`;
-
 export const BaseInput = styled.input`
 	padding: 5px;
 	border-radius: 5px;

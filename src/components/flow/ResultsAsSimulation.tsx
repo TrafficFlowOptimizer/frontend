@@ -15,7 +15,6 @@ import {
 	ContainerDiv,
 	LightColors,
 	PageHeader,
-	SimulationNumbers,
 } from "../../styles/MainStyles";
 import {
 	NeutralNegativeButton,
@@ -33,6 +32,7 @@ import {
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
+import { SimulationNumbers } from "../../styles/ResultsStyles";
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -352,15 +352,15 @@ export function ResultsAsSimulation() {
 				</StyledItemTd>
 			</tbody>
 
-			<NeutralNegativeButton>
-				<BaseButtonLink
-					to="../results-choice"
-					relative="path"
-					state={location.state}
-				>
+			<BaseButtonLink
+				to="../results-choice"
+				relative="path"
+				state={location.state}
+			>
+				<NeutralNegativeButton>
 					Go back to results choice panel
-				</BaseButtonLink>
-			</NeutralNegativeButton>
+				</NeutralNegativeButton>
+			</BaseButtonLink>
 		</ContainerDiv>
 	);
 }

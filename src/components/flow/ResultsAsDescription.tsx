@@ -6,7 +6,7 @@ import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyle
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	ResultsUl,
-	CustomStyledComponent,
+	ResultsInfoParagraph,
 	ResultsLi,
 	ResultsPanel,
 	StyledSequence,
@@ -71,57 +71,57 @@ export function ResultsAsDescription() {
 						connectionsIndexes.map((connectionIndex, index) => (
 							<ResultsLi key={`Visualization#${index}`}>
 								<ResultsPanel>
-									<CustomStyledComponent
+									<ResultsInfoParagraph
 										topMargin={15}
 										leftMargin={0}
 										fontWeight={"bold"}
 									>
 										Connection:
-									</CustomStyledComponent>
-									<CustomStyledComponent topMargin={15}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
 										{getConnectionNameFromIndex(
 											crossroadConnections,
 											connectionIndex,
 										)}
-									</CustomStyledComponent>
-									<CustomStyledComponent
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
 										topMargin={15}
 										leftMargin={0}
 										fontWeight={"bold"}
 									>
 										Cars passed to arrived ratio:
-									</CustomStyledComponent>
-									<CustomStyledComponent topMargin={15}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
 										{
 											conFlowRatioCurr[
 												parseInt(connectionIndex) - 1
 											]
 										}
-									</CustomStyledComponent>
-									<CustomStyledComponent
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
 										topMargin={15}
 										leftMargin={0}
 										fontWeight={"bold"}
 									>
 										Previous ratio:
-									</CustomStyledComponent>
+									</ResultsInfoParagraph>
 									{/* prettier-ignore */}
-									<CustomStyledComponent topMargin={15}>
+									<ResultsInfoParagraph topMargin={15}>
 										{conFlowRatioPrev.length ===
 										0
 											? "No previous results"
 											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
-									</CustomStyledComponent>
-									<CustomStyledComponent
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph
 										topMargin={15}
 										leftMargin={0}
 										fontWeight={"bold"}
 									>
 										Cars per minute:
-									</CustomStyledComponent>
-									<CustomStyledComponent topMargin={15}>
+									</ResultsInfoParagraph>
+									<ResultsInfoParagraph topMargin={15}>
 										{conFlow[parseInt(connectionIndex) - 1]}
-									</CustomStyledComponent>
+									</ResultsInfoParagraph>
 								</ResultsPanel>
 								{getConnectionLight(connectionIndex).length > 0 ? (
 									getConnectionLight(connectionIndex).map((light) => (
@@ -129,33 +129,33 @@ export function ResultsAsDescription() {
 											key={`Light#${light.index}/inCon${connectionIndex}`}
 										>
 											<SingleInfoPanel>
-												<CustomStyledComponent
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
 													fontWeight={"bold"}
 												>
 													Light:
-												</CustomStyledComponent>
-												<CustomStyledComponent topMargin={5}>
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph topMargin={5}>
 													#{light.index}
-												</CustomStyledComponent>
-												<CustomStyledComponent
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
 													fontWeight={"bold"}
 												>
 													Direction:
-												</CustomStyledComponent>
-												<CustomStyledComponent topMargin={5}>
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph topMargin={5}>
 													{light.direction}
-												</CustomStyledComponent>
-												<CustomStyledComponent
+												</ResultsInfoParagraph>
+												<ResultsInfoParagraph
 													topMargin={5}
 													leftMargin={5}
 													fontWeight={"bold"}
 												>
 													Current light sequence:
-												</CustomStyledComponent>
+												</ResultsInfoParagraph>
 											</SingleInfoPanel>
 											<SingleInfoPanel>
 												<SequenceContainer>
@@ -174,13 +174,13 @@ export function ResultsAsDescription() {
 													))}
 												</SequenceContainer>
 											</SingleInfoPanel>
-											<CustomStyledComponent
+											<ResultsInfoParagraph
 												topMargin={5}
 												leftMargin={5}
 												fontWeight={"bold"}
 											>
 												Previous light sequence:
-											</CustomStyledComponent>
+											</ResultsInfoParagraph>
 											<SingleInfoPanel>
 												<SequenceContainer>
 													{

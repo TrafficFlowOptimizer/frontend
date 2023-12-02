@@ -21,7 +21,7 @@ export type CustomProps = {
 	fontWeight?: "bold";
 };
 
-export const CustomStyledComponent = styled.p<CustomProps>`
+export const ResultsInfoParagraph = styled.p<CustomProps>`
   font-weight: ${(props) => props.fontWeight ?? "normal"};
   margin: ${(props) => `${props.topMargin}px ${props.leftMargin ?? 15}px 15px ${props.leftMargin ?? 0}px`};
 `;
@@ -97,4 +97,10 @@ export const SequenceContainer = styled(ResultsUl)`
 	flex-direction: row;
 	overflow-x: auto;
 	padding: 0px 0px 5px 5px;
+`;
+
+export const SimulationNumbers = styled.h4`
+	-webkit-text-stroke: 1px black; /* width and color */
+	line-height: 0.5;
+	color: white;
 `;
