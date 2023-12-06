@@ -52,6 +52,37 @@ export const EEIPointMarker = styled.div<EEIPointProps>`
 	background-color: ${(props: EEIPointProps) => props.color};
 `;
 
+export type EEIBorderProps = {
+	width: number;
+	xCord: number;
+	yCord: number;
+}
+
+export const EEIBorderMarker = styled.div<EEIBorderProps>`
+	width: ${(props: EEIBorderProps) => props.width}px;
+	height: 25px;
+	border: 3px solid black;
+	border-radius: 0%;
+	
+	position: absolute;
+	top: ${(props: EEIBorderProps) => props.yCord-8}px;
+	left: ${(props: EEIBorderProps) => props.xCord}px;
+`;
+
+export const EEIPointMarker2 = styled.div<EEIPointProps>`
+	width: 15px;
+	height: 15px;
+	border: 1px solid black;
+	border-radius: 50%;
+	
+	z-index: 1;
+	position: absolute;
+	top: ${(props: EEIPointProps) => props.yCord}px;
+	left: ${(props: EEIPointProps) => props.xCord}px;
+	
+	background-color: ${(props: EEIPointProps) => props.color};
+`;
+
 export const EEIPointTooltip = styled(Tooltip)<EEIPointProps>`
 	z-index: 4;
 	position: absolute;

@@ -28,11 +28,15 @@ import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
+	EEIBorderMarker,
 	EEIPointMarker,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
 import { SimulationNumbers } from "../../styles/ResultsStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SimulationLightSymbol } from "../../custom/SimulationInterface";
+import { lightsDirectionData } from "../../custom/drawing-tool/AuxiliaryData";
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -243,49 +247,59 @@ export function ResultsAsSimulation() {
 		let lightColor = LightColors.BLACK;
 		const carNumber = cars.get(point.index)!;
 
-		const result = [];
-
+		let result = [
+			<EEIBorderMarker
+				key={idx}
+				width={10 + 15 * usedLights.length}
+				yCord={point.yCord}
+				xCord={point.xCord - 7.5 * usedLights.length}
+			>
+				<SimulationNumbers>{carNumber}</SimulationNumbers>
+			</EEIBorderMarker>,
+		];
+		console.log(":");
+		console.log(usedLights.length % 2);
+		console.log("");
 		for (let i = 0; i < usedLights.length; i++) {
 			const light = usedLights[i];
 			idx = light.index;
 			lightColor = lights.get(usedLights[i].index)!;
 
-			if (i == 0) {
-				result.push(
-					<EEIPointMarker
-						key={idx}
-						color={lightColor}
-						yCord={point.yCord}
-						xCord={point.xCord}
-					>
-						<SimulationNumbers>{carNumber}</SimulationNumbers>
-					</EEIPointMarker>,
-				);
-			} else {
-				result.push(
-					<EEIPointMarker
-						key={idx}
-						color={lightColor}
-						yCord={point.yCord}
-						xCord={point.xCord + 15 * i}
-					></EEIPointMarker>,
-				);
-			}
+			const shift = 1 + i * 2 - Math.ceil((usedLights.length * 1.99) / 2);
+			console.log(shift);
+
+			const simulationLightSymbol: SimulationLightSymbol =
+				lightsDirectionData.get(light.direction)!;
+
+			result.push(
+				<FontAwesomeIcon
+					icon={simulationLightSymbol.symbol}
+					size={simulationLightSymbol.symbolSize}
+					rotation={simulationLightSymbol.symbolRotation}
+					style={{
+						zIndex: 1,
+						color: `${lightColor}`,
+						position: "absolute",
+						top: `${point.yCord + simulationLightSymbol.symbolTopShift}px`,
+						left: `${
+							point.xCord +
+							10 * shift +
+							simulationLightSymbol.symbolLeftShift
+						}px`,
+					}}
+				></FontAwesomeIcon>,
+			);
 		}
 
-		if (result.length == 0) {
-			result.push(
-				// <div key={idx}>
+		if (result.length == 1) {
+			result = [
 				<EEIPointMarker
 					key={idx}
 					color={lightColor}
 					yCord={point.yCord}
 					xCord={point.xCord}
-				>
-					<SimulationNumbers>{}</SimulationNumbers>
-				</EEIPointMarker>,
-				// </div>,
-			);
+				></EEIPointMarker>,
+			];
 		}
 		return result;
 	};
