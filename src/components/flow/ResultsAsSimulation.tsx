@@ -237,6 +237,23 @@ export function ResultsAsSimulation() {
 		return open;
 	}
 
+	function getDistribution(length: number) {
+		const distribution = [];
+		let rightSide;
+		let leftSide;
+		if (length % 2 == 0) {
+			rightSide = length / 2 - 0.5;
+			leftSide = -rightSide;
+		} else {
+			rightSide = Math.floor(length / 2);
+			leftSide = -rightSide;
+		}
+		for (let i = leftSide; i <= rightSide; i++) {
+			distribution.push(i);
+		}
+		return distribution;
+	}
+
 	const ShowLight = (
 		usedLights: TrafficLight[],
 		lightsSeq: number[][],
@@ -247,7 +264,18 @@ export function ResultsAsSimulation() {
 		let lightColor = LightColors.BLACK;
 		const carNumber = cars.get(point.index)!;
 
-		let result = [
+		if (usedLights.length == 0) {
+			return [
+				<EEIPointMarker
+					key={idx}
+					color={lightColor}
+					yCord={point.yCord}
+					xCord={point.xCord}
+				></EEIPointMarker>,
+			];
+		}
+
+		const result = [
 			<EEIBorderMarker
 				key={idx}
 				width={10 + 15 * usedLights.length}
@@ -257,16 +285,13 @@ export function ResultsAsSimulation() {
 				<SimulationNumbers>{carNumber}</SimulationNumbers>
 			</EEIBorderMarker>,
 		];
-		console.log(":");
-		console.log(usedLights.length % 2);
-		console.log("");
+		const distribution = getDistribution(usedLights.length);
 		for (let i = 0; i < usedLights.length; i++) {
 			const light = usedLights[i];
 			idx = light.index;
 			lightColor = lights.get(usedLights[i].index)!;
 
-			const shift = 1 + i * 2 - Math.ceil((usedLights.length * 1.99) / 2);
-			console.log(shift);
+			const horizontalShift = distribution[i] * 20;
 
 			const simulationLightSymbol: SimulationLightSymbol =
 				lightsDirectionData.get(light.direction)!;
@@ -283,23 +308,12 @@ export function ResultsAsSimulation() {
 						top: `${point.yCord + simulationLightSymbol.symbolTopShift}px`,
 						left: `${
 							point.xCord +
-							10 * shift +
+							horizontalShift +
 							simulationLightSymbol.symbolLeftShift
 						}px`,
 					}}
 				></FontAwesomeIcon>,
 			);
-		}
-
-		if (result.length == 1) {
-			result = [
-				<EEIPointMarker
-					key={idx}
-					color={lightColor}
-					yCord={point.yCord}
-					xCord={point.xCord}
-				></EEIPointMarker>,
-			];
 		}
 		return result;
 	};
