@@ -103,4 +103,9 @@ export const SimulationNumbers = styled.h4`
 	-webkit-text-stroke: 1px black; /* width and color */
 	line-height: 0.5;
 	color: white;
+	position: relative;
+	top: 10px;
+	left: 100%;
+
+	z-index: 2;
 `;

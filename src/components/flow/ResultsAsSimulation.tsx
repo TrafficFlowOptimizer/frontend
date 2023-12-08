@@ -28,11 +28,15 @@ import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
+	EEIBorderMarker,
 	EEIPointMarker,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
 import { SimulationNumbers } from "../../styles/ResultsStyles";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { SimulationLightSymbol } from "../../custom/SimulationInterface";
+import { lightsDirectionData } from "../../custom/drawing-tool/AuxiliaryData";
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -233,6 +237,23 @@ export function ResultsAsSimulation() {
 		return open;
 	}
 
+	function getDistribution(length: number) {
+		const distribution = [];
+		let rightSide;
+		let leftSide;
+		if (length % 2 == 0) {
+			rightSide = length / 2 - 0.5;
+			leftSide = -rightSide;
+		} else {
+			rightSide = Math.floor(length / 2);
+			leftSide = -rightSide;
+		}
+		for (let i = leftSide; i <= rightSide; i++) {
+			distribution.push(i);
+		}
+		return distribution;
+	}
+
 	const ShowLight = (
 		usedLights: TrafficLight[],
 		lightsSeq: number[][],
@@ -243,48 +264,55 @@ export function ResultsAsSimulation() {
 		let lightColor = LightColors.BLACK;
 		const carNumber = cars.get(point.index)!;
 
-		const result = [];
-
-		for (let i = 0; i < usedLights.length; i++) {
-			const light = usedLights[i];
-			idx = light.index;
-			lightColor = lights.get(usedLights[i].index)!;
-
-			if (i == 0) {
-				result.push(
-					<EEIPointMarker
-						key={idx}
-						color={lightColor}
-						yCord={point.yCord}
-						xCord={point.xCord}
-					>
-						<SimulationNumbers>{carNumber}</SimulationNumbers>
-					</EEIPointMarker>,
-				);
-			} else {
-				result.push(
-					<EEIPointMarker
-						key={idx}
-						color={lightColor}
-						yCord={point.yCord}
-						xCord={point.xCord + 15 * i}
-					></EEIPointMarker>,
-				);
-			}
-		}
-
-		if (result.length == 0) {
-			result.push(
-				// <div key={idx}>
+		if (usedLights.length == 0) {
+			return [
 				<EEIPointMarker
 					key={idx}
 					color={lightColor}
 					yCord={point.yCord}
 					xCord={point.xCord}
-				>
-					<SimulationNumbers>{}</SimulationNumbers>
-				</EEIPointMarker>,
-				// </div>,
+				></EEIPointMarker>,
+			];
+		}
+
+		const result = [
+			<EEIBorderMarker
+				key={idx}
+				width={10 + 15 * usedLights.length}
+				yCord={point.yCord}
+				xCord={point.xCord - 7.5 * usedLights.length}
+			>
+				<SimulationNumbers>{carNumber}</SimulationNumbers>
+			</EEIBorderMarker>,
+		];
+		const distribution = getDistribution(usedLights.length);
+		for (let i = 0; i < usedLights.length; i++) {
+			const light = usedLights[i];
+			idx = light.index;
+			lightColor = lights.get(usedLights[i].index)!;
+
+			const horizontalShift = distribution[i] * 20;
+
+			const simulationLightSymbol: SimulationLightSymbol =
+				lightsDirectionData.get(light.direction)!;
+
+			result.push(
+				<FontAwesomeIcon
+					icon={simulationLightSymbol.symbol}
+					size={simulationLightSymbol.symbolSize}
+					rotation={simulationLightSymbol.symbolRotation}
+					style={{
+						zIndex: 1,
+						color: `${lightColor}`,
+						position: "absolute",
+						top: `${point.yCord + simulationLightSymbol.symbolTopShift}px`,
+						left: `${
+							point.xCord +
+							horizontalShift +
+							simulationLightSymbol.symbolLeftShift
+						}px`,
+					}}
+				></FontAwesomeIcon>,
 			);
 		}
 		return result;

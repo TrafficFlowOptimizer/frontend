@@ -7,6 +7,16 @@ import {
 } from "../CrossroadInterface";
 import { createTheme } from "@mui/material";
 import { Colors } from "../../styles/MainStyles";
+import { SimulationLightSymbol } from "../SimulationInterface";
+import {
+	faArrowUp,
+	faCircle,
+	faLeftLong,
+	faRainbow,
+	faRightLong,
+	faTurnDown,
+	faTurnUp,
+} from "@fortawesome/free-solid-svg-icons";
 
 export const COUNTRIES = [
 	"Afghanistan",
@@ -286,3 +296,119 @@ export const tooltipTheme = createTheme({
 export const TOOLTIP_ENTRANCE_DELAY = 20;
 
 export const TOOLTIP_LEAVE_DELAY = 100;
+
+export const lightsDirectionData = new Map<
+	TrafficLightDirection,
+	SimulationLightSymbol
+>([
+	[
+		TrafficLightDirection.ENTIRE,
+		{
+			symbol: faCircle,
+			symbolSize: "sm",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.LEFT,
+		{
+			symbol: faLeftLong,
+			symbolSize: "lg",
+			symbolTopShift: -3,
+			symbolLeftShift: -3,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.RIGHT,
+		{
+			symbol: faRightLong,
+			symbolSize: "lg",
+			symbolTopShift: -3,
+			symbolLeftShift: -3,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.FORWARD,
+		{
+			symbol: faArrowUp,
+			symbolSize: "lg",
+			symbolTopShift: -3,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.ARROW_LEFT,
+		{
+			symbol: faTurnUp,
+			symbolSize: "lg",
+			symbolTopShift: -5,
+			symbolLeftShift: 0,
+			symbolRotation: 270,
+		},
+	],
+	[
+		TrafficLightDirection.ARROW_RIGHT,
+		{
+			symbol: faTurnDown,
+			symbolSize: "lg",
+			symbolTopShift: -5,
+			symbolLeftShift: 0,
+			symbolRotation: 270,
+		},
+	],
+	[
+		TrafficLightDirection.UTURN,
+		{
+			symbol: faRainbow,
+			symbolSize: "2xl",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.LEFT_RIGHT,
+		{
+			symbol: faRainbow,
+			symbolSize: "2xl",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.LEFT_FORWARD,
+		{
+			symbol: faRainbow,
+			symbolSize: "2xl",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.RIGHT_FORWARD,
+		{
+			symbol: faRainbow,
+			symbolSize: "2xl",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+	[
+		TrafficLightDirection.UTURN_LEFT,
+		{
+			symbol: faRainbow,
+			symbolSize: "2xl",
+			symbolTopShift: 0,
+			symbolLeftShift: 0,
+			symbolRotation: undefined,
+		},
+	],
+]);

@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import { BaseButton, ButtonColors, Colors, InputInformationMessage, LightColors } from "../MainStyles";
-import Tooltip from "@mui/material/Tooltip";
 import { EEIPointOffset } from "../../custom/drawing-tool/AuxiliaryData";
 
 export const WorkaroundInnerDiv = styled.div`
@@ -52,17 +51,27 @@ export const EEIPointMarker = styled.div<EEIPointProps>`
 	background-color: ${(props: EEIPointProps) => props.color};
 `;
 
-export const EEIPointTooltip = styled(Tooltip)<EEIPointProps>`
-	z-index: 4;
+export type EEIBorderProps = {
+	width: number;
+	xCord: number;
+	yCord: number;
+}
+
+export const EEIBorderMarker = styled.div<EEIBorderProps>`
+	width: ${(props: EEIBorderProps) => props.width}px;
+	height: 25px;
+	border: 3px solid black;
+	border-radius: 0%;
+	
 	position: absolute;
-	top: ${(props: EEIPointProps) => props.yCord};
-	left: ${(props: EEIPointProps) => props.xCord};
+	top: ${(props: EEIBorderProps) => props.yCord-8}px;
+	left: ${(props: EEIBorderProps) => props.xCord}px;
 `;
 
 
 export const TooltipButton = styled(BaseButton)<EEIPointProps>`
 	font-size: 10px;
-	padding 0.5vh 0.25vw;
+	padding: 0.5vh 0.25vw;
 	margin: 0.5vh 0.25vw;
 	background-color: ${(props) => props.color};
 `;
