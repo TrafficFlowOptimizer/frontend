@@ -81,8 +81,14 @@ export function ResultsAsSimulation() {
 	const timeDelta = 50;
 	const lightColors = [LightColors.RED, LightColors.GREEN, LightColors.YELLOW];
 
-	const [lights, setLights] = useState(new Map());
-	const [cars, setCars] = useState(new Map());
+	const [lightsCurrent, setLightsCurrent] = useState(new Map());
+	const [lightsPrevious, setLightsPrevious] = useState(new Map());
+	const [carsCurrent, setCarsCurrent] = useState(new Map());
+	const [carsPrevious, setCarsPrevious] = useState(new Map());
+
+	const [leftCarsCurrent, setLeftCarsCurrent] = useState(new Map());
+	const [leftCarsPrevious, setLeftCarsPrevious] = useState(new Map());
+	const [connectionIdxToTargetMap, setConnectionIdxToTargetMap] = useState(new Map());
 
 	useEffect(() => {
 		axios
@@ -101,7 +107,7 @@ export function ResultsAsSimulation() {
 				setTrafficLights(crossingsData.trafficLights);
 				setCollisions(crossingsData.collisions);
 				setCrossroadImage(crossingsData.image);
-				setLights(
+				setLightsCurrent(
 					new Map(
 						crossingsData.trafficLights.map((trafficLight) => [
 							trafficLight.index,
@@ -109,7 +115,28 @@ export function ResultsAsSimulation() {
 						]),
 					),
 				);
-				setCars(new Map(crossingsData.roads.map((road) => [road.index, 0])));
+				setLightsPrevious(
+					new Map(
+						crossingsData.trafficLights.map((trafficLight) => [
+							trafficLight.index,
+							LightColors.YELLOW,
+						]),
+					),
+				);
+				setConnectionIdxToTargetMap(
+					new Map(
+						crossingsData.connections.map((connection) => [
+							connection.index,
+							getRoadForId(connection.targetId, crossingsData.roads),
+						]),
+					),
+				);
+				setCarsCurrent(
+					new Map(crossingsData.roads.map((road) => [road.index, 0])),
+				);
+				setCarsPrevious(
+					new Map(crossingsData.roads.map((road) => [road.index, 0])),
+				);
 			})
 			.catch((error) => {
 				console.error(error);
@@ -123,10 +150,26 @@ export function ResultsAsSimulation() {
 	useEffect(() => {
 		if (running) {
 			const lightsTimer = setInterval(function () {
+				const joinedCarsCurrent: Map<number, number> = new Map<
+					number,
+					number
+				>();
+				const leftCars_Current: Map<number, number> = new Map<number, number>();
+				const newCarsCurrent: Map<number, number> = new Map<number, number>();
+				const joinedCarsPrevious: Map<number, number> = new Map<
+					number,
+					number
+				>();
+				const leftCars_Previous: Map<number, number> = new Map<
+					number,
+					number
+				>();
+				const newCarsPrevious: Map<number, number> = new Map<number, number>();
+
 				console.log(timer);
 				setTimer((timer + 1) % timeInterval);
 
-				const newLights: Map<number, LightColors> = new Map<
+				let newLights: Map<number, LightColors> = new Map<
 					number,
 					LightColors
 				>();
@@ -136,46 +179,127 @@ export function ResultsAsSimulation() {
 						lightColors[lightsSeqCurr[trafficLight.index - 1][timer]],
 					);
 				}
-				setLights(newLights);
-
-				const joinedCars: Map<number, number> = new Map<number, number>();
-				for (const exitEntrancePoint of exitEntrancePoints) {
-					joinedCars.set(
-						exitEntrancePoint.index,
-						howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
-					); //TODO 60? how many ticks per minute?
+				setLightsCurrent(newLights);
+				newLights = new Map<number, LightColors>();
+				for (const trafficLight of trafficLights) {
+					newLights.set(
+						trafficLight.index,
+						lightColors[lightsSeqPrev[trafficLight.index - 1][timer]],
+					);
 				}
+				setLightsPrevious(newLights);
 
-				const leftCars: Map<number, number> = new Map<number, number>();
 				for (const exitEntrancePoint of exitEntrancePoints) {
-					const connectionsId = getConnectionsIdsForRoadIdx(
+					const connectionsIdxs = getConnectionsIdxsForRoadIdx(
 						exitEntrancePoint.index,
 					);
-					if (connectionsId.length == 0) {
-						leftCars.set(exitEntrancePoint.index, 0);
+					if (connectionsIdxs.length == 0) {
+						leftCars_Current.set(exitEntrancePoint.index, 0);
+						leftCars_Previous.set(exitEntrancePoint.index, 0);
 					} else {
-						const whichConToGo = getWhichConnectionToGo(connectionsId);
-						if (isConnectionOpen(whichConToGo)) {
-							leftCars.set(exitEntrancePoint.index, 1);
+						const connectionToGoIdxCurrent =
+							getWhichConnectionToGo(connectionsIdxs);
+
+						if (isConnectionOpen(connectionToGoIdxCurrent, lightsCurrent)) {
+							leftCars_Current.set(exitEntrancePoint.index, 1);
+							const target = connectionIdxToTargetMap.get(
+								connectionToGoIdxCurrent,
+							);
+							if (target.type == "INTERMEDIATE") {
+								joinedCarsCurrent.set(
+									target.index,
+									// howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
+									1,
+								); //TODO 60? how many ticks per minute?
+							}
 						} else {
-							leftCars.set(exitEntrancePoint.index, 0);
+							leftCars_Current.set(exitEntrancePoint.index, 0);
+						}
+						const connectionToGoIdxPrevious =
+							getWhichConnectionToGo(connectionsIdxs);
+
+						if (
+							isConnectionOpen(connectionToGoIdxPrevious, lightsPrevious)
+						) {
+							leftCars_Previous.set(exitEntrancePoint.index, 1);
+							const target = connectionIdxToTargetMap.get(
+								connectionToGoIdxPrevious,
+							);
+							if (target.type == "INTERMEDIATE") {
+								joinedCarsPrevious.set(
+									target.index,
+									// howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
+									1,
+								); //TODO 60? how many ticks per minute?
+							}
+						} else {
+							leftCars_Previous.set(exitEntrancePoint.index, 0);
+						}
+					}
+				}
+				setLeftCarsCurrent(leftCars_Current);
+				setLeftCarsPrevious(leftCars_Previous);
+
+				for (const exitEntrancePoint of exitEntrancePoints) {
+					if (exitEntrancePoint.type != "INTERMEDIATE") {
+						joinedCarsCurrent.set(
+							exitEntrancePoint.index,
+							howManyCarsArrived(
+								roadFlow.get(exitEntrancePoint.index)! / 60,
+							),
+							// howManyCarsArrived(0.05),
+						); //TODO 60? how many ticks per minute?
+						joinedCarsPrevious.set(
+							exitEntrancePoint.index,
+							howManyCarsArrived(
+								roadFlow.get(exitEntrancePoint.index)! / 60,
+							),
+							// howManyCarsArrived(0.05),
+						); //TODO 60? how many ticks per minute?
+					} else {
+						if (!joinedCarsCurrent.has(exitEntrancePoint.index)) {
+							joinedCarsCurrent.set(exitEntrancePoint.index, 0);
+						}
+						if (!joinedCarsPrevious.has(exitEntrancePoint.index)) {
+							joinedCarsPrevious.set(exitEntrancePoint.index, 0);
 						}
 					}
 				}
 
-				const newCars: Map<number, number> = new Map<number, number>();
 				for (const exitEntrancePoint of exitEntrancePoints) {
-					newCars.set(
+					newCarsCurrent.set(
 						exitEntrancePoint.index,
-						Math.max(
-							0,
-							cars.get(exitEntrancePoint.index)! +
-								joinedCars.get(exitEntrancePoint.index)! -
-								leftCars.get(exitEntrancePoint.index)!,
-						),
+						leftCarsCurrent.get(exitEntrancePoint.index)! > 0
+							? Math.max(
+									0,
+									carsCurrent.get(exitEntrancePoint.index)! -
+										leftCarsCurrent.get(exitEntrancePoint.index)!,
+							  )
+							: Math.max(
+									0,
+									carsCurrent.get(exitEntrancePoint.index)! +
+										joinedCarsCurrent.get(exitEntrancePoint.index)!,
+							  ),
+					);
+					newCarsPrevious.set(
+						exitEntrancePoint.index,
+						leftCarsPrevious.get(exitEntrancePoint.index)! > 0
+							? Math.max(
+									0,
+									carsPrevious.get(exitEntrancePoint.index)! -
+										leftCarsPrevious.get(exitEntrancePoint.index)!,
+							  )
+							: Math.max(
+									0,
+									carsPrevious.get(exitEntrancePoint.index)! +
+										joinedCarsPrevious.get(
+											exitEntrancePoint.index,
+										)!,
+							  ),
 					);
 				}
-				setCars(newCars);
+				setCarsCurrent(newCarsCurrent);
+				setCarsPrevious(newCarsPrevious);
 			}, timeDelta);
 			return () => clearInterval(lightsTimer);
 		}
@@ -199,7 +323,18 @@ export function ResultsAsSimulation() {
 		return n;
 	}
 
-	function getConnectionsIdsForRoadIdx(index: number) {
+	function getRoadForId(id: string, exitEntrancePoints: ExitEntrancePoint[]) {
+		let road = null;
+		for (const p of exitEntrancePoints) {
+			if (p.id === id) {
+				road = p;
+				break;
+			}
+		}
+		return road;
+	}
+
+	function getConnectionsIdxsForRoadIdx(index: number) {
 		const connections: number[] = [];
 		conRoad.forEach(function (value, key) {
 			if (value == index) {
@@ -209,13 +344,13 @@ export function ResultsAsSimulation() {
 		return connections;
 	}
 
-	function getWhichConnectionToGo(connectionsIds: number[]) {
+	function getWhichConnectionToGo(connectionsIdxs: number[]) {
 		let chanceFloor = 0;
 		let chanceCeil = 0;
 		const randomNumber = Math.random();
 		let chosenConnection = 0;
 
-		for (const c of connectionsIds) {
+		for (const c of connectionsIdxs) {
 			chanceCeil += conChances.get(c)!;
 			if (chanceFloor < randomNumber && randomNumber <= chanceCeil) {
 				chosenConnection = c;
@@ -226,7 +361,7 @@ export function ResultsAsSimulation() {
 		return chosenConnection;
 	}
 
-	function isConnectionOpen(connection: number) {
+	function isConnectionOpen(connection: number, lights: Map<number, LightColors>) {
 		const connectionLights = conLights.get(connection)!;
 		let open = false;
 		for (let i = 0; i < connectionLights.length; i++) {
@@ -259,6 +394,9 @@ export function ResultsAsSimulation() {
 		lightsSeq: number[][],
 		roadFlow: number,
 		point: ExitEntrancePoint,
+		cars: Map<number, number>,
+		lights: Map<number, LightColors>,
+		type: string,
 	) => {
 		let idx = point.index * -1;
 		let lightColor = LightColors.BLACK;
@@ -349,12 +487,62 @@ export function ResultsAsSimulation() {
 					})}
 				{exitEntrancePoints.length > 0 &&
 					exitEntrancePoints.map((point, idx) => {
-						const usedLights = roadsLights.get(point.index)!;
+						const usedLights: TrafficLight[] = roadsLights.get(
+							point.index,
+						)!;
 						return ShowLight(
 							usedLights,
 							lightsSeqCurr,
 							roadFlow.get(point.index)!,
 							point,
+							carsCurrent,
+							lightsCurrent,
+							"curr",
+						);
+					})}
+				<CrossroadScreenshot
+					src={crossroadImage}
+					alt="Map screenshot"
+				></CrossroadScreenshot>
+			</BorderedWorkaroundDiv>
+			<BorderedWorkaroundDiv>
+				{connections.length > 0 &&
+					connections.map((con) => {
+						const entrancePoint = exitEntrancePoints.filter(
+							(point) => point.id === con.sourceId,
+						)[0];
+						const exitPoint = exitEntrancePoints.filter(
+							(point) => point.id === con.targetId,
+						)[0];
+
+						return (
+							<ConnectionMarker
+								key={con.index}
+								thickness={3}
+								entranceX={entrancePoint.xCord}
+								entranceY={entrancePoint.yCord}
+								exitX={exitPoint.xCord}
+								exitY={exitPoint.yCord}
+								connection={con}
+								color={Colors.PRIMARY_GRAY}
+								withLightIds={true}
+								withTooltip={false}
+							/>
+						);
+					})}
+				{exitEntrancePoints.length > 0 &&
+					exitEntrancePoints.map((point, idx) => {
+						const usedLights: TrafficLight[] = roadsLights.get(
+							point.index,
+						)!;
+						return ShowLight(
+							usedLights,
+							lightsSeqPrev,
+							roadFlow.get(point.index)!,
+							point,
+							carsPrevious,
+							lightsPrevious,
+							"prev",
 						);
 					})}
 				<CrossroadScreenshot
