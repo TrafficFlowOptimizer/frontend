@@ -109,3 +109,36 @@ export const SimulationNumbers = styled.h4`
 
 	z-index: 2;
 `;
+
+export type EEIBorderProps = {
+	width: number;
+	xCord: number;
+	yCord: number;
+}
+
+export const EEIBorderMarker = styled.div<EEIBorderProps>`
+	width: ${(props: EEIBorderProps) => props.width}px;
+	height: 25px;
+	border: 3px solid black;
+	border-radius: 0%;
+	
+	position: absolute;
+	top: ${(props: EEIBorderProps) => props.yCord-8}px;
+	left: ${(props: EEIBorderProps) => props.xCord}px;
+`;
+
+export const SimulationVersionLabel = styled.div`
+	width: 175px;
+	height: 50px;
+	background-color: #ffffff;
+	border: 5px solid #ff0000;
+	position: absolute;
+	z-index: 2;
+	left: 0%;
+	top: 0%;
+	object-fit: cover;
+`;
+export const SimulationVersion= styled.p`
+	text-align: center;
+	font-weight: bold;
+`;

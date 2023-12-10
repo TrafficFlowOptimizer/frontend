@@ -28,15 +28,21 @@ import { ConnectionMarker } from "../drawing-tool/ConnectionMarker";
 import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
-	EEIBorderMarker,
 	EEIPointMarker,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
-import { SimulationNumbers } from "../../styles/ResultsStyles";
+import {
+	EEIBorderMarker,
+	SimulationVersionLabel,
+	SimulationVersion,
+	SimulationNumbers,
+} from "../../styles/ResultsStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SimulationLightSymbol } from "../../custom/SimulationInterface";
 import { lightsDirectionData } from "../../custom/drawing-tool/AuxiliaryData";
+import { doc } from "prettier";
+import label = doc.builders.label;
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -527,6 +533,9 @@ export function ResultsAsSimulation() {
 					src={crossroadImage}
 					alt="Map screenshot"
 				></CrossroadScreenshot>
+				<SimulationVersionLabel>
+					<SimulationVersion>Fajna labelka 1</SimulationVersion>
+				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
@@ -568,6 +577,9 @@ export function ResultsAsSimulation() {
 							"prev",
 						);
 					})}
+				<SimulationVersionLabel>
+					<SimulationVersion>Fajna labelka 2</SimulationVersion>
+				</SimulationVersionLabel>
 				<CrossroadScreenshot
 					src={crossroadImage}
 					alt="Map screenshot"
