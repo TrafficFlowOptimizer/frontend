@@ -389,6 +389,29 @@ export function ResultsAsSimulation() {
 		return distribution;
 	}
 
+	function restart() {
+		setTimer(0);
+		setRunning(false);
+		setLightsCurrent(
+			new Map(
+				trafficLights.map((trafficLight) => [
+					trafficLight.index,
+					LightColors.YELLOW,
+				]),
+			),
+		);
+		setLightsPrevious(
+			new Map(
+				trafficLights.map((trafficLight) => [
+					trafficLight.index,
+					LightColors.YELLOW,
+				]),
+			),
+		);
+		setCarsCurrent(new Map(exitEntrancePoints.map((road) => [road.index, 0])));
+		setCarsPrevious(new Map(exitEntrancePoints.map((road) => [road.index, 0])));
+	}
+
 	const ShowLight = (
 		usedLights: TrafficLight[],
 		lightsSeq: number[][],
@@ -565,6 +588,11 @@ export function ResultsAsSimulation() {
 							Pause
 						</NeutralPositiveButton>
 					)}
+				</StyledItemTd>
+				<StyledItemTd>
+					<NeutralNegativeButton onClick={() => restart()}>
+						Restart
+					</NeutralNegativeButton>
 				</StyledItemTd>
 			</tbody>
 
