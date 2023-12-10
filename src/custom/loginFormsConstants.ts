@@ -7,3 +7,5 @@ export const specialCharactersReg = /[-’/`~!#*$_%+=.,^&(){}[\]|;:”<>?\\]/g;
 export const minimalPasswordLength = 8;
 
 export const maximalPasswordLength = 64;
+
+export const alertShowtimeMS = 4000;

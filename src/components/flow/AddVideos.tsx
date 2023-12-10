@@ -13,8 +13,6 @@ export function AddVideos() {
 	const crossroad: ResponseCrossroad = location.state.crossroad ?? true;
 	const connections: ResponseConnection[] = location.state.connections ?? true;
 
-	//TODO: style this page as a whole later on
-
 	const videoQualityMessage = (
 		<CenteredInstructionP>
 			Remember that the quality of analysis depends on the quality of a video.

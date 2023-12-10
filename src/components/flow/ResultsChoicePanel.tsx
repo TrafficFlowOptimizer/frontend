@@ -19,6 +19,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
 import { useUserContext } from "../../custom/UserContext";
+import { alertShowtimeMS } from "../../custom/loginFormsConstants";
 
 export function ResultsChoicePanel() {
 	const { loggedUser } = useUserContext();
@@ -36,6 +37,8 @@ export function ResultsChoicePanel() {
 	const [showFailureAlert, setShowFailureAlert] = useState(false);
 	const [failureMessage, setFailureMessage] = useState("");
 
+	const maximalWaitingPanelTimeSec = 100;
+
 	const handleResultsChoice = (type: "descriptive" | "simulation") => {
 		setShowWaitingModal(true);
 
@@ -52,6 +55,7 @@ export function ResultsChoicePanel() {
 				},
 			})
 			.then((response) => {
+				setShowWaitingModal(false);
 				const results: OptimizationResults = response.data;
 				if (type === "descriptive") {
 					navigate("../results-descriptive", {
@@ -88,7 +92,7 @@ export function ResultsChoicePanel() {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showFailureAlert}
-				autoHideDuration={5000}
+				autoHideDuration={alertShowtimeMS}
 				onClose={() => {
 					setShowFailureAlert(false);
 				}}
@@ -101,7 +105,7 @@ export function ResultsChoicePanel() {
 				<>
 					<WaitingPopUp
 						textToDisplay={"Obtaining optimization results..."}
-						waitingTime={1.5}
+						waitingTime={maximalWaitingPanelTimeSec}
 						onClose={() => {
 							setShowWaitingModal(false);
 						}}

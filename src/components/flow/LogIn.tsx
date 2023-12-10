@@ -48,6 +48,8 @@ export function LogIn() {
 	);
 	const [badLoginMessage, setBadLoginMessage] = useState("");
 
+	const logInMessage = "Log in to proceed";
+
 	const onUsernameChange = (e: React.FormEvent<HTMLInputElement>) => {
 		const text = e.currentTarget.value;
 
@@ -148,7 +150,7 @@ export function LogIn() {
 				src={theme === "light" ? logo : dm_logo}
 				alt="Traffic Flow Optimizer Logo"
 			/>
-			<h3>Log in to process further</h3>
+			<h3>{logInMessage}</h3>
 			<BaseForm onSubmit={logIn}>
 				<BaseUl>
 					<BaseLi>

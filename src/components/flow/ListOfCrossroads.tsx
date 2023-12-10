@@ -25,6 +25,7 @@ import { Backdrop } from "../additional/Modal/Backdrop";
 import { DeletionConfirmModal } from "../additional/Modal/DeletionConfirmModal";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { alertShowtimeMS } from "../../custom/loginFormsConstants";
 
 export function ListOfCrossroads() {
 	const { loggedUser } = useUserContext();
@@ -122,7 +123,7 @@ export function ListOfCrossroads() {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showAlert}
-				autoHideDuration={5000}
+				autoHideDuration={alertShowtimeMS}
 				onClose={() => {
 					setShowAlert(false);
 				}}
