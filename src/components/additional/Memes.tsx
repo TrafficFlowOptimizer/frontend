@@ -9,6 +9,12 @@ import meme7 from "../../assets/memes/meme_7.jpg";
 import meme8 from "../../assets/memes/meme_8.jpg";
 import meme9 from "../../assets/memes/meme_9.webp";
 import meme10 from "../../assets/memes/meme_10.gif";
+import meme11 from "../../assets/memes/meme_11.jpg";
+import meme12 from "../../assets/memes/meme_12.jpg";
+import meme13 from "../../assets/memes/meme_13.jpg";
+import meme14 from "../../assets/memes/meme_14.jpg";
+import meme15 from "../../assets/memes/meme_15.png";
+import meme16 from "../../assets/memes/meme_16.png";
 import meme1_uc from "../../assets/memes/meme_uc_1.webp";
 import meme2_uc from "../../assets/memes/meme_uc_2.gif";
 import styled from "styled-components";
@@ -25,6 +31,12 @@ export function Memes() {
 		meme8,
 		meme9,
 		meme10,
+		meme11,
+		meme12,
+		meme13,
+		meme14,
+		meme15,
+		meme16,
 		meme1_uc,
 		meme2_uc,
 	];
