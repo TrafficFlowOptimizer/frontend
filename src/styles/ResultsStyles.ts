@@ -121,9 +121,10 @@ export const EEIBorderMarker = styled.div<EEIBorderProps>`
 	height: 25px;
 	border: 3px solid black;
 	border-radius: 0%;
-	
+	background-color: #aaaaaa;
+
 	position: absolute;
-	top: ${(props: EEIBorderProps) => props.yCord-8}px;
+	top: ${(props: EEIBorderProps) => props.yCord - 8}px;
 	left: ${(props: EEIBorderProps) => props.xCord}px;
 `;
 
