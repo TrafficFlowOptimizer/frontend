@@ -24,7 +24,7 @@ import {
 	maximalUsernameLength,
 	minimalPasswordLength,
 	minimalUsernameLength,
-	specialCharactersReg
+	specialCharactersReg,
 } from "../../custom/loginFormsConstants";
 
 export type RegisterData = {
