@@ -34,15 +34,14 @@ import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
 import {
 	EEIBorderMarker,
-	SimulationVersionLabel,
-	SimulationVersion,
 	SimulationNumbers,
+	SimulationVersion,
+	SimulationVersionLabel,
 } from "../../styles/ResultsStyles";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SimulationLightSymbol } from "../../custom/SimulationInterface";
 import { lightsDirectionData } from "../../custom/drawing-tool/AuxiliaryData";
 import { doc } from "prettier";
-import label = doc.builders.label;
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -214,9 +213,10 @@ export function ResultsAsSimulation() {
 							if (target.type == "INTERMEDIATE") {
 								joinedCarsCurrent.set(
 									target.index,
-									// howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
-									1,
-								); //TODO 60? how many ticks per minute?
+									howManyCarsArrived(
+										roadFlow.get(exitEntrancePoint.index)! / 60,
+									),
+								);
 							}
 						} else {
 							leftCars_Current.set(exitEntrancePoint.index, 0);
@@ -234,9 +234,10 @@ export function ResultsAsSimulation() {
 							if (target.type == "INTERMEDIATE") {
 								joinedCarsPrevious.set(
 									target.index,
-									// howManyCarsArrived(roadFlow.get(exitEntrancePoint.index)! / 60),
-									1,
-								); //TODO 60? how many ticks per minute?
+									howManyCarsArrived(
+										roadFlow.get(exitEntrancePoint.index)! / 60,
+									),
+								);
 							}
 						} else {
 							leftCars_Previous.set(exitEntrancePoint.index, 0);
@@ -534,7 +535,9 @@ export function ResultsAsSimulation() {
 					alt="Map screenshot"
 				></CrossroadScreenshot>
 				<SimulationVersionLabel>
-					<SimulationVersion>Fajna labelka 1</SimulationVersion>
+					<SimulationVersion>
+						Current lights' sequences simulation
+					</SimulationVersion>
 				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
 			<BorderedWorkaroundDiv>
@@ -578,7 +581,9 @@ export function ResultsAsSimulation() {
 						);
 					})}
 				<SimulationVersionLabel>
-					<SimulationVersion>Fajna labelka 2</SimulationVersion>
+					<SimulationVersion>
+						Previous lights' sequences simulation
+					</SimulationVersion>
 				</SimulationVersionLabel>
 				<CrossroadScreenshot
 					src={crossroadImage}
