@@ -21,6 +21,7 @@ import { EntrancesAndExits } from "./components/drawing-tool/EntrancesAndExits";
 import { TrafficLights } from "./components/drawing-tool/TrafficLights";
 import { Connections } from "./components/drawing-tool/Connections";
 import { Collisions } from "./components/drawing-tool/Collisions";
+import { ProtectedRoutes } from "./components/additional/ProtectedRoutes";
 
 function App() {
 	const [theme, setTheme] = useState<ThemeType>("light");
@@ -37,54 +38,62 @@ function App() {
 								<Route path="/" element={<Welcome />} />
 								<Route path="register" element={<Register />} />
 								<Route path="login" element={<LogIn />} />
-								<Route
-									path="crossroad-list"
-									element={<ListOfCrossroads />}
-								/>
-								<Route
-									path="new-crossroad"
-									element={<CreateNewCrossroad />}
-								>
+								<Route element={<ProtectedRoutes />}>
 									<Route
-										path="location-selection"
-										element={<MapLeaflet />}
+										path="crossroad-list"
+										element={<ListOfCrossroads />}
 									/>
 									<Route
-										path="basic-information"
-										element={<BasicInformation />}
+										path="new-crossroad"
+										element={<CreateNewCrossroad />}
+									>
+										<Route
+											path="location-selection"
+											element={<MapLeaflet />}
+										/>
+										<Route
+											path="basic-information"
+											element={<BasicInformation />}
+										/>
+										<Route
+											path="entrances-and-exits"
+											element={<EntrancesAndExits />}
+										/>
+										<Route
+											path="connections"
+											element={<Connections />}
+										/>
+										<Route
+											path="traffic-lights"
+											element={<TrafficLights />}
+										/>
+										<Route
+											path="collisions"
+											element={<Collisions />}
+										/>
+										<Route
+											path="*"
+											element={<PageNotFoundLanding />}
+										/>
+									</Route>
+									<Route path="add-videos" element={<AddVideos />} />
+									<Route
+										path="crossroad-view/:crossroadId"
+										element={<CrossroadView />}
 									/>
 									<Route
-										path="entrances-and-exits"
-										element={<EntrancesAndExits />}
+										path="results-choice"
+										element={<ResultsChoicePanel />}
 									/>
 									<Route
-										path="connections"
-										element={<Connections />}
+										path="results-simulation"
+										element={<ResultsAsSimulation />}
 									/>
 									<Route
-										path="traffic-lights"
-										element={<TrafficLights />}
+										path="results-descriptive"
+										element={<ResultsAsDescription />}
 									/>
-									<Route path="collisions" element={<Collisions />} />
-									<Route path="*" element={<PageNotFoundLanding />} />
 								</Route>
-								<Route path="add-videos" element={<AddVideos />} />
-								<Route
-									path="crossroad-view/:crossroadId"
-									element={<CrossroadView />}
-								/>
-								<Route
-									path="results-choice"
-									element={<ResultsChoicePanel />}
-								/>
-								<Route
-									path="results-simulation"
-									element={<ResultsAsSimulation />}
-								/>
-								<Route
-									path="results-descriptive"
-									element={<ResultsAsDescription />}
-								/>
 								<Route path="*" element={<PageNotFoundLanding />} />
 							</Routes>
 						</BaseDiv>

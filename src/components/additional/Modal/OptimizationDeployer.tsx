@@ -28,6 +28,7 @@ import { useUserContext } from "../../../custom/UserContext";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
+import { alertShowtimeMS } from "../../../custom/loginFormsConstants";
 
 export type OptimizationDeployerProps = {
 	textToDisplay: string;
@@ -82,10 +83,19 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 				});
 			})
 			.catch((error) => {
-				console.error(error);
-				setFailureMessage(`Error ${error.code}`);
+				if (error.response.status >= 500) {
+					setFailureMessage("Internal server error!");
+				} else if (error.response.status === 422) {
+					setFailureMessage(
+						"Optimizer needs more time to provide relevant results!",
+					);
+				} else {
+					setFailureMessage(`Error ${error.code}`);
+				}
 				setShowFailureAlert(true);
-				props.onClose();
+				setTimeout(() => {
+					props.onClose();
+				}, alertShowtimeMS);
 			});
 	};
 
@@ -112,21 +122,24 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 
 	const handleChange = (event: SelectChangeEvent<string | number>) => {
 		const newValue = event.target.value;
-		if (newValue === "infinity") {
+		if (newValue === "no time limit") {
 			setChosenTime(-1);
 		} else if (typeof newValue === "number") {
 			setChosenTime(newValue);
 		}
 	};
 
-	const optimizationTimeOptions = [1, 10, 20, 30, 60, 120, -1];
+	const optimizationTimeOptions = [10, 30, 60, 120, 300, 600, -1];
 
 	return (
 		<StyledModal>
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showSuccessAlert}
-				autoHideDuration={1000}
+				autoHideDuration={alertShowtimeMS}
+				onClose={() => {
+					setShowSuccessAlert(false);
+				}}
 			>
 				<Alert
 					variant="filled"
@@ -139,7 +152,10 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showFailureAlert}
-				autoHideDuration={1000}
+				autoHideDuration={alertShowtimeMS}
+				onClose={() => {
+					setShowFailureAlert(false);
+				}}
 			>
 				<Alert variant="filled" severity="error">
 					<strong>{failureMessage}</strong>
@@ -185,7 +201,7 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 					>
 						<Select
 							displayEmpty
-							value={chosenTime === -1 ? "infinity" : chosenTime}
+							value={chosenTime === -1 ? "no time limit" : chosenTime}
 							onChange={handleChange}
 							input={<OutlinedInput />}
 							renderValue={(selected) => {
@@ -195,7 +211,7 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 
 								return (
 									<ChosenEm>
-										{selected === -1 ? "infinity" : selected}
+										{selected === -1 ? "no time limit" : selected}
 									</ChosenEm>
 								);
 							}}
@@ -214,7 +230,7 @@ export function OptimizationDeployer(props: OptimizationDeployerProps) {
 							</MenuItem>
 							{optimizationTimeOptions.map((time, index) => (
 								<MenuItem key={index} value={time} style={getStyles()}>
-									<p>{time !== -1 ? time : "infinity"}</p>
+									<p>{time !== -1 ? time : "no time limit"}</p>
 								</MenuItem>
 							))}
 						</Select>

@@ -19,6 +19,7 @@ import {
 	BaseLi,
 } from "../../styles/MainStyles";
 import {
+	alertShowtimeMS,
 	maximalPasswordLength,
 	maximalUsernameLength,
 	minimalPasswordLength,
@@ -52,6 +53,8 @@ export function Register() {
 	const [badRegisterMessage, setBadRegisterMessage] = useState("");
 
 	const [showSuccessAlert, setShowSuccessAlert] = useState(false);
+
+	const signUpMessage = "Sign up to start using the app";
 
 	const onRegister = (event: React.SyntheticEvent) => {
 		event.preventDefault();
@@ -158,7 +161,7 @@ export function Register() {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showSuccessAlert}
-				autoHideDuration={1000}
+				autoHideDuration={alertShowtimeMS}
 			>
 				<Alert
 					variant="filled"
@@ -172,7 +175,7 @@ export function Register() {
 				src={theme === "light" ? logo : dm_logo}
 				alt="Traffic Flow Optimizer Logo"
 			/>
-			<h3>Sign up to be able to use our app!</h3>
+			<h3>{signUpMessage}</h3>
 			<BaseForm onSubmit={onRegister}>
 				<BaseUl>
 					<BaseLi>

@@ -43,6 +43,7 @@ import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import CheckIcon from "@mui/icons-material/Check";
 import { Detection } from "../../../custom/OptimizationInterface";
+import { alertShowtimeMS } from "../../../custom/loginFormsConstants";
 
 export type VideoCordsSelectorProps = {
 	videoId: string;
@@ -236,9 +237,39 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 		setLowerLeftChoiceMessage(lowerLeftBase);
 	};
 
-	const onFinish = () => {
-		axios
-			.post<Detection[]>(
+	// const onFinish = () => {
+	// 	axios
+	// 		.post<Detection[]>(
+	// 			`/videos/${props.videoId}/analysis`,
+	// 			createdDetectionRectangles,
+	// 			{
+	// 				params: {
+	// 					skipFrames: 10,
+	// 				},
+	// 				headers: {
+	// 					Authorization: `Bearer ${
+	// 						loggedUser !== null
+	// 							? loggedUser.jwtToken
+	// 							: getUserJWTToken()
+	// 					}`,
+	// 				},
+	// 			},
+	// 		)
+	// 		.then((response) => {
+	// 			console.log(response.data);
+	// 			setShowSuccessAlert(true);
+	// 			setTimeout(() => {
+	// 				props.onClose();
+	// 			}, 1000);
+	// 		})
+	// 		.catch((error) => {
+	// 			console.error(error);
+	// 		});
+	// };
+
+	const onFinish = async () => {
+		try {
+			const response = await axios.post<Detection[]>(
 				`/videos/${props.videoId}/analysis`,
 				createdDetectionRectangles,
 				{
@@ -253,17 +284,15 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 						}`,
 					},
 				},
-			)
-			.then((response) => {
-				console.log(response.data);
-				setShowSuccessAlert(true);
-				setTimeout(() => {
-					props.onClose();
-				}, 1000);
-			})
-			.catch((error) => {
-				console.error(error);
-			});
+			);
+			alert(`Video ${props.videoId} was successfully analyzed!`);
+			setShowSuccessAlert(true);
+			setTimeout(() => {
+				props.onClose();
+			}, 1000);
+		} catch (error) {
+			alert(`Analysis of video ${props.videoId} failed with error ${error}!`);
+		}
 	};
 
 	const instruction = (
@@ -276,10 +305,13 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 			<br />
 			2. Then choose the connection that this particular rectangle will represent
 			<br />
-			{/* eslint-disable-next-line react/no-unescaped-entities */}
-			3. Repeat points 1. and 2. until you've covered all connections visible in
-			{/* eslint-disable-next-line react/no-unescaped-entities */}
-			the video's screenshot.
+			3. Repeat points 1. and 2. until you&apos;ve covered all connections visible
+			in the video&apos;s screenshot.
+			<br />* After pressing <strong>&quot;Finish&quot;</strong> button the
+			request will be serviced asynchronously.
+			<br />
+			You can leave the modal any time by pressing &quot;Abort&quot; without
+			cancelling the analysis
 		</CenteredInstructionP>
 	);
 
@@ -288,7 +320,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showSuccessAlert}
-				autoHideDuration={1000}
+				autoHideDuration={alertShowtimeMS}
 			>
 				<Alert
 					variant="filled"

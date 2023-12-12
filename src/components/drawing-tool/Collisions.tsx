@@ -51,6 +51,7 @@ import { CrossroadDescriptionRequest } from "../../custom/CrossRoadRestTypes";
 import { useUserContext } from "../../custom/UserContext";
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
+import { alertShowtimeMS } from "../../custom/loginFormsConstants";
 
 export function Collisions() {
 	const { theme } = useThemeContext();
@@ -279,7 +280,7 @@ export function Collisions() {
 			<Snackbar
 				anchorOrigin={{ vertical: "top", horizontal: "center" }}
 				open={showFailureAlert}
-				autoHideDuration={1000}
+				autoHideDuration={alertShowtimeMS}
 			>
 				<Alert variant="filled" severity="error">
 					<strong>{failureMessage}</strong>
