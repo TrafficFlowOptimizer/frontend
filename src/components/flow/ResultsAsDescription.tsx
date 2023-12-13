@@ -2,7 +2,12 @@ import React from "react";
 import { useLocation } from "react-router-dom";
 import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
-import { BaseButtonLink, PageHeader, ContainerDiv } from "../../styles/MainStyles";
+import {
+	BaseButtonLink,
+	PageHeader,
+	ContainerDiv,
+	ButtonsDiv,
+} from "../../styles/MainStyles";
 import { NeutralNegativeButton } from "../../styles/NeutralButton";
 import {
 	ResultsUl,
@@ -219,18 +224,20 @@ export function ResultsAsDescription() {
 						<li>Results are empty</li>
 					)}
 				</ResultsUl>
-				<BaseButtonLink
-					to="../results-choice"
-					relative="path"
-					state={{
-						crossroadId: crossroadId,
-						crossroadName: crossroadName,
-					}}
-				>
-					<NeutralNegativeButton>
-						Go back to results choice panel
-					</NeutralNegativeButton>
-				</BaseButtonLink>
+				<ButtonsDiv>
+					<BaseButtonLink
+						to="../results-choice"
+						relative="path"
+						state={{
+							crossroadId: crossroadId,
+							crossroadName: crossroadName,
+						}}
+					>
+						<NeutralNegativeButton>
+							Go back to results choice panel
+						</NeutralNegativeButton>
+					</BaseButtonLink>
+				</ButtonsDiv>
 			</div>
 		</ContainerDiv>
 	);
