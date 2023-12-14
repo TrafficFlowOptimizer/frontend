@@ -47,6 +47,7 @@ import {
 import Snackbar from "@mui/material/Snackbar";
 import Alert from "@mui/material/Alert";
 import { useUserContext } from "../../custom/UserContext";
+import { InitialSequenceUploader } from "../additional/Modal/InitialSequenceUploader";
 
 export function CrossroadView() {
 	const { loggedUser } = useUserContext();
@@ -68,6 +69,9 @@ export function CrossroadView() {
 	const [showFailureAlert, setShowFailureAlert] = useState(false);
 
 	const [failureMessage, setFailureMessage] = useState("");
+
+	const [showInitialSequenceUploader, setShowIntialSequenceUploader] =
+		useState(false);
 
 	useEffect(() => {
 		axios
@@ -164,6 +168,18 @@ export function CrossroadView() {
 						crossroadId={crossroad.id}
 						onClose={() => {
 							setShowOptimizationDeploymentModal(false);
+						}}
+					/>
+					<Backdrop />
+				</>
+			)}
+			{showInitialSequenceUploader && crossroad !== null && (
+				<>
+					<InitialSequenceUploader
+						crossroadName={crossroad.name}
+						crossroadId={crossroad.id}
+						onClose={() => {
+							setShowIntialSequenceUploader(false);
 						}}
 					/>
 					<Backdrop />
@@ -335,7 +351,7 @@ export function CrossroadView() {
 							</CenteredInfo>
 						)}
 					</HorizontalDiv>
-					{/*<VideosList /> TODO: Consider if it's doable and it's usefulness (if it's even worth the effort*/}
+					{/*<VideosList /> TODO: Consider if it's doable and it's usefulness (if it's even worth the effort)*/}
 				</>
 			) : (
 				<Snackbar
@@ -351,6 +367,12 @@ export function CrossroadView() {
 				<PositiveButton onClick={handleAddVideosButton}>
 					Add new video for chosen crossroad
 				</PositiveButton>
+				<NeutralPositiveButton
+					disabled={crossroadID === null}
+					onClick={() => setShowIntialSequenceUploader(true)}
+				>
+					Upload initial lights sequences
+				</NeutralPositiveButton>
 				<NeutralPositiveButton
 					disabled={crossroadID === null}
 					onClick={handleOptimizationOrder}

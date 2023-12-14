@@ -274,30 +274,32 @@ export function ResultsAsSimulation() {
 				}
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
+					//prettier-ignore
 					newCarsCurrent.set(
 						exitEntrancePoint.index,
 						leftCarsCurrent.get(exitEntrancePoint.index)! > 0
 							? Math.max(
-									0,
+								0,
 									carsCurrent.get(exitEntrancePoint.index)! -
 										leftCarsCurrent.get(exitEntrancePoint.index)!,
 							  )
 							: Math.max(
-									0,
+								0,
 									carsCurrent.get(exitEntrancePoint.index)! +
 										joinedCarsCurrent.get(exitEntrancePoint.index)!,
 							  ),
 					);
+					//prettier-ignore
 					newCarsPrevious.set(
 						exitEntrancePoint.index,
 						leftCarsPrevious.get(exitEntrancePoint.index)! > 0
 							? Math.max(
-									0,
+								0,
 									carsPrevious.get(exitEntrancePoint.index)! -
 										leftCarsPrevious.get(exitEntrancePoint.index)!,
 							  )
 							: Math.max(
-									0,
+								0,
 									carsPrevious.get(exitEntrancePoint.index)! +
 										joinedCarsPrevious.get(
 											exitEntrancePoint.index,
@@ -536,7 +538,7 @@ export function ResultsAsSimulation() {
 				></CrossroadScreenshot>
 				<SimulationVersionLabel>
 					<SimulationVersion>
-						Current lights' sequences simulation
+						Current lights&apos; sequences simulation
 					</SimulationVersion>
 				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
@@ -582,7 +584,7 @@ export function ResultsAsSimulation() {
 					})}
 				<SimulationVersionLabel>
 					<SimulationVersion>
-						Previous lights' sequences simulation
+						Previous lights&apos; sequences simulation
 					</SimulationVersion>
 				</SimulationVersionLabel>
 				<CrossroadScreenshot
