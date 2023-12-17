@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { ButtonColors, DarkTheme } from "./MainStyles";
+import { ButtonColors, Colors, DarkTheme } from "./MainStyles";
 
 export const ResultsUl = styled.ul`
 	list-style-type: none;
@@ -129,15 +129,15 @@ export const EEIBorderMarker = styled.div<EEIBorderProps>`
 `;
 
 export const SimulationVersionLabel = styled.div`
-	width: 175px;
-	height: 50px;
-	background-color: #ffffff;
-	border: 5px solid #ff0000;
+	width: fit-content;
+	height: fit-content;
+	background-color: ${Colors.PRIMARY_WHITE};
+	border: 3px solid ${Colors.PRIMARY_BLACK};
 	position: absolute;
 	z-index: 2;
 	left: 0%;
 	top: 0%;
-	object-fit: cover;
+	padding: 0px 5px;
 `;
 export const SimulationVersion= styled.p`
 	text-align: center;
