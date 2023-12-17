@@ -3,9 +3,7 @@ import { OptimizationResults } from "../../custom/OptimizationInterface";
 import { Navbar } from "../additional/Navbar";
 import {
 	CrossroadDescriptionResponse,
-	ResponseCollision,
 	ResponseConnection,
-	ResponseCrossroad,
 } from "../../custom/CrossRoadRestTypes";
 
 import { useLocation } from "react-router-dom";
@@ -13,6 +11,7 @@ import {
 	BaseButtonLink,
 	Colors,
 	ContainerDiv,
+	HorizontalDiv,
 	LightColors,
 	PageHeader,
 } from "../../styles/MainStyles";
@@ -20,7 +19,6 @@ import {
 	NeutralNegativeButton,
 	NeutralPositiveButton,
 } from "../../styles/NeutralButton";
-
 import { ExitEntrancePoint, TrafficLight } from "../../custom/CrossroadInterface";
 import { StyledItemTd } from "../../styles/CrossroadListStyles";
 import { getUserJWTToken } from "../../custom/drawing-tool/AuxiliaryFunctions";
@@ -29,6 +27,7 @@ import {
 	BorderedWorkaroundDiv,
 	CrossroadScreenshot,
 	EEIPointMarker,
+	CenteredInstructionP,
 } from "../../styles/drawing-tool-styles/GeneralStyles";
 import axios from "axios";
 import { useUserContext } from "../../custom/UserContext";
@@ -41,7 +40,9 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { SimulationLightSymbol } from "../../custom/SimulationInterface";
 import { lightsDirectionData } from "../../custom/drawing-tool/AuxiliaryData";
-import { doc } from "prettier";
+import Snackbar from "@mui/material/Snackbar";
+import { alertShowtimeMS } from "../../custom/loginFormsConstants";
+import Alert from "@mui/material/Alert";
 
 export function ResultsAsSimulation() {
 	const { loggedUser } = useUserContext();
@@ -50,7 +51,6 @@ export function ResultsAsSimulation() {
 	const crossroadName = location.state.crossroadName ?? null;
 	const results: OptimizationResults = location.state.results ?? null;
 	const crossroadId = location.state.crossroadId;
-	const carFlows: number[] = location.state.car;
 
 	const lightsSeqPrev: number[][] = Object.values(results.lightsSequenceMapPrevious);
 	const lightsSeqCurr: number[][] = Object.values(results.lightsSequenceMapCurrent);
@@ -60,21 +60,18 @@ export function ResultsAsSimulation() {
 	const roadsLights: Map<number, TrafficLight[]> = convertObjectToMap(
 		results.roadsLightsMap,
 	);
-	const conFlow: Map<number, number> = convertObjectToMap(results.connectionsFlowMap);
 	const conRoad: Map<number, number> = convertObjectToMap(results.connectionsRoadMap);
 	const roadFlow: Map<number, number> = convertObjectToMap(results.roadsFlowMap);
 	const conChances: Map<number, number> = convertObjectToMap(
 		results.connectionChanceToPickMap,
 	);
 
-	const [crossroad, setCrossroad] = useState<ResponseCrossroad | null>(null);
 	const [crossroadImage, setCrossroadImage] = useState<string | undefined>(undefined);
 	const [exitEntrancePoints, setExitEntrancePoints] = useState<ExitEntrancePoint[]>(
 		[],
 	);
 	const [connections, setConnections] = useState<ResponseConnection[]>([]);
 	const [trafficLights, setTrafficLights] = useState<TrafficLight[]>([]);
-	const [collisions, setCollisions] = useState<ResponseCollision[]>([]);
 
 	const [showFailureAlert, setShowFailureAlert] = useState(false);
 	const [failureMessage, setFailureMessage] = useState("");
@@ -106,11 +103,9 @@ export function ResultsAsSimulation() {
 			})
 			.then((response) => {
 				const crossingsData: CrossroadDescriptionResponse = response.data;
-				setCrossroad(crossingsData.crossroad);
 				setExitEntrancePoints(crossingsData.roads);
 				setConnections(crossingsData.connections);
 				setTrafficLights(crossingsData.trafficLights);
-				setCollisions(crossingsData.collisions);
 				setCrossroadImage(crossingsData.image);
 				setLightsCurrent(
 					new Map(
@@ -185,14 +180,16 @@ export function ResultsAsSimulation() {
 					);
 				}
 				setLightsCurrent(newLights);
-				newLights = new Map<number, LightColors>();
-				for (const trafficLight of trafficLights) {
-					newLights.set(
-						trafficLight.index,
-						lightColors[lightsSeqPrev[trafficLight.index - 1][timer]],
-					);
+				if (lightsSeqPrev.length != 0) {
+					newLights = new Map<number, LightColors>();
+					for (const trafficLight of trafficLights) {
+						newLights.set(
+							trafficLight.index,
+							lightColors[lightsSeqPrev[trafficLight.index - 1][timer]],
+						);
+					}
+					setLightsPrevious(newLights);
 				}
-				setLightsPrevious(newLights);
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
 					const connectionsIdxs = getConnectionsIdxsForRoadIdx(
@@ -274,30 +271,32 @@ export function ResultsAsSimulation() {
 				}
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
+					// prettier-ignore
 					newCarsCurrent.set(
 						exitEntrancePoint.index,
 						leftCarsCurrent.get(exitEntrancePoint.index)! > 0
 							? Math.max(
-									0,
+								0,
 									carsCurrent.get(exitEntrancePoint.index)! -
 										leftCarsCurrent.get(exitEntrancePoint.index)!,
 							  )
 							: Math.max(
-									0,
+								0,
 									carsCurrent.get(exitEntrancePoint.index)! +
 										joinedCarsCurrent.get(exitEntrancePoint.index)!,
 							  ),
 					);
+					// prettier-ignore
 					newCarsPrevious.set(
 						exitEntrancePoint.index,
 						leftCarsPrevious.get(exitEntrancePoint.index)! > 0
 							? Math.max(
-									0,
+								0,
 									carsPrevious.get(exitEntrancePoint.index)! -
 										leftCarsPrevious.get(exitEntrancePoint.index)!,
 							  )
 							: Math.max(
-									0,
+								0,
 									carsPrevious.get(exitEntrancePoint.index)! +
 										joinedCarsPrevious.get(
 											exitEntrancePoint.index,
@@ -306,7 +305,9 @@ export function ResultsAsSimulation() {
 					);
 				}
 				setCarsCurrent(newCarsCurrent);
-				setCarsPrevious(newCarsPrevious);
+				if (lightsSeqPrev.length != 0) {
+					setCarsPrevious(newCarsPrevious);
+				}
 			}, timeDelta);
 			return () => clearInterval(lightsTimer);
 		}
@@ -323,11 +324,11 @@ export function ResultsAsSimulation() {
 	}
 
 	function howManyCarsArrived(flow: number) {
-		let n = 0;
+		let arrivedCars = 0;
 		while (flow > 0 && Math.random() < flow) {
-			n += 1;
+			arrivedCars += 1;
 		}
-		return n;
+		return arrivedCars;
 	}
 
 	function getRoadForId(id: string, exitEntrancePoints: ExitEntrancePoint[]) {
@@ -426,7 +427,6 @@ export function ResultsAsSimulation() {
 		point: ExitEntrancePoint,
 		cars: Map<number, number>,
 		lights: Map<number, LightColors>,
-		type: string,
 	) => {
 		let idx = point.index * -1;
 		let lightColor = LightColors.BLACK;
@@ -489,7 +489,23 @@ export function ResultsAsSimulation() {
 	return (
 		<ContainerDiv>
 			<Navbar />
+			<Snackbar
+				anchorOrigin={{ vertical: "top", horizontal: "center" }}
+				open={showFailureAlert}
+				autoHideDuration={alertShowtimeMS}
+				onClose={() => {
+					setShowFailureAlert(false);
+				}}
+			>
+				<Alert variant="filled" severity="error">
+					<strong>{failureMessage}</strong>
+				</Alert>
+			</Snackbar>
 			<PageHeader>{crossroadName}</PageHeader>
+			<CenteredInstructionP>
+				Symbols of the traffic lights are oriented as if the driver was
+				positioned in front of the screen!
+			</CenteredInstructionP>
 			<BorderedWorkaroundDiv>
 				{connections.length > 0 &&
 					connections.map((con) => {
@@ -516,7 +532,7 @@ export function ResultsAsSimulation() {
 						);
 					})}
 				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
+					exitEntrancePoints.map((point) => {
 						const usedLights: TrafficLight[] = roadsLights.get(
 							point.index,
 						)!;
@@ -527,7 +543,6 @@ export function ResultsAsSimulation() {
 							point,
 							carsCurrent,
 							lightsCurrent,
-							"curr",
 						);
 					})}
 				<CrossroadScreenshot
@@ -536,60 +551,65 @@ export function ResultsAsSimulation() {
 				></CrossroadScreenshot>
 				<SimulationVersionLabel>
 					<SimulationVersion>
-						Current lights' sequences simulation
+						Current lights&apos; sequences simulation
 					</SimulationVersion>
 				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
-			<BorderedWorkaroundDiv>
-				{connections.length > 0 &&
-					connections.map((con) => {
-						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
-						)[0];
-						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
-						)[0];
+			{lightsSeqPrev.length !== 0 ? (
+				<BorderedWorkaroundDiv>
+					{connections.length > 0 &&
+						connections.map((con) => {
+							const entrancePoint = exitEntrancePoints.filter(
+								(point) => point.id === con.sourceId,
+							)[0];
+							const exitPoint = exitEntrancePoints.filter(
+								(point) => point.id === con.targetId,
+							)[0];
 
-						return (
-							<ConnectionMarker
-								key={con.index}
-								thickness={3}
-								entranceX={entrancePoint.xCord}
-								entranceY={entrancePoint.yCord}
-								exitX={exitPoint.xCord}
-								exitY={exitPoint.yCord}
-								connection={con}
-								color={Colors.PRIMARY_GRAY}
-								withLightIds={true}
-								withTooltip={false}
-							/>
-						);
-					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
-						const usedLights: TrafficLight[] = roadsLights.get(
-							point.index,
-						)!;
-						return ShowLight(
-							usedLights,
-							lightsSeqPrev,
-							roadFlow.get(point.index)!,
-							point,
-							carsPrevious,
-							lightsPrevious,
-							"prev",
-						);
-					})}
-				<SimulationVersionLabel>
-					<SimulationVersion>
-						Previous lights' sequences simulation
-					</SimulationVersion>
-				</SimulationVersionLabel>
-				<CrossroadScreenshot
-					src={crossroadImage}
-					alt="Map screenshot"
-				></CrossroadScreenshot>
-			</BorderedWorkaroundDiv>
+							return (
+								<ConnectionMarker
+									key={con.index}
+									thickness={3}
+									entranceX={entrancePoint.xCord}
+									entranceY={entrancePoint.yCord}
+									exitX={exitPoint.xCord}
+									exitY={exitPoint.yCord}
+									connection={con}
+									color={Colors.PRIMARY_GRAY}
+									withLightIds={true}
+									withTooltip={false}
+								/>
+							);
+						})}
+					{exitEntrancePoints.length > 0 &&
+						exitEntrancePoints.map((point) => {
+							const usedLights: TrafficLight[] = roadsLights.get(
+								point.index,
+							)!;
+							return ShowLight(
+								usedLights,
+								lightsSeqPrev,
+								roadFlow.get(point.index)!,
+								point,
+								carsPrevious,
+								lightsPrevious,
+							);
+						})}
+					<SimulationVersionLabel>
+						<SimulationVersion>
+							Previous lights&apos; sequences simulation
+						</SimulationVersion>
+					</SimulationVersionLabel>
+					<CrossroadScreenshot
+						src={crossroadImage}
+						alt="Map screenshot"
+					></CrossroadScreenshot>
+				</BorderedWorkaroundDiv>
+			) : (
+				<HorizontalDiv>
+					<p>There are no previous lights!</p>
+				</HorizontalDiv>
+			)}
 			<tbody>
 				<StyledItemTd>
 					{!running ? (
