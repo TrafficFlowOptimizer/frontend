@@ -11,6 +11,7 @@ import {
 	BaseButtonLink,
 	Colors,
 	ContainerDiv,
+	HorizontalDiv,
 	LightColors,
 	PageHeader,
 } from "../../styles/MainStyles";
@@ -241,9 +242,7 @@ export function ResultsAsSimulation() {
 					}
 				}
 				setLeftCarsCurrent(leftCars_Current);
-				// if (lightsSeqPrev.length == 0) {
 				setLeftCarsPrevious(leftCars_Previous);
-				// }
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
 					if (exitEntrancePoint.type != "INTERMEDIATE") {
@@ -325,11 +324,11 @@ export function ResultsAsSimulation() {
 	}
 
 	function howManyCarsArrived(flow: number) {
-		let n = 0;
+		let arrivedCars = 0;
 		while (flow > 0 && Math.random() < flow) {
-			n += 1;
+			arrivedCars += 1;
 		}
-		return n;
+		return arrivedCars;
 	}
 
 	function getRoadForId(id: string, exitEntrancePoints: ExitEntrancePoint[]) {
@@ -556,57 +555,61 @@ export function ResultsAsSimulation() {
 					</SimulationVersion>
 				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
-			<BorderedWorkaroundDiv>
-				{connections.length > 0 &&
-					connections.map((con) => {
-						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
-						)[0];
-						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
-						)[0];
+			{lightsSeqPrev.length !== 0 ? (
+				<BorderedWorkaroundDiv>
+					{connections.length > 0 &&
+						connections.map((con) => {
+							const entrancePoint = exitEntrancePoints.filter(
+								(point) => point.id === con.sourceId,
+							)[0];
+							const exitPoint = exitEntrancePoints.filter(
+								(point) => point.id === con.targetId,
+							)[0];
 
-						return (
-							<ConnectionMarker
-								key={con.index}
-								thickness={3}
-								entranceX={entrancePoint.xCord}
-								entranceY={entrancePoint.yCord}
-								exitX={exitPoint.xCord}
-								exitY={exitPoint.yCord}
-								connection={con}
-								color={Colors.PRIMARY_GRAY}
-								withLightIds={true}
-								withTooltip={false}
-							/>
-						);
-					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point) => {
-						const usedLights: TrafficLight[] = roadsLights.get(
-							point.index,
-						)!;
-						return ShowLight(
-							usedLights,
-							lightsSeqPrev,
-							roadFlow.get(point.index)!,
-							point,
-							carsPrevious,
-							lightsPrevious,
-						);
-					})}
-				<SimulationVersionLabel>
-					<SimulationVersion>
-						{lightsSeqPrev.length == 0
-							? "There are no previous lights' sequences!"
-							: "Previous lights&apos; sequences simulation"}
-					</SimulationVersion>
-				</SimulationVersionLabel>
-				<CrossroadScreenshot
-					src={crossroadImage}
-					alt="Map screenshot"
-				></CrossroadScreenshot>
-			</BorderedWorkaroundDiv>
+							return (
+								<ConnectionMarker
+									key={con.index}
+									thickness={3}
+									entranceX={entrancePoint.xCord}
+									entranceY={entrancePoint.yCord}
+									exitX={exitPoint.xCord}
+									exitY={exitPoint.yCord}
+									connection={con}
+									color={Colors.PRIMARY_GRAY}
+									withLightIds={true}
+									withTooltip={false}
+								/>
+							);
+						})}
+					{exitEntrancePoints.length > 0 &&
+						exitEntrancePoints.map((point) => {
+							const usedLights: TrafficLight[] = roadsLights.get(
+								point.index,
+							)!;
+							return ShowLight(
+								usedLights,
+								lightsSeqPrev,
+								roadFlow.get(point.index)!,
+								point,
+								carsPrevious,
+								lightsPrevious,
+							);
+						})}
+					<SimulationVersionLabel>
+						<SimulationVersion>
+							Previous lights&apos; sequences simulation
+						</SimulationVersion>
+					</SimulationVersionLabel>
+					<CrossroadScreenshot
+						src={crossroadImage}
+						alt="Map screenshot"
+					></CrossroadScreenshot>
+				</BorderedWorkaroundDiv>
+			) : (
+				<HorizontalDiv>
+					<p>There are no previous lights!</p>
+				</HorizontalDiv>
+			)}
 			<tbody>
 				<StyledItemTd>
 					{!running ? (
