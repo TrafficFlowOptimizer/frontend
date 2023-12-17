@@ -179,14 +179,16 @@ export function ResultsAsSimulation() {
 					);
 				}
 				setLightsCurrent(newLights);
-				newLights = new Map<number, LightColors>();
-				for (const trafficLight of trafficLights) {
-					newLights.set(
-						trafficLight.index,
-						lightColors[lightsSeqPrev[trafficLight.index - 1][timer]],
-					);
+				if (lightsSeqPrev.length != 0) {
+					newLights = new Map<number, LightColors>();
+					for (const trafficLight of trafficLights) {
+						newLights.set(
+							trafficLight.index,
+							lightColors[lightsSeqPrev[trafficLight.index - 1][timer]],
+						);
+					}
+					setLightsPrevious(newLights);
 				}
-				setLightsPrevious(newLights);
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
 					const connectionsIdxs = getConnectionsIdxsForRoadIdx(
@@ -239,7 +241,9 @@ export function ResultsAsSimulation() {
 					}
 				}
 				setLeftCarsCurrent(leftCars_Current);
+				// if (lightsSeqPrev.length == 0) {
 				setLeftCarsPrevious(leftCars_Previous);
+				// }
 
 				for (const exitEntrancePoint of exitEntrancePoints) {
 					if (exitEntrancePoint.type != "INTERMEDIATE") {
@@ -302,7 +306,9 @@ export function ResultsAsSimulation() {
 					);
 				}
 				setCarsCurrent(newCarsCurrent);
-				setCarsPrevious(newCarsPrevious);
+				if (lightsSeqPrev.length != 0) {
+					setCarsPrevious(newCarsPrevious);
+				}
 			}, timeDelta);
 			return () => clearInterval(lightsTimer);
 		}
@@ -591,7 +597,9 @@ export function ResultsAsSimulation() {
 					})}
 				<SimulationVersionLabel>
 					<SimulationVersion>
-						Previous lights&apos; sequences simulation
+						{lightsSeqPrev.length == 0
+							? "There are no previous lights' sequences!"
+							: "Previous lights&apos; sequences simulation"}
 					</SimulationVersion>
 				</SimulationVersionLabel>
 				<CrossroadScreenshot
