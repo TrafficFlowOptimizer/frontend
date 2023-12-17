@@ -255,8 +255,8 @@ export function InitialSequenceUploader(props: InitialSequenceUploaderProps) {
 				<PositiveButton
 					onClick={sendInitialSequence}
 					disabled={
-						chosenDay === undefined ||
-						chosenHour === undefined ||
+						(!initialSequenceForAllIntervals &&
+							(chosenDay === undefined || chosenHour === undefined)) ||
 						csvToUpload === null
 					}
 				>
@@ -270,5 +270,6 @@ export function InitialSequenceUploader(props: InitialSequenceUploaderProps) {
 const StyledCSVUploader = styled(StyledModal)`
 	top: 0%;
 	padding: 15px;
-	height: fit-content;
+	height: 90vh;
+	overflow-y: auto;
 `;
