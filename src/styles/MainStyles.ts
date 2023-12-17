@@ -74,7 +74,7 @@ export const BaseButton = styled.button`
 	transition: all 0.2s ease-in-out;
 	&:hover:enabled {
 		cursor: pointer;
-		z-index: 10;
+		z-index: 2;
 	}
 	
 	&:disabled {

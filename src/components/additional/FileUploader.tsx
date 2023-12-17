@@ -22,17 +22,6 @@ import {
 	VideoReadyMessage,
 	HorizontalWrapper,
 } from "../../styles/FileUploaderStyles";
-import {
-	ChosenEm,
-	SELECT_ITEM_HEIGHT,
-	SELECT_ITEM_PADDING_TOP,
-	SELECT_WIDTH,
-	StyledEm,
-} from "../../styles/drawing-tool-styles/MUISelectStyles";
-import Select, { SelectChangeEvent } from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-import OutlinedInput from "@mui/material/OutlinedInput";
-import MenuItem from "@mui/material/MenuItem";
 import { ButtonsDiv } from "../../styles/MainStyles";
 import { NeutralPositiveButton } from "../../styles/NeutralButton";
 import { ThemeProvider } from "@mui/material";

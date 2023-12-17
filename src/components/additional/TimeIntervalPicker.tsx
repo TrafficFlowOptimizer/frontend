@@ -18,13 +18,18 @@ import { useThemeContext } from "../../custom/ThemeContext";
 export type TimeIntervalPickerProps = {
 	setHour: (hour: Hour | undefined) => void;
 	setDay: (day: Day | undefined) => void;
+	isDisabled?: boolean;
+	alternativeHourPlaceholder?: string;
+	alternativeDayPlaceholder?: string;
 };
 
 export function TimeIntervalPicker(props: TimeIntervalPickerProps) {
 	const { theme } = useThemeContext();
 
-	const hourPlaceholder = "Select hour when the video was recorded";
-	const dayPlaceholder = "Select day when the video was recorded";
+	const hourPlaceholder =
+		props.alternativeHourPlaceholder || "Select hour when the video was recorded";
+	const dayPlaceholder =
+		props.alternativeDayPlaceholder || "Select day when the video was recorded";
 
 	const MenuProps = {
 		PaperProps: {
@@ -151,6 +156,7 @@ export function TimeIntervalPicker(props: TimeIntervalPickerProps) {
 				}}
 			>
 				<Select
+					disabled={props.isDisabled !== undefined ? props.isDisabled : false}
 					displayEmpty
 					value={stringifyHour(chosenHour)}
 					onChange={handleHourChange}
@@ -197,6 +203,7 @@ export function TimeIntervalPicker(props: TimeIntervalPickerProps) {
 				}}
 			>
 				<Select
+					disabled={props.isDisabled !== undefined ? props.isDisabled : false}
 					displayEmpty
 					value={chosenDay === undefined ? "" : chosenDay}
 					onChange={handleDayChange}
