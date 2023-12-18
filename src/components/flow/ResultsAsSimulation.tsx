@@ -592,7 +592,6 @@ export function ResultsAsSimulation() {
 							point,
 							carsPrevious,
 							lightsPrevious,
-							"prev",
 						);
 					})}
 				<SimulationVersionLabel>
