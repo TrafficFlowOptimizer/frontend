@@ -555,51 +555,6 @@ export function ResultsAsSimulation() {
 					</SimulationVersion>
 				</SimulationVersionLabel>
 			</BorderedWorkaroundDiv>
-			<BorderedWorkaroundDiv>
-				{connections.length > 0 &&
-					connections.map((con) => {
-						const entrancePoint = exitEntrancePoints.filter(
-							(point) => point.id === con.sourceId,
-						)[0];
-						const exitPoint = exitEntrancePoints.filter(
-							(point) => point.id === con.targetId,
-						)[0];
-
-						return (
-							<ConnectionMarker
-								key={con.index}
-								thickness={3}
-								entranceX={entrancePoint.xCord}
-								entranceY={entrancePoint.yCord}
-								exitX={exitPoint.xCord}
-								exitY={exitPoint.yCord}
-								connection={con}
-								color={Colors.PRIMARY_GRAY}
-								withLightIds={true}
-								withTooltip={false}
-							/>
-						);
-					})}
-				{exitEntrancePoints.length > 0 &&
-					exitEntrancePoints.map((point, idx) => {
-						const usedLights: TrafficLight[] = roadsLights.get(
-							point.index,
-						)!;
-						return ShowLight(
-							usedLights,
-							lightsSeqPrev,
-							roadFlow.get(point.index)!,
-							point,
-							carsPrevious,
-							lightsPrevious,
-						);
-					})}
-				<SimulationVersionLabel>
-					<SimulationVersion>
-						Previous lights&apos; sequences simulation
-					</SimulationVersion>
-				</SimulationVersionLabel>
-			</BorderedWorkaroundDiv>
 			{lightsSeqPrev.length !== 0 ? (
 				<BorderedWorkaroundDiv>
 					{connections.length > 0 &&
