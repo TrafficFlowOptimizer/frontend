@@ -98,11 +98,7 @@ export function InitialSequenceUploader(props: InitialSequenceUploaderProps) {
 			const uploadCsvData = new FormData();
 			uploadCsvData.append("file", csvToUpload);
 			uploadCsvData.append("crossroadId", props.crossroadId);
-			if (initialSequenceForAllIntervals) {
-				uploadCsvData.append("hour", "null");
-
-				uploadCsvData.append("day", "null");
-			} else {
+			if (!initialSequenceForAllIntervals) {
 				uploadCsvData.append(
 					"hour",
 					chosenHour === undefined ? " " : Hour[chosenHour],
