@@ -15,6 +15,7 @@ Oprócz autentykacji i autoryzacji głównymi elementami modułu są odpowiednio
 ![drawing-tool_flow](https://github.com/TrafficFlowOptimizer/frontend/assets/92650724/09db9ecf-76f3-4471-aabd-03dfd2a672ee)
 
 * **Wyznaczanie pasów na klatce nagrania za pomocą tzw. DetectionRectangles** - element niezbędny dla modułu Analizatora do poprawnego przetwarzania dostarczonych nagrań. Polega na wyznaczeniu obszarów konkretnych pasów widocznych na nagraniu i przyporządkowaniu ich do konkretnych przejazdów.
+*  **Zlecanie optymalizacji i podgląd wyników** - wysłanie zlecenia optymalizacji za pomocą żądania HTTP oraz podgląd uzyskanych w ten sposób rezultatów w postaci danych opisowych i symulacji.
 
 ## Wykorzystane zewnętrzne biblioteki
 Moduł oparto na **frameworku React** i **języku TypeScript**.\
