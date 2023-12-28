@@ -1,46 +1,37 @@
-# Getting Started with Create React App
+# TrafficFlowOptimizer - moduł Frontend
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Opis
+Moduł jest częścią webową aplikacji.\
+Został zaprojektowany z myślą o jak największej przejrzystości i prostocie użytkowania. Dodatkowo każdy etap procesu modelowania skrzyżowania, dodawania nagrania, zlecania optymalizacji oraz podglądu wyników opatrzony jest krótką instrukcją postępowania.\
+Poniżej przedstawiono generalny schemat użytkowania modułu dostępny dla klienta.
 
-## Available Scripts
+<img width="1747" alt="flow_szczegolowy" src="https://github.com/TrafficFlowOptimizer/frontend/assets/92650724/8283a9d6-acf6-463e-b53d-cc30b729ed1f">
 
-In the project directory, you can run:
 
-### `npm start`
+## Najważniejsze elementy
+Oprócz autentykacji i autoryzacji głównymi elementami modułu są odpowiednio:
+* **DrawingTool** - autorskie narzędzie do tworzenia modeli skrzyżowań. Pozwala w realistyczny sposób odtworzyć dowolne skrzyżowanie. Zostawia klientowi duże pole manewru umożliwiając m.in. wprowadzenie hipotetycznych zmian w wybranym przejeździe, czy stworzenie zupełnie nowego układu ulic. Poniżej zaprezentowano szczegółowy schemat kolejnych etapów tworzenia skrzyżowania za pomoca narzędzia:
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+![drawing-tool_flow](https://github.com/TrafficFlowOptimizer/frontend/assets/92650724/09db9ecf-76f3-4471-aabd-03dfd2a672ee)
 
-The page will reload if you make edits.\
-You will also see any lint errors in the console.
+* **Wyznaczanie pasów na klatce nagrania za pomocą tzw. DetectionRectangles** - element niezbędny dla modułu Analizatora do poprawnego przetwarzania dostarczonych nagrań. Polega na wyznaczeniu obszarów konkretnych pasów widocznych na nagraniu i przyporządkowaniu ich do konkretnych przejazdów.
 
-### `npm test`
+## Wykorzystane zewnętrzne biblioteki
+Moduł oparto na **frameworku React** i **języku TypeScript**.\
+Oprócz funkcjonalności zapewnianych przez ww. narzędzia wykorzystano również kilka zewnętrznych bibliotek oraz narzędzi:
+* **Font Awesome**, **MaterialUI** oraz **styled-components** w celu wzbogacenia strony wizualnej projektu
+* **Eslint** oraz **Prettier** formatujące kod i pilnujące spójności stylu, oraz zachowywania zasad pisania w TypeScriptcie
+* **Axios**, by uprościć korzystanie z żądań HTTP. Właśnie za ich pomocą, w oparciu o styl architektoniczny REST moduł komunikuje się z Backendem (częścią serwerową)
+* **Google Maps API** wykorzystywane w autorskim narzędziu DrawingTool do tworzenia modeli skrzyżowań
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+## Jak uruchomić moduł, czyli `npm start`
 
-### `npm run build`
+Uruchamia aplikację w trybie developerskim.\
+Aplikację można także uruchomić w innych trybach opisanych w dokumentacji frameworka.\
+Otwórz [http://localhost:3000](http://localhost:3000) aby zobaczyć klienta w przeglądarce.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## Dokumentacja React'a
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
-
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
-
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
+* [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+* [React documentation](https://reactjs.org/).
