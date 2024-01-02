@@ -237,38 +237,12 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 		setLowerLeftChoiceMessage(lowerLeftBase);
 	};
 
-	// const onFinish = () => {
-	// 	axios
-	// 		.post<Detection[]>(
-	// 			`/videos/${props.videoId}/analysis`,
-	// 			createdDetectionRectangles,
-	// 			{
-	// 				params: {
-	// 					skipFrames: 10,
-	// 				},
-	// 				headers: {
-	// 					Authorization: `Bearer ${
-	// 						loggedUser !== null
-	// 							? loggedUser.jwtToken
-	// 							: getUserJWTToken()
-	// 					}`,
-	// 				},
-	// 			},
-	// 		)
-	// 		.then((response) => {
-	// 			console.log(response.data);
-	// 			setShowSuccessAlert(true);
-	// 			setTimeout(() => {
-	// 				props.onClose();
-	// 			}, 1000);
-	// 		})
-	// 		.catch((error) => {
-	// 			console.error(error);
-	// 		});
-	// };
-
 	const onFinish = async () => {
 		try {
+			setShowSuccessAlert(true);
+			setTimeout(() => {
+				props.onClose();
+			}, 1000);
 			const response = await axios.post<Detection[]>(
 				`/videos/${props.videoId}/analysis`,
 				createdDetectionRectangles,
@@ -285,11 +259,7 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 					},
 				},
 			);
-			alert(`Video ${props.videoId} was successfully analyzed!`);
-			setShowSuccessAlert(true);
-			setTimeout(() => {
-				props.onClose();
-			}, 1000);
+			alert(`Video ${props.videoId} was analyzed successfully!`);
 		} catch (error) {
 			alert(`Analysis of video ${props.videoId} failed with error ${error}!`);
 		}
@@ -498,7 +468,11 @@ export function VideoCordsSelector(props: VideoCordsSelectorProps) {
 					Reset current rectangle
 				</NeutralNegativeButton>
 				<NeutralPositiveButton
-					disabled={currentDetectionRectangle.connectionId === ""}
+					disabled={
+						currentDetectionRectangle.connectionId === "" ||
+						lowerLeftChoiceMessage == lowerLeftBase ||
+						upperRightChoiceMessage == upperRightBase
+					}
 					onClick={onNextDetectionRectangle}
 				>
 					Next Detection Rectangle
