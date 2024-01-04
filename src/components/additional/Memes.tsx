@@ -17,6 +17,18 @@ import meme15 from "../../assets/memes/meme_15.png";
 import meme16 from "../../assets/memes/meme_16.png";
 import meme1_uc from "../../assets/memes/meme_uc_1.webp";
 import meme2_uc from "../../assets/memes/meme_uc_2.gif";
+import meme17 from "../../assets/memes/meme_17.jpg";
+import meme18 from "../../assets/memes/meme_18.webp";
+import meme19 from "../../assets/memes/meme_19.jpg";
+import meme20 from "../../assets/memes/meme_20.jpeg";
+import meme21 from "../../assets/memes/meme_21.png";
+import meme22 from "../../assets/memes/meme_22.png";
+import meme23 from "../../assets/memes/meme_23.png";
+import meme24 from "../../assets/memes/meme_24.jpg";
+import meme25 from "../../assets/memes/meme_25.jpg";
+import meme26 from "../../assets/memes/meme_26.jpeg";
+import meme27 from "../../assets/memes/meme_27.jpg";
+import meme28 from "../../assets/memes/meme_28.webp";
 import styled from "styled-components";
 
 export function Memes() {
@@ -39,6 +51,18 @@ export function Memes() {
 		meme16,
 		meme1_uc,
 		meme2_uc,
+		meme17,
+		meme18,
+		meme19,
+		meme20,
+		meme21,
+		meme22,
+		meme23,
+		meme24,
+		meme25,
+		meme26,
+		meme27,
+		meme28,
 	];
 	const [image, setImage] = useState(meme1);
 
