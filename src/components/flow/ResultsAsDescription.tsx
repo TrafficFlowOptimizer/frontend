@@ -101,11 +101,9 @@ export function ResultsAsDescription() {
 										Cars passed to arrived ratio:
 									</ResultsInfoParagraph>
 									<ResultsInfoParagraph topMargin={15}>
-										{
-											conFlowRatioCurr[
-												parseInt(connectionIndex) - 1
-											]
-										}
+										{conFlowRatioCurr[
+											parseInt(connectionIndex) - 1
+										].toFixed(2)}
 									</ResultsInfoParagraph>
 									<ResultsInfoParagraph
 										topMargin={15}
@@ -119,7 +117,7 @@ export function ResultsAsDescription() {
 										{conFlowRatioPrev.length ===
 										0
 											? "No previous results"
-											: conFlowRatioPrev[parseInt(connectionIndex)-1]}
+											: (conFlowRatioPrev[parseInt(connectionIndex)-1]).toFixed(2)}
 									</ResultsInfoParagraph>
 									<ResultsInfoParagraph
 										topMargin={15}
