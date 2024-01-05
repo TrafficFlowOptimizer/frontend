@@ -5,12 +5,12 @@ export const StyledModal = styled.div`
 	background-color: ${(props) => props.theme.primary};
 	padding: 1rem;
 	text-align: center;
-	width: 60vw;
-	height: calc(100% - 10vh);
+	width: 40vw;
+	height: calc(100% - 20vh);
 	z-index: 10;
 	position: fixed;
 	top: 5vh;
-	left: calc(50% - 30vw);
+	left: calc(50% - 20vw);
 
 	display: flex;
 	flex-direction: column;

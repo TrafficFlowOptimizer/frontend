@@ -110,6 +110,7 @@ export function ListOfCrossroads() {
 				} else {
 					setAlertMessage(`Error ${error.code}`);
 				}
+				setShowAlert(true);
 			});
 	};
 
