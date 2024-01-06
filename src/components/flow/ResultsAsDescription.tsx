@@ -64,10 +64,6 @@ export function ResultsAsDescription() {
 		}
 	};
 
-	console.log("connectionsIndexes", connectionsIndexes);
-	console.log("crossroadConnections", crossroadConnections);
-	console.log("lightsSeqCurr", lightsSeqCurr);
-
 	return (
 		<ContainerDiv>
 			<Navbar />

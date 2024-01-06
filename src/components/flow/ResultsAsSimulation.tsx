@@ -166,7 +166,6 @@ export function ResultsAsSimulation() {
 				>();
 				const newCarsPrevious: Map<number, number> = new Map<number, number>();
 
-				console.log(timer);
 				setTimer((timer + 1) % timeInterval);
 
 				let newLights: Map<number, LightColors> = new Map<
@@ -251,15 +250,13 @@ export function ResultsAsSimulation() {
 							howManyCarsArrived(
 								roadFlow.get(exitEntrancePoint.index)! / 60,
 							),
-							// howManyCarsArrived(0.05),
-						); //TODO 60? how many ticks per minute?
+						);
 						joinedCarsPrevious.set(
 							exitEntrancePoint.index,
 							howManyCarsArrived(
 								roadFlow.get(exitEntrancePoint.index)! / 60,
 							),
-							// howManyCarsArrived(0.05),
-						); //TODO 60? how many ticks per minute?
+						);
 					} else {
 						if (!joinedCarsCurrent.has(exitEntrancePoint.index)) {
 							joinedCarsCurrent.set(exitEntrancePoint.index, 0);
