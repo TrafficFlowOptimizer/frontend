@@ -25,11 +25,19 @@ Oprócz funkcjonalności zapewnianych przez ww. narzędzia wykorzystano równie�
 * **Axios**, by uprościć korzystanie z żądań HTTP. Właśnie za ich pomocą, w oparciu o styl architektoniczny REST moduł komunikuje się z Backendem (częścią serwerową)
 * **Google Maps API** wykorzystywane w autorskim narzędziu DrawingTool do tworzenia modeli skrzyżowań
 
-## Jak uruchomić moduł, czyli `npm start`
+## Jak uruchomić moduł, wykorzystanie npm
 
-Uruchamia aplikację w trybie developerskim.\
+Jeśli uruchamiamy aplikację po raz pierwszy należy jako krok zerowy użyć komendy `npm install`.\
+Komenda `npm start` uruchamia aplikację w trybie developerskim.\
 Aplikację można także uruchomić w innych trybach opisanych w dokumentacji frameworka.\
 Otwórz [http://localhost:3000](http://localhost:3000) aby zobaczyć klienta w przeglądarce.
+
+**!UWAGA!**\
+Aby moduł działał w pełni poprawnie powinien w głównym katalogu zawierać plik **.env**, zawierający następujące informacje:
+* Klucz API do Map Google umożliwiający krok pierwszy tworzenia skrzyżowania &rarr; **REACT_APP_GOOGLE_MAPS_API_KEY**=\<klucz>
+* Ustalona z góry nazwa administratora systemu &rarr; **REACT_APP_ADMIN_USERNAME**=\<ustalona nazwa administratora>
+
+Plik ten ze względów bezpieczeństwa nie jest udostępniany w repozytorium. Domyślnie zakłada się, że zostałby stworzony specjalnie dla klienta przed oddaniem w jego ręce produktu, analogicznie postępowano by z kluczem dostępu do API map Google.
 
 
 ## Dokumentacja React'a
