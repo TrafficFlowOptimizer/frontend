@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import meme0 from "../../assets/memes/meme_0.jpg";
 import meme1 from "../../assets/memes/meme_1.jpg";
 import meme2 from "../../assets/memes/meme_2.png";
 import meme3 from "../../assets/memes/meme_3.jpg";
@@ -15,8 +16,6 @@ import meme13 from "../../assets/memes/meme_13.jpg";
 import meme14 from "../../assets/memes/meme_14.jpg";
 import meme15 from "../../assets/memes/meme_15.png";
 import meme16 from "../../assets/memes/meme_16.png";
-import meme1_uc from "../../assets/memes/meme_uc_1.webp";
-import meme2_uc from "../../assets/memes/meme_uc_2.gif";
 import meme17 from "../../assets/memes/meme_17.jpg";
 import meme18 from "../../assets/memes/meme_18.webp";
 import meme19 from "../../assets/memes/meme_19.jpg";
@@ -33,6 +32,7 @@ import styled from "styled-components";
 
 export function Memes() {
 	const memes = [
+		meme0,
 		meme1,
 		meme2,
 		meme3,
@@ -49,8 +49,6 @@ export function Memes() {
 		meme14,
 		meme15,
 		meme16,
-		meme1_uc,
-		meme2_uc,
 		meme17,
 		meme18,
 		meme19,
